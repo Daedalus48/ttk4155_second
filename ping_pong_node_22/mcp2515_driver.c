@@ -69,7 +69,7 @@ void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data)
 {
 	PORTB &= ~(1<<PB7); // Select CAN-controller
 	//SPSR &= ~(1 << SPIF);	
-	
+
 	uint8_t bit_list[] = {MCP_BITMOD, address, mask, data};
 	spi_write(bit_list, 4);	
 	

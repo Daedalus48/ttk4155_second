@@ -13,11 +13,7 @@
 #define F_CPU 4915200UL
 #define UART0_BAUD 9600
 
-#define DDR_SPI DDRB
-#define DD_SS PB7
-#define DD_MOSI	DDB2
-#define DD_MISO DDB3
-#define DD_SCK DDB1
+
 
 #include <avr/interrupt.h>
 #include <avr/io.h>

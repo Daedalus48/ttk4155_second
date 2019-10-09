@@ -7,16 +7,24 @@
 
 #include "spi.h"
 
-void spi_init() 
-{
-	/* Set MOSI and SCK and CS output, all others input */
-	DDR_SPI = (1 << DD_MOSI) | (1 << DD_SCK) | (1 << DD_SS);
-	/* Enable interrupt */
+#define SS_PIN PB7
+#define SCK_PIN PB1
+#define MOSI_PIN PB2
+#define MISO_PIN PB3
 
-	// SPCR = 1<<SPIE;
+void spi_init() {
 
-	/* Enable SPI, Master, set clock rate fck/16 , SPI mode 0 by default*/
-	SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);// | (1<<SPIE)
+  /* Set MOSI and SCK and CS output, all others input */
+  DDRB |= (1 << MOSI_PIN) | (1 << SCK_PIN) | (1 << SS_PIN) | (1 << PB0);
+  PORTB |= (1 << SS_PIN) | (1 << PB0); // Set Master mode
+  
+  //DDR_SPI = (1<<MISO_PIN);
+  /* Enable interrupt */
+  // SPSR = (1<<SPIF);
+
+  /* Enable SPI interrupt, SPI, Master, set clock rate fck/16 , SPI mode 0 by
+   * default*/
+  SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);
 }
 
 void spi_read(uint8_t *receive_data, uint8_t data_length) 
@@ -26,7 +34,10 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
 	for (int i = 0; i < data_length; i++)
 	{
 		SPDR = dummy_data[i];
-		while (!(SPSR & (1 << SPIF)));
+		int j = 0;
+		while (!(SPSR & (1 << SPIF))){
+			//printf("I am stuck here %d\n\r ",j++);			
+		}
 		receive_data[i] = SPDR;
 	}
 	

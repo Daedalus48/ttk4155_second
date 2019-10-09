@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ping_pong_node_2", "ping_pong_node_2\ping_pong_node_2.cproj", "{6403EC90-4C72-4C3E-B336-FD99403C188C}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ping_pong_node_2", "ping_pong_node_2.cproj", "{6403EC90-4C72-4C3E-B336-FD99403C188C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

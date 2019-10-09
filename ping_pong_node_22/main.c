@@ -17,9 +17,13 @@
 
 
 int main(void){
+	
 	USART_Init(MYUBRR);
+	printf("start \n\r \n");
 	
 	can_init();
+	
+
 	
 	struct can_message message;
 	message.id = 3;
@@ -30,6 +34,8 @@ int main(void){
 	struct can_message message2;
 	message2.id = 3;
 	message2.length = 1;
+	
+	
 	
 	
 	printf("In the main send %c \n\r", message.data[0]);

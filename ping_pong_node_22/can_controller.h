@@ -23,6 +23,7 @@ struct can_message{
 void can_init();
 void can_message_send(struct can_message* msg);
 void can_data_receive(struct can_message* msg);
+int can_get_message(struct can_message* message);
 /*void can_message_send()
 void can_error()
 void can_transmit_complete()
