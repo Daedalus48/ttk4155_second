@@ -101,11 +101,31 @@ int main(void){
 	message2.length = 1;
 	
 	
-	printf("In the main send %c \n\r", message.data[0]);
 	
-	can_message_send(&message);
-	_delay_ms(50);
-	can_data_receive(&message2);
+	while(1){
+		//can_message_send(&message);
+		//_delay_ms(50);
+		
+		/*if(temp_value = adc_joy_pos_changed_up_down())
+		{
+			
+			//printf("temp value %d \n \r", temp_value);
+			oled_actualise_joy_pos(temp_value);
+			oled_display_activity();
+			_delay_ms(400);
+			
+		}*/
+		temp_value = adc_joy_pos_changed();
+		if(temp_value != 5)
+		{
+			message.data[0] = temp_value;
+			printf("can send %d \n\r", message.data[0]);
+			can_message_send(&message);
+		}
+	}
+	
+	
+	/*can_get_message(&message2);
 	
 	
 	printf("In the main received %c \n\r \n\r", message2.data[0]);
@@ -116,10 +136,10 @@ int main(void){
 	
 	can_message_send(&message);
 	_delay_ms(50);
-	can_data_receive(&message2);
+	can_get_message(&message2);
 	
 	
-	printf("In the main received %c \n\r \n\r", message2.data[0]);
+	printf("In the main received %c \n\r \n\r", message2.data[0]);*/
 
 
 	

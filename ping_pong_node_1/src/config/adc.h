@@ -42,6 +42,8 @@ int adc_test_function();
 
 int adc_joy_pos_changed();
 
+int adc_joy_pos_changed_up_down();
+
 
 #endif /* ADC_H_ */
 

@@ -135,6 +135,24 @@ int adc_joy_pos_changed(){
 	printf("previous joy adc %d \n \r", previous_joy_adc_direction);
 	printf("joy adc direction %d \n \r", joy_adc_direction);*/
 	
+	if(previous_joy_adc_direction == joy_adc_direction){
+		ans = 5;
+	}
+	else{
+		ans = joy_adc_direction;
+	}
+	//printf("answer % d \n \r \n \r", ans);
+	return ans;
+}
+
+int adc_joy_pos_changed_up_down(){
+	int ans = 0;
+	int previous_joy_adc_direction = joy_adc_direction;
+	joy_adc_direction = adc_joystick_direction();
+	/*printf("in adc joy pos changed \n \r");
+	printf("previous joy adc %d \n \r", previous_joy_adc_direction);
+	printf("joy adc direction %d \n \r", joy_adc_direction);*/
+	
 	if(previous_joy_adc_direction == joy_adc_direction || joy_adc_direction == LEFT || joy_adc_direction == RIGHT || joy_adc_direction == NEUTRAL){
 		ans = 0;
 	}

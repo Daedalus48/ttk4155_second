@@ -37,12 +37,12 @@ int main(void){
 	
 	
 	
-	
+	/*
 	printf("In the main send %c \n\r", message.data[0]);
 	
 	can_message_send(&message);
 	_delay_ms(50);
-	can_data_receive(&message2);
+	can_get_message(&message2);
 	
 	
 	printf("In the main received %c \n\r \n\r", message2.data[0]);
@@ -53,15 +53,22 @@ int main(void){
 	
 	can_message_send(&message);
 	_delay_ms(50);
-	can_data_receive(&message2);
+	can_get_message(&message2);
 	
 	
 	printf("In the main received %c \n\r \n\r", message2.data[0]);
-	
+	*/
+	int i = 4;
+	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
+			
     while(1)
     {
-	    //printf("bloodbath \r\n");
-	
+		if(can_get_message(&message2)){
+			i = message2.data[0];
+			printf("Atmega2560 received a new message %s \n \r \n\r", joy_equivalence[i]);
+		}
+		
+		_delay_ms(50);
 		//TODO:: Please write your application code 
     }
 }

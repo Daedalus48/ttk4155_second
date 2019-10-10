@@ -80,12 +80,11 @@ void can_transmit_complete()
 	
 }
 */
-void can_data_receive(struct can_message* msg)
+void can_data_receive(struct can_message* msg, int buffer)
 {
 	uint8_t result[MAX_CAN_LENGTH];
 	
-	int a = 1;
-	
+		
 	mcp2515_read(MCP_CANINTF, result, 1);
 
 	if (!result[0]){
@@ -94,34 +93,29 @@ void can_data_receive(struct can_message* msg)
 	
 	uint8_t i;
 	
-	
-	
-	/*mcp2515_read(MCP_RXB0DLC + buffer, result, 1);
+	mcp2515_read(MCP_RXB0DLC + buffer, result, 1);
 	msg->length = result[0];
 	
 	mcp2515_read(MCP_RXB0SIDH + buffer, result, 1);
 	msg->id = result[0];
 	
-	mcp2515_read(MCP_RXB0D(0) + buffer, result, 1);
+	mcp2515_read(MCP_RXB0D(0) + buffer, result, msg->length);
 	
-	for(i=0; i < msg->length; i++)
-		msg->data[i] = result[i];
-	*/
 	for (i = 0; i < msg->length; i++)
 	{
-		mcp2515_read(MCP_RXB0D(0), result, 1);
 		msg->data[i] = result[i];
-		printf("can messsage received %d", msg->data[i]);
+		//printf("can messsage received %c", msg->data[i]);
 	}
-	printf("\n\r");
+	//printf("\n\r");
 	
 	mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00);
 }
 
 int can_get_message(struct can_message* message)
 {
-	/*uint8_t result[MAX_CAN_LENGTH];
+	uint8_t result[MAX_CAN_LENGTH];
 	mcp2515_read(MCP_CANINTF, result, 1);
+
 	
 	if ((result[0] & 0x01) == 0x01)
 	{
@@ -138,7 +132,7 @@ int can_get_message(struct can_message* message)
 	else
 	{
 		return 0;
-	}*/
+	}
 	
 }
 

@@ -202,9 +202,7 @@ Discarded input sections
                 0x00000000       0x3a src/config/adc.o
  .text.adc_joystick_angle
                 0x00000000       0x74 src/config/adc.o
- .text.adc_joystick_direction
-                0x00000000       0xae src/config/adc.o
- .text.adc_joy_pos_changed
+ .text.adc_joy_pos_changed_up_down
                 0x00000000       0x40 src/config/adc.o
  .rodata.str1.1
                 0x00000000       0x75 src/config/adc.o
@@ -246,6 +244,10 @@ Discarded input sections
  .text          0x00000000        0x0 src/config/can_controller.o
  .data          0x00000000        0x0 src/config/can_controller.o
  .bss           0x00000000        0x0 src/config/can_controller.o
+ .text.can_data_receive
+                0x00000000      0x112 src/config/can_controller.o
+ .text.can_get_message
+                0x00000000       0x80 src/config/can_controller.o
  .debug_macro   0x00000000      0xa30 src/config/can_controller.o
  .debug_macro   0x00000000       0x10 src/config/can_controller.o
  .debug_macro   0x00000000      0x1ad src/config/can_controller.o
@@ -284,7 +286,7 @@ Discarded input sections
  .text.mcp2515_read_status
                 0x00000000       0x50 src/config/mcp2515_driver.o
  .debug_macro   0x00000000      0xa30 src/config/mcp2515_driver.o
- .debug_macro   0x00000000      0x2ac src/config/mcp2515_driver.o
+ .debug_macro   0x00000000      0x2b8 src/config/mcp2515_driver.o
  .debug_macro   0x00000000       0x1c src/config/mcp2515_driver.o
  .debug_macro   0x00000000       0x10 src/config/mcp2515_driver.o
  .debug_macro   0x00000000      0x1ad src/config/mcp2515_driver.o
@@ -469,7 +471,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/main.o
  .debug_macro   0x00000000       0x20 src/main.o
  .debug_macro   0x00000000       0x22 src/main.o
- .debug_macro   0x00000000      0x2ac src/main.o
+ .debug_macro   0x00000000      0x2b8 src/main.o
  .debug_macro   0x00000000       0x1c src/main.o
  .debug_macro   0x00000000       0x69 src/main.o
  .debug_macro   0x00000000       0x34 src/main.o
@@ -942,7 +944,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x16ac
+.text           0x00000000     0x167a
  *(.vectors)
  .vectors       0x00000000       0x70 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
                 0x00000000                __vector_default
@@ -1042,134 +1044,137 @@ END GROUP
  .text.adc_init
                 0x000006f8        0xe src/config/adc.o
                 0x000006f8                adc_init
+ .text.adc_joystick_direction
+                0x00000706       0xae src/config/adc.o
+                0x00000706                adc_joystick_direction
+ .text.adc_joy_pos_changed
+                0x000007b4       0x26 src/config/adc.o
+                0x000007b4                adc_joy_pos_changed
  .text.can_init
-                0x00000706       0xac src/config/can_controller.o
-                0x00000706                can_init
+                0x000007da       0xaa src/config/can_controller.o
+                0x000007da                can_init
  .text.can_message_send
-                0x000007b2       0x88 src/config/can_controller.o
-                0x000007b2                can_message_send
- .text.can_data_receive
-                0x0000083a       0xaa src/config/can_controller.o
-                0x0000083a                can_data_receive
+                0x00000884       0x92 src/config/can_controller.o
+                0x00000884                can_message_send
  .text.mcp2515_reset
-                0x000008e4       0x22 src/config/mcp2515_driver.o
-                0x000008e4                mcp2515_reset
+                0x00000916       0x22 src/config/mcp2515_driver.o
+                0x00000916                mcp2515_reset
  .text.mcp2515_init
-                0x00000906        0x6 src/config/mcp2515_driver.o
-                0x00000906                mcp2515_init
+                0x00000938        0x6 src/config/mcp2515_driver.o
+                0x00000938                mcp2515_init
  .text.mcp2515_read
-                0x0000090c       0x3c src/config/mcp2515_driver.o
-                0x0000090c                mcp2515_read
+                0x0000093e       0x3c src/config/mcp2515_driver.o
+                0x0000093e                mcp2515_read
  .text.mcp2515_write
-                0x00000948       0x2e src/config/mcp2515_driver.o
-                0x00000948                mcp2515_write
+                0x0000097a       0x2e src/config/mcp2515_driver.o
+                0x0000097a                mcp2515_write
  .text.mcp2515_request
-                0x00000976       0x20 src/config/mcp2515_driver.o
-                0x00000976                mcp2515_request
+                0x000009a8       0x20 src/config/mcp2515_driver.o
+                0x000009a8                mcp2515_request
  .text.mcp2515_bit_modify
-                0x00000996       0x30 src/config/mcp2515_driver.o
-                0x00000996                mcp2515_bit_modify
+                0x000009c8       0x30 src/config/mcp2515_driver.o
+                0x000009c8                mcp2515_bit_modify
  .text.oled_columb_range_select
-                0x000009c6       0x28 src/config/oled.o
-                0x000009c6                oled_columb_range_select
+                0x000009f8       0x28 src/config/oled.o
+                0x000009f8                oled_columb_range_select
  .text.oled_page_select
-                0x000009ee       0x20 src/config/oled.o
-                0x000009ee                oled_page_select
+                0x00000a20       0x20 src/config/oled.o
+                0x00000a20                oled_page_select
  .text.oled_clear_page
-                0x00000a0e       0x1e src/config/oled.o
-                0x00000a0e                oled_clear_page
+                0x00000a40       0x1e src/config/oled.o
+                0x00000a40                oled_clear_page
  .text.oled_clear_screen
-                0x00000a2c       0x12 src/config/oled.o
-                0x00000a2c                oled_clear_screen
+                0x00000a5e       0x12 src/config/oled.o
+                0x00000a5e                oled_clear_screen
  .text.oled_init
-                0x00000a3e       0x66 src/config/oled.o
-                0x00000a3e                oled_init
+                0x00000a70       0x66 src/config/oled.o
+                0x00000a70                oled_init
  .text.oled_print_char_of_size
-                0x00000aa4       0x6a src/config/oled.o
-                0x00000aa4                oled_print_char_of_size
+                0x00000ad6       0x6a src/config/oled.o
+                0x00000ad6                oled_print_char_of_size
  .text.oled_print_char_of_size_inverted
-                0x00000b0e       0x6c src/config/oled.o
-                0x00000b0e                oled_print_char_of_size_inverted
+                0x00000b40       0x6c src/config/oled.o
+                0x00000b40                oled_print_char_of_size_inverted
  .text.oled_print_char
-                0x00000b7a       0x22 src/config/oled.o
-                0x00000b7a                oled_print_char
+                0x00000bac       0x22 src/config/oled.o
+                0x00000bac                oled_print_char
  .text.oled_print_char_inverted
-                0x00000b9c       0x22 src/config/oled.o
-                0x00000b9c                oled_print_char_inverted
+                0x00000bce       0x22 src/config/oled.o
+                0x00000bce                oled_print_char_inverted
  .text.oled_printf
-                0x00000bbe       0x46 src/config/oled.o
-                0x00000bbe                oled_printf
+                0x00000bf0       0x46 src/config/oled.o
+                0x00000bf0                oled_printf
  .text.oled_printf_inverted
-                0x00000c04       0x46 src/config/oled.o
-                0x00000c04                oled_printf_inverted
+                0x00000c36       0x46 src/config/oled.o
+                0x00000c36                oled_printf_inverted
  .text.oled_display_activity
-                0x00000c4a       0x5e src/config/oled.o
-                0x00000c4a                oled_display_activity
+                0x00000c7c       0x5e src/config/oled.o
+                0x00000c7c                oled_display_activity
  .text.spi_init
-                0x00000ca8        0xc src/config/spi.o
-                0x00000ca8                spi_init
+                0x00000cda        0xc src/config/spi.o
+                0x00000cda                spi_init
  .text.spi_read
-                0x00000cb4       0x4a src/config/spi.o
-                0x00000cb4                spi_read
+                0x00000ce6       0x4a src/config/spi.o
+                0x00000ce6                spi_read
  .text.spi_write
-                0x00000cfe       0x26 src/config/spi.o
-                0x00000cfe                spi_write
+                0x00000d30       0x26 src/config/spi.o
+                0x00000d30                spi_write
  .text.USART_Transmit
-                0x00000d24        0x8 src/config/usart.o
-                0x00000d24                USART_Transmit
+                0x00000d56        0x8 src/config/usart.o
+                0x00000d56                USART_Transmit
  .text.USART_Receive
-                0x00000d2c        0x8 src/config/usart.o
-                0x00000d2c                USART_Receive
+                0x00000d5e        0x8 src/config/usart.o
+                0x00000d5e                USART_Receive
  .text.USART_Init
-                0x00000d34       0x18 src/config/usart.o
-                0x00000d34                USART_Init
+                0x00000d66       0x18 src/config/usart.o
+                0x00000d66                USART_Init
  .text.xmem_init
-                0x00000d4c        0xe src/main.o
-                0x00000d4c                xmem_init
- .text.main     0x00000d5a       0xc8 src/main.o
-                0x00000d5a                main
+                0x00000d7e        0xe src/main.o
+                0x00000d7e                xmem_init
+ .text.main     0x00000d8c       0x64 src/main.o
+                0x00000d8c                main
  .text.avr-libc
-                0x00000e22       0x94 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(fdevopen.o)
-                0x00000e22                fdevopen
+                0x00000df0       0x94 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(fdevopen.o)
+                0x00000df0                fdevopen
  .text.avr-libc
-                0x00000eb6       0x22 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(printf.o)
-                0x00000eb6                printf
+                0x00000e84       0x22 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(printf.o)
+                0x00000e84                printf
  .text.avr-libc
-                0x00000ed8      0x386 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
-                0x00000ed8                vfprintf
+                0x00000ea6      0x386 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(vfprintf_std.o)
+                0x00000ea6                vfprintf
  .text.avr-libc
-                0x0000125e       0x34 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(calloc.o)
-                0x0000125e                calloc
+                0x0000122c       0x34 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(calloc.o)
+                0x0000122c                calloc
  .text.avr-libc
-                0x00001292      0x24e c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
-                0x00001292                malloc
-                0x000013c2                free
+                0x00001260      0x24e c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
+                0x00001260                malloc
+                0x00001390                free
  .text.avr-libc
-                0x000014e0       0x16 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
-                0x000014e0                strnlen_P
+                0x000014ae       0x16 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(strnlen_P.o)
+                0x000014ae                strnlen_P
  .text.avr-libc
-                0x000014f6        0xe c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(memset.o)
-                0x000014f6                memset
+                0x000014c4        0xe c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(memset.o)
+                0x000014c4                memset
  .text.avr-libc
-                0x00001504       0x16 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(strnlen.o)
-                0x00001504                strnlen
+                0x000014d2       0x16 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(strnlen.o)
+                0x000014d2                strnlen
  .text.avr-libc
-                0x0000151a       0x64 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(fputc.o)
-                0x0000151a                fputc
+                0x000014e8       0x64 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(fputc.o)
+                0x000014e8                fputc
  .text.avr-libc
-                0x0000157e       0xbc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
-                0x0000157e                __ultoa_invert
+                0x0000154c       0xbc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(ultoa_invert.o)
+                0x0000154c                __ultoa_invert
  .text.libgcc.prologue
-                0x0000163a       0x38 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_prologue.o)
-                0x0000163a                __prologue_saves__
+                0x00001608       0x38 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_prologue.o)
+                0x00001608                __prologue_saves__
  .text.libgcc.prologue
-                0x00001672       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_epilogue.o)
-                0x00001672                __epilogue_restores__
-                0x000016a8                . = ALIGN (0x2)
+                0x00001640       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_epilogue.o)
+                0x00001640                __epilogue_restores__
+                0x00001676                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000016a8        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
-                0x000016a8                _exit
-                0x000016a8                exit
+ .fini9         0x00001676        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
+                0x00001676                _exit
+                0x00001676                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -1188,11 +1193,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000016a8        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
+ .fini0         0x00001676        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000016ac                _etext = .
+                0x0000167a                _etext = .
 
-.data           0x00800100      0x1c0 load address 0x000016ac
+.data           0x00800100      0x1aa load address 0x0000167a
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
@@ -1203,48 +1208,48 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800106       0x85 src/config/can_controller.o
-                                 0x88 (size before relaxing)
+                0x00800106       0x95 src/config/can_controller.o
+                                 0x98 (size before relaxing)
  .rodata.str1.1
-                0x0080018b       0x1b src/config/oled.o
+                0x0080019b       0x1b src/config/oled.o
  .rodata.str1.1
-                0x008001a6      0x11a src/main.o
+                0x008001b6       0xf4 src/main.o
  *(.gnu.linkonce.d*)
-                0x008002c0                . = ALIGN (0x2)
-                0x008002c0                _edata = .
-                0x008002c0                PROVIDE (__data_end, .)
+                0x008002aa                . = ALIGN (0x2)
+                0x008002aa                _edata = .
+                0x008002aa                PROVIDE (__data_end, .)
 
-.bss            0x008002c0      0x114
-                0x008002c0                PROVIDE (__bss_start, .)
+.bss            0x008002aa      0x114
+                0x008002aa                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss.printf_size
-                0x008002c0        0x1 src/config/oled.o
-                0x008002c0                printf_size
+                0x008002aa        0x1 src/config/oled.o
+                0x008002aa                printf_size
  .bss.printf_page
-                0x008002c1        0x1 src/config/oled.o
-                0x008002c1                printf_page
+                0x008002ab        0x1 src/config/oled.o
+                0x008002ab                printf_page
  *(COMMON)
- COMMON         0x008002c2        0x2 src/config/adc.o
-                0x008002c2                joy_adc_direction
- COMMON         0x008002c4      0x106 src/config/oled.o
-                0x008002c4                oled_activity
-                0x008003c8                joy_pos
- COMMON         0x008003ca        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(iob.o)
-                0x008003ca                __iob
- COMMON         0x008003d0        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
-                0x008003d0                __brkval
-                0x008003d2                __flp
-                0x008003d4                PROVIDE (__bss_end, .)
-                0x000016ac                __data_load_start = LOADADDR (.data)
-                0x0000186c                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008002ac        0x2 src/config/adc.o
+                0x008002ac                joy_adc_direction
+ COMMON         0x008002ae      0x106 src/config/oled.o
+                0x008002ae                oled_activity
+                0x008003b2                joy_pos
+ COMMON         0x008003b4        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(iob.o)
+                0x008003b4                __iob
+ COMMON         0x008003ba        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
+                0x008003ba                __brkval
+                0x008003bc                __flp
+                0x008003be                PROVIDE (__bss_end, .)
+                0x0000167a                __data_load_start = LOADADDR (.data)
+                0x00001824                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008003d4        0x0
-                0x008003d4                PROVIDE (__noinit_start, .)
+.noinit         0x008003be        0x0
+                0x008003be                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x008003d4                PROVIDE (__noinit_end, .)
-                0x008003d4                _end = .
-                0x008003d4                PROVIDE (__heap_start, .)
+                0x008003be                PROVIDE (__noinit_end, .)
+                0x008003be                _end = .
+                0x008003be                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -1317,92 +1322,92 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x210
+.debug_aranges  0x00000000      0x220
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x58 src/config/adc.o
+                0x00000000       0x60 src/config/adc.o
  .debug_aranges
-                0x00000058       0x30 src/config/can_controller.o
+                0x00000060       0x38 src/config/can_controller.o
  .debug_aranges
-                0x00000088       0x50 src/config/mcp2515_driver.o
+                0x00000098       0x50 src/config/mcp2515_driver.o
  .debug_aranges
-                0x000000d8       0x98 src/config/oled.o
+                0x000000e8       0x98 src/config/oled.o
  .debug_aranges
-                0x00000170       0x30 src/config/spi.o
+                0x00000180       0x30 src/config/spi.o
  .debug_aranges
-                0x000001a0       0x30 src/config/usart.o
+                0x000001b0       0x30 src/config/usart.o
  .debug_aranges
-                0x000001d0       0x40 src/main.o
+                0x000001e0       0x40 src/main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x27e0
+.debug_info     0x00000000     0x2889
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x71f src/config/adc.o
- .debug_info    0x0000071f      0x582 src/config/can_controller.o
- .debug_info    0x00000ca1      0x3b0 src/config/mcp2515_driver.o
- .debug_info    0x00001051      0xdd3 src/config/oled.o
- .debug_info    0x00001e24      0x154 src/config/spi.o
- .debug_info    0x00001f78      0x1f0 src/config/usart.o
- .debug_info    0x00002168      0x678 src/main.o
+ .debug_info    0x00000000      0x764 src/config/adc.o
+ .debug_info    0x00000764      0x6fa src/config/can_controller.o
+ .debug_info    0x00000e5e      0x3b0 src/config/mcp2515_driver.o
+ .debug_info    0x0000120e      0xdd3 src/config/oled.o
+ .debug_info    0x00001fe1      0x154 src/config/spi.o
+ .debug_info    0x00002135      0x1f0 src/config/usart.o
+ .debug_info    0x00002325      0x564 src/main.o
 
-.debug_abbrev   0x00000000      0xde6
+.debug_abbrev   0x00000000      0xdbf
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x29f src/config/adc.o
- .debug_abbrev  0x0000029f      0x21f src/config/can_controller.o
- .debug_abbrev  0x000004be      0x167 src/config/mcp2515_driver.o
- .debug_abbrev  0x00000625      0x2a0 src/config/oled.o
- .debug_abbrev  0x000008c5       0xf1 src/config/spi.o
- .debug_abbrev  0x000009b6      0x132 src/config/usart.o
- .debug_abbrev  0x00000ae8      0x2fe src/main.o
+ .debug_abbrev  0x0000029f      0x24a src/config/can_controller.o
+ .debug_abbrev  0x000004e9      0x167 src/config/mcp2515_driver.o
+ .debug_abbrev  0x00000650      0x2a0 src/config/oled.o
+ .debug_abbrev  0x000008f0       0xf1 src/config/spi.o
+ .debug_abbrev  0x000009e1      0x132 src/config/usart.o
+ .debug_abbrev  0x00000b13      0x2ac src/main.o
 
-.debug_line     0x00000000     0x1e52
+.debug_line     0x00000000     0x1ec7
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x556 src/config/adc.o
- .debug_line    0x00000556      0x43c src/config/can_controller.o
- .debug_line    0x00000992      0x3ed src/config/mcp2515_driver.o
- .debug_line    0x00000d7f      0x5bd src/config/oled.o
- .debug_line    0x0000133c      0x30f src/config/spi.o
- .debug_line    0x0000164b      0x329 src/config/usart.o
- .debug_line    0x00001974      0x4de src/main.o
+ .debug_line    0x00000000      0x585 src/config/adc.o
+ .debug_line    0x00000585      0x4bb src/config/can_controller.o
+ .debug_line    0x00000a40      0x3ed src/config/mcp2515_driver.o
+ .debug_line    0x00000e2d      0x5bd src/config/oled.o
+ .debug_line    0x000013ea      0x30f src/config/spi.o
+ .debug_line    0x000016f9      0x329 src/config/usart.o
+ .debug_line    0x00001a22      0x4a5 src/main.o
 
-.debug_frame    0x00000000      0x55c
+.debug_frame    0x00000000      0x5a4
  *(.debug_frame)
- .debug_frame   0x00000000       0xc4 src/config/adc.o
- .debug_frame   0x000000c4       0xbc src/config/can_controller.o
- .debug_frame   0x00000180      0x100 src/config/mcp2515_driver.o
- .debug_frame   0x00000280      0x15c src/config/oled.o
- .debug_frame   0x000003dc       0x54 src/config/spi.o
- .debug_frame   0x00000430       0x44 src/config/usart.o
- .debug_frame   0x00000474       0xe8 src/main.o
+ .debug_frame   0x00000000       0xe0 src/config/adc.o
+ .debug_frame   0x000000e0       0xe8 src/config/can_controller.o
+ .debug_frame   0x000001c8      0x100 src/config/mcp2515_driver.o
+ .debug_frame   0x000002c8      0x15c src/config/oled.o
+ .debug_frame   0x00000424       0x54 src/config/spi.o
+ .debug_frame   0x00000478       0x44 src/config/usart.o
+ .debug_frame   0x000004bc       0xe8 src/main.o
 
-.debug_str      0x00000000     0x9312
+.debug_str      0x00000000     0x93b3
  *(.debug_str)
- .debug_str     0x00000000     0x6d4f src/config/adc.o
-                               0x6e88 (size before relaxing)
- .debug_str     0x00006d4f      0xdb6 src/config/can_controller.o
-                               0x78d4 (size before relaxing)
- .debug_str     0x00007b05       0x7f src/config/mcp2515_driver.o
-                               0x6e74 (size before relaxing)
- .debug_str     0x00007b84     0x1611 src/config/oled.o
+ .debug_str     0x00000000     0x6d67 src/config/adc.o
+                               0x6ea0 (size before relaxing)
+ .debug_str     0x00006d67      0xdf0 src/config/can_controller.o
+                               0x7912 (size before relaxing)
+ .debug_str     0x00007b57       0x7f src/config/mcp2515_driver.o
+                               0x6e93 (size before relaxing)
+ .debug_str     0x00007bd6     0x1660 src/config/oled.o
                                0x7d25 (size before relaxing)
- .debug_str     0x00009195       0x42 src/config/spi.o
+ .debug_str     0x00009236       0x42 src/config/spi.o
                                0x6680 (size before relaxing)
- .debug_str     0x000091d7       0x4c src/config/usart.o
+ .debug_str     0x00009278       0x4c src/config/usart.o
                                0x6aeb (size before relaxing)
- .debug_str     0x00009223       0xef src/main.o
-                               0x7e6a (size before relaxing)
+ .debug_str     0x000092c4       0xef src/main.o
+                               0x7e41 (size before relaxing)
 
-.debug_loc      0x00000000     0x1374
+.debug_loc      0x00000000     0x14c0
  *(.debug_loc)
- .debug_loc     0x00000000      0x2d9 src/config/adc.o
- .debug_loc     0x000002d9      0x2c8 src/config/can_controller.o
- .debug_loc     0x000005a1      0x3a2 src/config/mcp2515_driver.o
- .debug_loc     0x00000943      0x703 src/config/oled.o
- .debug_loc     0x00001046       0xcb src/config/spi.o
- .debug_loc     0x00001111       0x26 src/config/usart.o
- .debug_loc     0x00001137      0x23d src/main.o
+ .debug_loc     0x00000000      0x344 src/config/adc.o
+ .debug_loc     0x00000344      0x385 src/config/can_controller.o
+ .debug_loc     0x000006c9      0x3a2 src/config/mcp2515_driver.o
+ .debug_loc     0x00000a6b      0x703 src/config/oled.o
+ .debug_loc     0x0000116e       0xcb src/config/spi.o
+ .debug_loc     0x00001239       0x26 src/config/usart.o
+ .debug_loc     0x0000125f      0x261 src/main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -1422,17 +1427,17 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x200
+.debug_ranges   0x00000000      0x210
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x48 src/config/adc.o
- .debug_ranges  0x00000048       0x20 src/config/can_controller.o
- .debug_ranges  0x00000068       0x40 src/config/mcp2515_driver.o
- .debug_ranges  0x000000a8       0xb8 src/config/oled.o
- .debug_ranges  0x00000160       0x20 src/config/spi.o
- .debug_ranges  0x00000180       0x20 src/config/usart.o
- .debug_ranges  0x000001a0       0x60 src/main.o
+ .debug_ranges  0x00000000       0x50 src/config/adc.o
+ .debug_ranges  0x00000050       0x28 src/config/can_controller.o
+ .debug_ranges  0x00000078       0x40 src/config/mcp2515_driver.o
+ .debug_ranges  0x000000b8       0xb8 src/config/oled.o
+ .debug_ranges  0x00000170       0x20 src/config/spi.o
+ .debug_ranges  0x00000190       0x20 src/config/usart.o
+ .debug_ranges  0x000001b0       0x60 src/main.o
 
-.debug_macro    0x00000000     0x1104
+.debug_macro    0x00000000     0x1110
  *(.debug_macro)
  .debug_macro   0x00000000       0xf5 src/config/adc.o
  .debug_macro   0x000000f5       0x10 src/config/adc.o
@@ -1445,21 +1450,21 @@ END GROUP
  .debug_macro   0x000004f3       0x60 src/config/adc.o
  .debug_macro   0x00000553       0x10 src/config/adc.o
  .debug_macro   0x00000563      0x111 src/config/can_controller.o
- .debug_macro   0x00000674      0x2ac src/config/can_controller.o
- .debug_macro   0x00000920       0x1c src/config/can_controller.o
- .debug_macro   0x0000093c       0x63 src/config/can_controller.o
- .debug_macro   0x0000099f       0x34 src/config/can_controller.o
- .debug_macro   0x000009d3       0xbb src/config/mcp2515_driver.o
- .debug_macro   0x00000a8e       0xf6 src/config/oled.o
- .debug_macro   0x00000b84       0x89 src/config/oled.o
- .debug_macro   0x00000c0d       0xaa src/config/oled.o
- .debug_macro   0x00000cb7       0xee src/config/oled.o
- .debug_macro   0x00000da5       0x22 src/config/oled.o
- .debug_macro   0x00000dc7       0x20 src/config/oled.o
- .debug_macro   0x00000de7       0x16 src/config/oled.o
- .debug_macro   0x00000dfd       0xa8 src/config/spi.o
- .debug_macro   0x00000ea5       0xd9 src/config/usart.o
- .debug_macro   0x00000f7e      0x170 src/main.o
- .debug_macro   0x000010ee       0x16 src/main.o
+ .debug_macro   0x00000674      0x2b8 src/config/can_controller.o
+ .debug_macro   0x0000092c       0x1c src/config/can_controller.o
+ .debug_macro   0x00000948       0x63 src/config/can_controller.o
+ .debug_macro   0x000009ab       0x34 src/config/can_controller.o
+ .debug_macro   0x000009df       0xbb src/config/mcp2515_driver.o
+ .debug_macro   0x00000a9a       0xf6 src/config/oled.o
+ .debug_macro   0x00000b90       0x89 src/config/oled.o
+ .debug_macro   0x00000c19       0xaa src/config/oled.o
+ .debug_macro   0x00000cc3       0xee src/config/oled.o
+ .debug_macro   0x00000db1       0x22 src/config/oled.o
+ .debug_macro   0x00000dd3       0x20 src/config/oled.o
+ .debug_macro   0x00000df3       0x16 src/config/oled.o
+ .debug_macro   0x00000e09       0xa8 src/config/spi.o
+ .debug_macro   0x00000eb1       0xd9 src/config/usart.o
+ .debug_macro   0x00000f8a      0x170 src/main.o
+ .debug_macro   0x000010fa       0x16 src/main.o
 OUTPUT(Ping Pong_6_2.elf elf32-avr)
 LOAD linker stubs
