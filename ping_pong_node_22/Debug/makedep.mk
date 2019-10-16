@@ -8,6 +8,10 @@ main.c
 
 mcp2515_driver.c
 
+pwm.c
+
+servo.c
+
 spi.c
 
 usart.c

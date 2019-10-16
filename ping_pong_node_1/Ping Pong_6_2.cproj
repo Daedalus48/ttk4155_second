@@ -307,6 +307,12 @@
     <Compile Include="src\config\pwm.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\servo.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\servo.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\spi.c">
       <SubType>compile</SubType>
     </Compile>

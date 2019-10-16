@@ -38,6 +38,7 @@ void pwm_set_signal_period(float time){
 	clear_bit(TCCR1B, CS10);
 	
 	ICR1 = (pwm_freq * time - 0.5);	//set period to 20ms
+	//ICR1 = 1250;
 }
 
 void pwm_set_pulse_width(float time){
@@ -46,4 +47,5 @@ void pwm_set_pulse_width(float time){
 	else if(time>0.0021){time=0.0021;};
 	printf("Freq: %d",  (pwm_freq * time - 0.5));
 	OCR1A = (pwm_freq * time - 0.5);
+	//OCR1A = 1150;
 }

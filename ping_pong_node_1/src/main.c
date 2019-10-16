@@ -16,6 +16,8 @@
 #include "adc.h"
 #include "oled.h"
 #include "can_controller.h"
+#include "pwm.h"
+#include "servo.h"
 
 void global_init(){
 	USART_Init(MYUBRR);
@@ -23,6 +25,7 @@ void global_init(){
 	oled_init();
 	adc_init();
 	can_init();
+	servo_init(F_CPU);
 }
 
 int main(void){
@@ -30,6 +33,7 @@ int main(void){
 	global_init();
 	
 	DDRB &= ~(0b0111);
+	/*
 	SRAM_test();
 	
 	int left_s = 0, right_s = 0, x = 0, y = 0;
@@ -52,10 +56,11 @@ int main(void){
 	message2.id = 3;
 	message2.length = 1;
 	
-	
+	*/
+	//servo_set_servo(0);
 	
 	while(1){	
-		pin = (PINB & 0b0100)>>2;
+		/*pin = (PINB & 0b0100)>>2;
 		
 		if(pin == 0)
 			printf("string number %d selected \n \r", oled_get_joy_pos());
@@ -73,9 +78,14 @@ int main(void){
 				oled_display_activity();
 				_delay_ms(400);
 			}
+			
+		
 		}
+		*/
+		//printf("pw: %d \n\r", OCR1A);
 	}
-	
+
+		
 	return 0;
 }
 

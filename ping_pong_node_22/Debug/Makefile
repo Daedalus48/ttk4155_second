@@ -40,6 +40,8 @@ C_SRCS +=  \
 ../can_controller.c \
 ../main.c \
 ../mcp2515_driver.c \
+../pwm.c \
+../servo.c \
 ../spi.c \
 ../usart.c
 
@@ -54,6 +56,8 @@ OBJS +=  \
 can_controller.o \
 main.o \
 mcp2515_driver.o \
+pwm.o \
+servo.o \
 spi.o \
 usart.o
 
@@ -61,6 +65,8 @@ OBJS_AS_ARGS +=  \
 can_controller.o \
 main.o \
 mcp2515_driver.o \
+pwm.o \
+servo.o \
 spi.o \
 usart.o
 
@@ -68,6 +74,8 @@ C_DEPS +=  \
 can_controller.d \
 main.d \
 mcp2515_driver.d \
+pwm.d \
+servo.d \
 spi.d \
 usart.d
 
@@ -75,6 +83,8 @@ C_DEPS_AS_ARGS +=  \
 can_controller.d \
 main.d \
 mcp2515_driver.d \
+pwm.d \
+servo.d \
 spi.d \
 usart.d
 
@@ -92,6 +102,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 
