@@ -406,12 +406,6 @@ Disassembly of section .text:
      6f8:	83 cc       	rjmp	.-1786   	; 0x0 <__vectors>
 
 000006fa <adc_joystick_direction>:
-	else{
-		ans = joy_adc_direction;
-	}
-	//printf("answer % d \n \r \n \r", ans);
-	return ans;*/
-}
      6fa:	84 e0       	ldi	r24, 0x04	; 4
      6fc:	80 93 00 14 	sts	0x1400, r24
      700:	85 e3       	ldi	r24, 0x35	; 53
@@ -499,73 +493,39 @@ Disassembly of section .text:
      7a6:	08 95       	ret
 
 000007a8 <get_joy_adc_direction>:
-
-int get_joy_adc_direction(){
-	return xmem_read(JOY_DIR_ADDRESS);
      7a8:	80 e0       	ldi	r24, 0x00	; 0
      7aa:	98 e1       	ldi	r25, 0x18	; 24
      7ac:	01 d3       	rcall	.+1538   	; 0xdb0 <xmem_read>
-}
      7ae:	90 e0       	ldi	r25, 0x00	; 0
      7b0:	08 95       	ret
 
 000007b2 <set_joy_adc_direction>:
-
-void set_joy_adc_direction(int joy_adc_direction){
-	xmem_write(joy_adc_direction, JOY_DIR_ADDRESS);
      7b2:	60 e0       	ldi	r22, 0x00	; 0
      7b4:	78 e1       	ldi	r23, 0x18	; 24
      7b6:	f8 c2       	rjmp	.+1520   	; 0xda8 <xmem_write>
      7b8:	08 95       	ret
 
 000007ba <adc_init>:
-
-
-
-
-void adc_init(){
-	set_joy_adc_direction(NEUTRAL);
      7ba:	84 e0       	ldi	r24, 0x04	; 4
      7bc:	90 e0       	ldi	r25, 0x00	; 0
      7be:	f9 cf       	rjmp	.-14     	; 0x7b2 <set_joy_adc_direction>
      7c0:	08 95       	ret
 
 000007c2 <adc_joy_pos_changed>:
-		ans = NEUTRAL;
-	}
-	return ans;
-}
-
-int adc_joy_pos_changed(){
      7c2:	cf 93       	push	r28
      7c4:	df 93       	push	r29
-	int ans = 0;
-	int joy_adc_direction = get_joy_adc_direction();
      7c6:	f0 df       	rcall	.-32     	; 0x7a8 <get_joy_adc_direction>
      7c8:	ec 01       	movw	r28, r24
-	int previous_joy_adc_direction = joy_adc_direction;
-	joy_adc_direction = adc_joystick_direction();
      7ca:	97 df       	rcall	.-210    	; 0x6fa <adc_joystick_direction>
-
-	
-	if(previous_joy_adc_direction == joy_adc_direction){
      7cc:	c8 17       	cp	r28, r24
      7ce:	d9 07       	cpc	r29, r25
      7d0:	19 f4       	brne	.+6      	; 0x7d8 <adc_joy_pos_changed+0x16>
-		ans = 5;
      7d2:	d5 e0       	ldi	r29, 0x05	; 5
      7d4:	c0 e0       	ldi	r28, 0x00	; 0
      7d6:	02 c0       	rjmp	.+4      	; 0x7dc <adc_joy_pos_changed+0x1a>
-	}
-	else{
-		ans = joy_adc_direction;
      7d8:	d8 2f       	mov	r29, r24
      7da:	c9 2f       	mov	r28, r25
-	}
-	set_joy_adc_direction(joy_adc_direction);
      7dc:	ea df       	rcall	.-44     	; 0x7b2 <set_joy_adc_direction>
-	return ans;
-}
      7de:	8d 2f       	mov	r24, r29
      7e0:	9c 2f       	mov	r25, r28
      7e2:	df 91       	pop	r29
@@ -573,12 +533,6 @@ int adc_joy_pos_changed(){
      7e6:	08 95       	ret
 
 000007e8 <can_init>:
-
-
-// "Main" for using can:
-
-void can_init()
-{
      7e8:	cf 93       	push	r28
      7ea:	df 93       	push	r29
      7ec:	cd b7       	in	r28, 0x3d	; 61
@@ -589,11 +543,7 @@ void can_init()
      7f6:	de bf       	out	0x3e, r29	; 62
      7f8:	0f be       	out	0x3f, r0	; 63
      7fa:	cd bf       	out	0x3d, r28	; 61
-	mcp2515_init(); //Init
      7fc:	80 d0       	rcall	.+256    	; 0x8fe <mcp2515_init>
-	
-	
-	mcp2515_write(MCP_RXB0CTRL, MCP_RXBnCTRL_NOFILTER_bm, 1); // Set to no filter
      7fe:	41 e0       	ldi	r20, 0x01	; 1
      800:	60 e6       	ldi	r22, 0x60	; 96
      802:	80 e6       	ldi	r24, 0x60	; 96
@@ -610,9 +560,6 @@ void can_init()
      80c:	f1 f7       	brne	.-4      	; 0x80a <can_init+0x22>
      80e:	00 c0       	rjmp	.+0      	; 0x810 <can_init+0x28>
      810:	00 00       	nop
-	_delay_ms(30);
-	
-	mcp2515_bit_modify(MCP_CANINTE, 0b00000001, 1); // Enable Interrupt when message is received
      812:	41 e0       	ldi	r20, 0x01	; 1
      814:	61 e0       	ldi	r22, 0x01	; 1
      816:	8b e2       	ldi	r24, 0x2B	; 43
@@ -623,9 +570,6 @@ void can_init()
      820:	f1 f7       	brne	.-4      	; 0x81e <can_init+0x36>
      822:	00 c0       	rjmp	.+0      	; 0x824 <can_init+0x3c>
      824:	00 00       	nop
-	_delay_ms(30);
-
-	mcp2515_bit_modify(MCP_CANCTRL, MODE_MASK, MODE_NORMAL);//0b11100000 instead of MODE_MASK
      826:	40 e0       	ldi	r20, 0x00	; 0
      828:	60 ee       	ldi	r22, 0xE0	; 224
      82a:	8f e0       	ldi	r24, 0x0F	; 15
@@ -636,26 +580,15 @@ void can_init()
      834:	f1 f7       	brne	.-4      	; 0x832 <can_init+0x4a>
      836:	00 c0       	rjmp	.+0      	; 0x838 <can_init+0x50>
      838:	00 00       	nop
-	_delay_ms(30);
-	
-	uint8_t mode_bits;
-	uint8_t data[MAX_CAN_LENGTH];
-	mcp2515_read(MCP_CANSTAT, data, MAX_CAN_LENGTH);
      83a:	4a e0       	ldi	r20, 0x0A	; 10
      83c:	be 01       	movw	r22, r28
      83e:	6f 5f       	subi	r22, 0xFF	; 255
      840:	7f 4f       	sbci	r23, 0xFF	; 255
      842:	8e e0       	ldi	r24, 0x0E	; 14
      844:	5f d0       	rcall	.+190    	; 0x904 <mcp2515_read>
-	uint8_t val = data[0];
-	
-	mode_bits = (val & MODE_MASK);
      846:	89 81       	ldd	r24, Y+1	; 0x01
      848:	80 7e       	andi	r24, 0xE0	; 224
-	if(mode_bits != MODE_NORMAL){
      84a:	99 f0       	breq	.+38     	; 0x872 <can_init+0x8a>
-		
-		printf("MCP2515 is NOT in correct mode after reset! Its config bits are %x\n", mode_bits);
      84c:	1f 92       	push	r1
      84e:	8f 93       	push	r24
      850:	8a e0       	ldi	r24, 0x0A	; 10
@@ -663,7 +596,6 @@ void can_init()
      854:	9f 93       	push	r25
      856:	8f 93       	push	r24
      858:	3f d4       	rcall	.+2174   	; 0x10d8 <printf>
-		printf("\n\r");
      85a:	8f e6       	ldi	r24, 0x6F	; 111
      85c:	91 e0       	ldi	r25, 0x01	; 1
      85e:	9f 93       	push	r25
@@ -676,9 +608,6 @@ void can_init()
      86c:	0f 90       	pop	r0
      86e:	0f 90       	pop	r0
      870:	07 c0       	rjmp	.+14     	; 0x880 <can_init+0x98>
-	}
-	else
-	printf("in mode normal \n\r");
      872:	8e e4       	ldi	r24, 0x4E	; 78
      874:	91 e0       	ldi	r25, 0x01	; 1
      876:	9f 93       	push	r25
@@ -686,8 +615,6 @@ void can_init()
      87a:	2e d4       	rcall	.+2140   	; 0x10d8 <printf>
      87c:	0f 90       	pop	r0
      87e:	0f 90       	pop	r0
-	
-}
      880:	2a 96       	adiw	r28, 0x0a	; 10
      882:	0f b6       	in	r0, 0x3f	; 63
      884:	f8 94       	cli
@@ -699,38 +626,26 @@ void can_init()
      890:	08 95       	ret
 
 00000892 <can_message_send>:
-
-void can_message_send(struct can_message* msg)
-{
      892:	1f 93       	push	r17
      894:	cf 93       	push	r28
      896:	df 93       	push	r29
      898:	ec 01       	movw	r28, r24
-
-	mcp2515_write(MCP_TXB0DLC, msg->length, 1);
      89a:	41 e0       	ldi	r20, 0x01	; 1
      89c:	6a 81       	ldd	r22, Y+2	; 0x02
      89e:	85 e3       	ldi	r24, 0x35	; 53
      8a0:	4f d0       	rcall	.+158    	; 0x940 <mcp2515_write>
-	mcp2515_write(MCP_TXB0SIDH, msg->id, 1);
      8a2:	41 e0       	ldi	r20, 0x01	; 1
      8a4:	68 81       	ld	r22, Y
      8a6:	81 e3       	ldi	r24, 0x31	; 49
      8a8:	4b d0       	rcall	.+150    	; 0x940 <mcp2515_write>
-	mcp2515_write(MCP_TXB0SIDL, msg->id, 1);
      8aa:	41 e0       	ldi	r20, 0x01	; 1
      8ac:	68 81       	ld	r22, Y
      8ae:	82 e3       	ldi	r24, 0x32	; 50
      8b0:	47 d0       	rcall	.+142    	; 0x940 <mcp2515_write>
-	
-	uint8_t i;
-	for (i = 0; i < msg->length; i++)
      8b2:	8a 81       	ldd	r24, Y+2	; 0x02
      8b4:	88 23       	and	r24, r24
      8b6:	61 f0       	breq	.+24     	; 0x8d0 <can_message_send+0x3e>
      8b8:	10 e0       	ldi	r17, 0x00	; 0
-	{
-		mcp2515_write(MCP_TXB0D(0), msg->data[i], 1);
      8ba:	fe 01       	movw	r30, r28
      8bc:	e1 0f       	add	r30, r17
      8be:	f1 1d       	adc	r31, r1
@@ -738,81 +653,42 @@ void can_message_send(struct can_message* msg)
      8c2:	63 81       	ldd	r22, Z+3	; 0x03
      8c4:	86 e3       	ldi	r24, 0x36	; 54
      8c6:	3c d0       	rcall	.+120    	; 0x940 <mcp2515_write>
-	mcp2515_write(MCP_TXB0DLC, msg->length, 1);
-	mcp2515_write(MCP_TXB0SIDH, msg->id, 1);
-	mcp2515_write(MCP_TXB0SIDL, msg->id, 1);
-	
-	uint8_t i;
-	for (i = 0; i < msg->length; i++)
      8c8:	1f 5f       	subi	r17, 0xFF	; 255
      8ca:	8a 81       	ldd	r24, Y+2	; 0x02
      8cc:	18 17       	cp	r17, r24
      8ce:	a8 f3       	brcs	.-22     	; 0x8ba <can_message_send+0x28>
-	{
-		mcp2515_write(MCP_TXB0D(0), msg->data[i], 1);
-	}
-	mcp2515_request(MCP_RTS_TX0);
      8d0:	81 e8       	ldi	r24, 0x81	; 129
      8d2:	4d d0       	rcall	.+154    	; 0x96e <mcp2515_request>
-	//Do something...
-}
      8d4:	df 91       	pop	r29
      8d6:	cf 91       	pop	r28
      8d8:	1f 91       	pop	r17
      8da:	08 95       	ret
 
 000008dc <mcp2515_reset>:
-	 spi_init();
-	 mcp2515_reset();
-}
-
-void mcp2515_reset()
-{
      8dc:	cf 93       	push	r28
      8de:	df 93       	push	r29
      8e0:	1f 92       	push	r1
      8e2:	cd b7       	in	r28, 0x3d	; 61
      8e4:	de b7       	in	r29, 0x3e	; 62
-	PORTB &= ~(1<<PINB4); // Select CAN-controller
      8e6:	c4 98       	cbi	0x18, 4	; 24
-	//SPSR &= ~(1 << SPIF);	
-	
-	uint8_t reset[] = {MCP_RESET};
      8e8:	80 ec       	ldi	r24, 0xC0	; 192
      8ea:	89 83       	std	Y+1, r24	; 0x01
-	spi_write(reset, 1);
      8ec:	61 e0       	ldi	r22, 0x01	; 1
      8ee:	ce 01       	movw	r24, r28
      8f0:	01 96       	adiw	r24, 0x01	; 1
      8f2:	2c d2       	rcall	.+1112   	; 0xd4c <spi_write>
-	
-	PORTB |= (1<<PINB4); // DeselectCAN-controller
      8f4:	c4 9a       	sbi	0x18, 4	; 24
-}
      8f6:	0f 90       	pop	r0
      8f8:	df 91       	pop	r29
      8fa:	cf 91       	pop	r28
      8fc:	08 95       	ret
 
 000008fe <mcp2515_init>:
-#include "MCP2515_driver.h"
-
-
-void mcp2515_init() 
-{
-	 spi_init();
      8fe:	fb d1       	rcall	.+1014   	; 0xcf6 <spi_init>
-	 mcp2515_reset();
      900:	ed cf       	rjmp	.-38     	; 0x8dc <mcp2515_reset>
      902:	08 95       	ret
 
 00000904 <mcp2515_read>:
-	
-	PORTB |= (1<<PINB4); // DeselectCAN-controller
-}
-
-void mcp2515_read(uint8_t address, uint8_t result[MAX_CAN_LENGTH], uint8_t data_size)
-{	
      904:	ff 92       	push	r15
      906:	0f 93       	push	r16
      908:	1f 93       	push	r17
@@ -823,30 +699,18 @@ void mcp2515_read(uint8_t address, uint8_t result[MAX_CAN_LENGTH], uint8_t data_
      912:	de b7       	in	r29, 0x3e	; 62
      914:	8b 01       	movw	r16, r22
      916:	f4 2e       	mov	r15, r20
-	PORTB &= ~(1<<PINB4); // Select CAN-controller
      918:	c4 98       	cbi	0x18, 4	; 24
-	//SPSR &= ~(1 << SPIF);
-	
-	uint8_t write[] = {MCP_READ, address};
      91a:	93 e0       	ldi	r25, 0x03	; 3
      91c:	99 83       	std	Y+1, r25	; 0x01
      91e:	8a 83       	std	Y+2, r24	; 0x02
-	spi_write(write, 2); // Send read instruction
      920:	62 e0       	ldi	r22, 0x02	; 2
      922:	ce 01       	movw	r24, r28
      924:	01 96       	adiw	r24, 0x01	; 1
      926:	12 d2       	rcall	.+1060   	; 0xd4c <spi_write>
-	
-	spi_read(result, data_size); // Readresult
      928:	6f 2d       	mov	r22, r15
      92a:	c8 01       	movw	r24, r16
      92c:	ea d1       	rcall	.+980    	; 0xd02 <spi_read>
-	
-	PORTB |= (1<<PINB4); // DeselectCAN-controller
      92e:	c4 9a       	sbi	0x18, 4	; 24
-	
-	
-}
      930:	0f 90       	pop	r0
      932:	0f 90       	pop	r0
      934:	df 91       	pop	r29
@@ -857,35 +721,23 @@ void mcp2515_read(uint8_t address, uint8_t result[MAX_CAN_LENGTH], uint8_t data_
      93e:	08 95       	ret
 
 00000940 <mcp2515_write>:
-
-void mcp2515_write(uint8_t address, uint8_t data, uint8_t data_size)
-{
      940:	cf 93       	push	r28
      942:	df 93       	push	r29
      944:	00 d0       	rcall	.+0      	; 0x946 <mcp2515_write+0x6>
      946:	1f 92       	push	r1
      948:	cd b7       	in	r28, 0x3d	; 61
      94a:	de b7       	in	r29, 0x3e	; 62
-	PORTB &= ~(1<<PINB4); // Select CAN-controller
      94c:	c4 98       	cbi	0x18, 4	; 24
-	//SPSR &= ~(1 << SPIF);
-	
-	uint8_t write[] = {MCP_WRITE, address, data};
      94e:	92 e0       	ldi	r25, 0x02	; 2
      950:	99 83       	std	Y+1, r25	; 0x01
      952:	8a 83       	std	Y+2, r24	; 0x02
      954:	6b 83       	std	Y+3, r22	; 0x03
-	spi_write(write, data_size + 2); // Send read instruction
      956:	62 e0       	ldi	r22, 0x02	; 2
      958:	64 0f       	add	r22, r20
      95a:	ce 01       	movw	r24, r28
      95c:	01 96       	adiw	r24, 0x01	; 1
      95e:	f6 d1       	rcall	.+1004   	; 0xd4c <spi_write>
-	
-	PORTB |= (1<<PINB4); // DeselectCAN-controller
      960:	c4 9a       	sbi	0x18, 4	; 24
-		
-}
      962:	0f 90       	pop	r0
      964:	0f 90       	pop	r0
      966:	0f 90       	pop	r0
@@ -894,65 +746,41 @@ void mcp2515_write(uint8_t address, uint8_t data, uint8_t data_size)
      96c:	08 95       	ret
 
 0000096e <mcp2515_request>:
-
-void mcp2515_request(uint8_t rqs)
-{
      96e:	cf 93       	push	r28
      970:	df 93       	push	r29
      972:	1f 92       	push	r1
      974:	cd b7       	in	r28, 0x3d	; 61
      976:	de b7       	in	r29, 0x3e	; 62
-	PORTB &= ~(1<<PINB4); // Select CAN-controller
      978:	c4 98       	cbi	0x18, 4	; 24
-	//SPSR &= ~(1 << SPIF);		
-		
-	uint8_t cmd[] = {rqs};
      97a:	89 83       	std	Y+1, r24	; 0x01
-	spi_write(cmd, 1);		
      97c:	61 e0       	ldi	r22, 0x01	; 1
      97e:	ce 01       	movw	r24, r28
      980:	01 96       	adiw	r24, 0x01	; 1
      982:	e4 d1       	rcall	.+968    	; 0xd4c <spi_write>
-	
-	PORTB |= (1<<PINB4); // Deselect CAN-controller
      984:	c4 9a       	sbi	0x18, 4	; 24
-}
      986:	0f 90       	pop	r0
      988:	df 91       	pop	r29
      98a:	cf 91       	pop	r28
      98c:	08 95       	ret
 
 0000098e <mcp2515_bit_modify>:
-
-// Modify bits in the register / See datasheet 12.10
-void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data) 
-{
      98e:	cf 93       	push	r28
      990:	df 93       	push	r29
      992:	00 d0       	rcall	.+0      	; 0x994 <mcp2515_bit_modify+0x6>
      994:	00 d0       	rcall	.+0      	; 0x996 <mcp2515_bit_modify+0x8>
      996:	cd b7       	in	r28, 0x3d	; 61
      998:	de b7       	in	r29, 0x3e	; 62
-	PORTB &= ~(1<<PINB4); // Select CAN-controller
      99a:	c4 98       	cbi	0x18, 4	; 24
-	//SPSR &= ~(1 << SPIF);	
-	
-	uint8_t bit_list[] = {MCP_BITMOD, address, mask, data};
      99c:	95 e0       	ldi	r25, 0x05	; 5
      99e:	99 83       	std	Y+1, r25	; 0x01
      9a0:	8a 83       	std	Y+2, r24	; 0x02
      9a2:	6b 83       	std	Y+3, r22	; 0x03
      9a4:	4c 83       	std	Y+4, r20	; 0x04
-	spi_write(bit_list, 4);	
      9a6:	64 e0       	ldi	r22, 0x04	; 4
      9a8:	ce 01       	movw	r24, r28
      9aa:	01 96       	adiw	r24, 0x01	; 1
      9ac:	cf d1       	rcall	.+926    	; 0xd4c <spi_write>
-	
-	PORTB |= (1<<PINB4); //Deselect CAN-controller
      9ae:	c4 9a       	sbi	0x18, 4	; 24
-
-}
      9b0:	0f 90       	pop	r0
      9b2:	0f 90       	pop	r0
      9b4:	0f 90       	pop	r0
@@ -962,46 +790,16 @@ void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data)
      9bc:	08 95       	ret
 
 000009be <oled_columb_range_select>:
-int joy_pos;
-
-
-void oled_write_c(uint8_t data) {
-	volatile uint8_t *adress = OLEDC_OFFSET;
-	*adress = data;
      9be:	91 e2       	ldi	r25, 0x21	; 33
      9c0:	90 93 00 10 	sts	0x1000, r25
-	//oled_display_activity();
-}
-
-void oled_columb_range_select(uint8_t start, uint8_t end) {
-	oled_write_c(OLED_COLUMB_SET);
-	if (start < OLED_COLUMBS) {
      9c4:	88 23       	and	r24, r24
      9c6:	1c f0       	brlt	.+6      	; 0x9ce <oled_columb_range_select+0x10>
-int joy_pos;
-
-
-void oled_write_c(uint8_t data) {
-	volatile uint8_t *adress = OLEDC_OFFSET;
-	*adress = data;
      9c8:	80 93 00 10 	sts	0x1000, r24
      9cc:	03 c0       	rjmp	.+6      	; 0x9d4 <oled_columb_range_select+0x16>
      9ce:	8f e7       	ldi	r24, 0x7F	; 127
      9d0:	80 93 00 10 	sts	0x1000, r24
-		oled_write_c(start);
-		} else {
-		oled_write_c(OLED_COLUMBS - 1);
-	}
-
-	if (end < OLED_COLUMBS) {
      9d4:	66 23       	and	r22, r22
      9d6:	1c f0       	brlt	.+6      	; 0x9de <oled_columb_range_select+0x20>
-int joy_pos;
-
-
-void oled_write_c(uint8_t data) {
-	volatile uint8_t *adress = OLEDC_OFFSET;
-	*adress = data;
      9d8:	60 93 00 10 	sts	0x1000, r22
      9dc:	08 95       	ret
      9de:	8f e7       	ldi	r24, 0x7F	; 127
@@ -1011,20 +809,8 @@ void oled_write_c(uint8_t data) {
 000009e6 <oled_page_select>:
      9e6:	92 e2       	ldi	r25, 0x22	; 34
      9e8:	90 93 00 10 	sts	0x1000, r25
-	}
-}
-
-void oled_page_select(uint8_t page) {
-	oled_write_c(OLED_PAGE_SET);
-	if (page < OLED_PAGES) {
      9ec:	88 30       	cpi	r24, 0x08	; 8
      9ee:	28 f4       	brcc	.+10     	; 0x9fa <oled_page_select+0x14>
-int joy_pos;
-
-
-void oled_write_c(uint8_t data) {
-	volatile uint8_t *adress = OLEDC_OFFSET;
-	*adress = data;
      9f0:	e0 e0       	ldi	r30, 0x00	; 0
      9f2:	f0 e1       	ldi	r31, 0x10	; 16
      9f4:	80 83       	st	Z, r24
@@ -1038,77 +824,34 @@ void oled_write_c(uint8_t data) {
      a04:	08 95       	ret
 
 00000a06 <oled_clear_page>:
-		oled_write_c(OLED_PAGES - 1);
-	}
-}
-
-void oled_clear_page(uint8_t page) {
-	if (page < OLED_PAGES) {
      a06:	88 30       	cpi	r24, 0x08	; 8
      a08:	60 f4       	brcc	.+24     	; 0xa22 <oled_clear_page+0x1c>
-		oled_page_select(page);
      a0a:	ed df       	rcall	.-38     	; 0x9e6 <oled_page_select>
-		oled_columb_range_select(0, OLED_COLUMBS - 1);
      a0c:	6f e7       	ldi	r22, 0x7F	; 127
      a0e:	80 e0       	ldi	r24, 0x00	; 0
      a10:	d6 df       	rcall	.-84     	; 0x9be <oled_columb_range_select>
      a12:	80 e8       	ldi	r24, 0x80	; 128
      a14:	90 e0       	ldi	r25, 0x00	; 0
-	*adress = data;
-}
-
-void oled_write_data(uint8_t data) {
-	volatile uint8_t *adress = OLEDD_OFFSET;
-	*adress = data;
      a16:	e0 e0       	ldi	r30, 0x00	; 0
      a18:	f2 e1       	ldi	r31, 0x12	; 18
      a1a:	10 82       	st	Z, r1
      a1c:	01 97       	sbiw	r24, 0x01	; 1
-
-void oled_clear_page(uint8_t page) {
-	if (page < OLED_PAGES) {
-		oled_page_select(page);
-		oled_columb_range_select(0, OLED_COLUMBS - 1);
-		for (int i = 0; i < OLED_COLUMBS; i++) {
      a1e:	00 97       	sbiw	r24, 0x00	; 0
      a20:	e1 f7       	brne	.-8      	; 0xa1a <oled_clear_page+0x14>
      a22:	08 95       	ret
 
 00000a24 <oled_clear_screen>:
-			oled_write_data(0x00);
-		}
-	}
-}
-
-void oled_clear_screen() {
      a24:	cf 93       	push	r28
      a26:	c0 e0       	ldi	r28, 0x00	; 0
-	for (int i = 0; i < OLED_PAGES; i++) {
-		oled_clear_page(i);
      a28:	8c 2f       	mov	r24, r28
      a2a:	ed df       	rcall	.-38     	; 0xa06 <oled_clear_page>
      a2c:	cf 5f       	subi	r28, 0xFF	; 255
-		}
-	}
-}
-
-void oled_clear_screen() {
-	for (int i = 0; i < OLED_PAGES; i++) {
      a2e:	c8 30       	cpi	r28, 0x08	; 8
      a30:	d9 f7       	brne	.-10     	; 0xa28 <oled_clear_screen+0x4>
-		oled_clear_page(i);
-	}
-}
      a32:	cf 91       	pop	r28
      a34:	08 95       	ret
 
 00000a36 <oled_init>:
-int joy_pos;
-
-
-void oled_write_c(uint8_t data) {
-	volatile uint8_t *adress = OLEDC_OFFSET;
-	*adress = data;
      a36:	e0 e0       	ldi	r30, 0x00	; 0
      a38:	f0 e1       	ldi	r31, 0x10	; 16
      a3a:	8e ea       	ldi	r24, 0xAE	; 174
@@ -1154,52 +897,24 @@ void oled_write_c(uint8_t data) {
      a8a:	80 83       	st	Z, r24
      a8c:	8f ea       	ldi	r24, 0xAF	; 175
      a8e:	80 83       	st	Z, r24
-	oled_write_c(0xad);	//master configuration
-	oled_write_c(0x00);
-	oled_write_c(0xa4);	//out follows RAM content
-	oled_write_c(0xa6);	//set normal display
-	oled_write_c(0xaf);	//display on
-	oled_clear_screen();
      a90:	c9 df       	rcall	.-110    	; 0xa24 <oled_clear_screen>
-	//current_activity = &oled_main;
-	joy_pos = 0;
      a92:	10 92 97 03 	sts	0x0397, r1
      a96:	10 92 96 03 	sts	0x0396, r1
-	//oled_display_activity();
-}
      a9a:	08 95       	ret
 
 00000a9c <oled_print_char_of_size>:
-}
-
-void oled_print_char_of_size(char letter, uint8_t size) {
-	uint8_t char_length = 0;
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
      a9c:	62 30       	cpi	r22, 0x02	; 2
      a9e:	41 f4       	brne	.+16     	; 0xab0 <oled_print_char_of_size+0x14>
-		char_length = 4;
-		letter_bitmap = font4[letter - ' '];
      aa0:	94 e0       	ldi	r25, 0x04	; 4
      aa2:	89 02       	muls	r24, r25
      aa4:	a0 01       	movw	r20, r0
      aa6:	11 24       	eor	r1, r1
      aa8:	40 51       	subi	r20, 0x10	; 16
      aaa:	50 40       	sbci	r21, 0x00	; 0
-
-void oled_print_char_of_size(char letter, uint8_t size) {
-	uint8_t char_length = 0;
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
-		char_length = 4;
      aac:	24 e0       	ldi	r18, 0x04	; 4
      aae:	25 c0       	rjmp	.+74     	; 0xafa <oled_print_char_of_size+0x5e>
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
      ab0:	61 30       	cpi	r22, 0x01	; 1
      ab2:	89 f4       	brne	.+34     	; 0xad6 <oled_print_char_of_size+0x3a>
-		char_length = 5;
-		letter_bitmap = font5[letter - ' '];
      ab4:	48 2f       	mov	r20, r24
      ab6:	55 27       	eor	r21, r21
      ab8:	47 fd       	sbrc	r20, 7
@@ -1215,53 +930,21 @@ void oled_print_char_of_size(char letter, uint8_t size) {
      acc:	59 1f       	adc	r21, r25
      ace:	44 51       	subi	r20, 0x14	; 20
      ad0:	5e 4f       	sbci	r21, 0xFE	; 254
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
-		char_length = 4;
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
-		char_length = 5;
      ad2:	25 e0       	ldi	r18, 0x05	; 5
      ad4:	12 c0       	rjmp	.+36     	; 0xafa <oled_print_char_of_size+0x5e>
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
-		letter_bitmap = font8[letter - ' '];
      ad6:	98 e0       	ldi	r25, 0x08	; 8
      ad8:	89 02       	muls	r24, r25
      ada:	a0 01       	movw	r20, r0
      adc:	11 24       	eor	r1, r1
      ade:	49 53       	subi	r20, 0x39	; 57
      ae0:	5d 4f       	sbci	r21, 0xFD	; 253
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
-		char_length = 5;
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
      ae2:	28 e0       	ldi	r18, 0x08	; 8
      ae4:	0a c0       	rjmp	.+20     	; 0xafa <oled_print_char_of_size+0x5e>
      ae6:	fa 01       	movw	r30, r20
      ae8:	e8 0f       	add	r30, r24
      aea:	f9 1f       	adc	r31, r25
-		letter_bitmap = font8[letter - ' '];
-	}
-	for (int i = 0; i < char_length; i++) {
-      oled_write_data(pgm_read_byte(&(letter_bitmap[i])));
      aec:	e4 91       	lpm	r30, Z
-	*adress = data;
-}
-
-void oled_write_data(uint8_t data) {
-	volatile uint8_t *adress = OLEDD_OFFSET;
-	*adress = data;
      aee:	ec 93       	st	X, r30
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
-		letter_bitmap = font8[letter - ' '];
-	}
-	for (int i = 0; i < char_length; i++) {
      af0:	01 96       	adiw	r24, 0x01	; 1
      af2:	82 17       	cp	r24, r18
      af4:	93 07       	cpc	r25, r19
@@ -1270,47 +953,23 @@ void oled_write_data(uint8_t data) {
      afa:	30 e0       	ldi	r19, 0x00	; 0
      afc:	80 e0       	ldi	r24, 0x00	; 0
      afe:	90 e0       	ldi	r25, 0x00	; 0
-	*adress = data;
-}
-
-void oled_write_data(uint8_t data) {
-	volatile uint8_t *adress = OLEDD_OFFSET;
-	*adress = data;
      b00:	a0 e0       	ldi	r26, 0x00	; 0
      b02:	b2 e1       	ldi	r27, 0x12	; 18
      b04:	f0 cf       	rjmp	.-32     	; 0xae6 <oled_print_char_of_size+0x4a>
 
 00000b06 <oled_print_char_of_size_inverted>:
-}
-
-void oled_print_char_of_size_inverted(char letter, uint8_t size) {
-	uint8_t char_length = 0;
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
      b06:	62 30       	cpi	r22, 0x02	; 2
      b08:	41 f4       	brne	.+16     	; 0xb1a <oled_print_char_of_size_inverted+0x14>
-		char_length = 4;
-		letter_bitmap = font4[letter - ' '];
      b0a:	94 e0       	ldi	r25, 0x04	; 4
      b0c:	89 02       	muls	r24, r25
      b0e:	a0 01       	movw	r20, r0
      b10:	11 24       	eor	r1, r1
      b12:	40 51       	subi	r20, 0x10	; 16
      b14:	50 40       	sbci	r21, 0x00	; 0
-
-void oled_print_char_of_size_inverted(char letter, uint8_t size) {
-	uint8_t char_length = 0;
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
-		char_length = 4;
      b16:	24 e0       	ldi	r18, 0x04	; 4
      b18:	26 c0       	rjmp	.+76     	; 0xb66 <oled_print_char_of_size_inverted+0x60>
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
      b1a:	61 30       	cpi	r22, 0x01	; 1
      b1c:	89 f4       	brne	.+34     	; 0xb40 <oled_print_char_of_size_inverted+0x3a>
-		char_length = 5;
-		letter_bitmap = font5[letter - ' '];
      b1e:	48 2f       	mov	r20, r24
      b20:	55 27       	eor	r21, r21
      b22:	47 fd       	sbrc	r20, 7
@@ -1326,54 +985,22 @@ void oled_print_char_of_size_inverted(char letter, uint8_t size) {
      b36:	59 1f       	adc	r21, r25
      b38:	44 51       	subi	r20, 0x14	; 20
      b3a:	5e 4f       	sbci	r21, 0xFE	; 254
-	unsigned char *letter_bitmap;
-	if (size == FONT_SIZE_SMALL) {
-		char_length = 4;
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
-		char_length = 5;
      b3c:	25 e0       	ldi	r18, 0x05	; 5
      b3e:	13 c0       	rjmp	.+38     	; 0xb66 <oled_print_char_of_size_inverted+0x60>
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
-		letter_bitmap = font8[letter - ' '];
      b40:	98 e0       	ldi	r25, 0x08	; 8
      b42:	89 02       	muls	r24, r25
      b44:	a0 01       	movw	r20, r0
      b46:	11 24       	eor	r1, r1
      b48:	49 53       	subi	r20, 0x39	; 57
      b4a:	5d 4f       	sbci	r21, 0xFD	; 253
-		letter_bitmap = font4[letter - ' '];
-		} else if (size == FONT_SIZE_MEDIUM) {
-		char_length = 5;
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
      b4c:	28 e0       	ldi	r18, 0x08	; 8
      b4e:	0b c0       	rjmp	.+22     	; 0xb66 <oled_print_char_of_size_inverted+0x60>
      b50:	fa 01       	movw	r30, r20
      b52:	e8 0f       	add	r30, r24
      b54:	f9 1f       	adc	r31, r25
-		letter_bitmap = font8[letter - ' '];
-	}
-	for (int i = 0; i < char_length; i++) {
-      oled_write_data(~pgm_read_byte(&(letter_bitmap[i])));
      b56:	e4 91       	lpm	r30, Z
      b58:	e0 95       	com	r30
-	*adress = data;
-}
-
-void oled_write_data(uint8_t data) {
-	volatile uint8_t *adress = OLEDD_OFFSET;
-	*adress = data;
      b5a:	ec 93       	st	X, r30
-		letter_bitmap = font5[letter - ' '];
-		} else {
-		char_length = 8;
-		letter_bitmap = font8[letter - ' '];
-	}
-	for (int i = 0; i < char_length; i++) {
      b5c:	01 96       	adiw	r24, 0x01	; 1
      b5e:	82 17       	cp	r24, r18
      b60:	93 07       	cpc	r25, r19
@@ -1382,85 +1009,49 @@ void oled_write_data(uint8_t data) {
      b66:	30 e0       	ldi	r19, 0x00	; 0
      b68:	80 e0       	ldi	r24, 0x00	; 0
      b6a:	90 e0       	ldi	r25, 0x00	; 0
-	*adress = data;
-}
-
-void oled_write_data(uint8_t data) {
-	volatile uint8_t *adress = OLEDD_OFFSET;
-	*adress = data;
      b6c:	a0 e0       	ldi	r26, 0x00	; 0
      b6e:	b2 e1       	ldi	r27, 0x12	; 18
      b70:	ef cf       	rjmp	.-34     	; 0xb50 <oled_print_char_of_size_inverted+0x4a>
 
 00000b72 <oled_print_char>:
-
-uint8_t printf_page = 0;
-uint8_t printf_size = 0;
-
-uint8_t oled_print_char(char letter) {
-	if (letter == '\n') {
      b72:	8a 30       	cpi	r24, 0x0A	; 10
      b74:	51 f4       	brne	.+20     	; 0xb8a <oled_print_char+0x18>
-		printf_page += 1;
      b76:	80 91 91 02 	lds	r24, 0x0291
      b7a:	8f 5f       	subi	r24, 0xFF	; 255
      b7c:	80 93 91 02 	sts	0x0291, r24
-		oled_page_select(printf_page);
      b80:	32 df       	rcall	.-412    	; 0x9e6 <oled_page_select>
-		oled_columb_range_select(0, OLED_COLUMBS);
      b82:	60 e8       	ldi	r22, 0x80	; 128
      b84:	80 e0       	ldi	r24, 0x00	; 0
      b86:	1b df       	rcall	.-458    	; 0x9be <oled_columb_range_select>
      b88:	03 c0       	rjmp	.+6      	; 0xb90 <oled_print_char+0x1e>
-		} else {
-		oled_print_char_of_size(letter, printf_size);
      b8a:	60 91 90 02 	lds	r22, 0x0290
      b8e:	86 df       	rcall	.-244    	; 0xa9c <oled_print_char_of_size>
-		uint8_t columb_adder = 0;
-	}
-	return 0;
-}
      b90:	80 e0       	ldi	r24, 0x00	; 0
      b92:	08 95       	ret
 
 00000b94 <oled_print_char_inverted>:
-
-uint8_t oled_print_char_inverted(char letter) {
-	if (letter == '\n') {
      b94:	8a 30       	cpi	r24, 0x0A	; 10
      b96:	51 f4       	brne	.+20     	; 0xbac <oled_print_char_inverted+0x18>
-		printf_page += 1;
      b98:	80 91 91 02 	lds	r24, 0x0291
      b9c:	8f 5f       	subi	r24, 0xFF	; 255
      b9e:	80 93 91 02 	sts	0x0291, r24
-		oled_page_select(printf_page);
      ba2:	21 df       	rcall	.-446    	; 0x9e6 <oled_page_select>
-		oled_columb_range_select(0, OLED_COLUMBS);
      ba4:	60 e8       	ldi	r22, 0x80	; 128
      ba6:	80 e0       	ldi	r24, 0x00	; 0
      ba8:	0a df       	rcall	.-492    	; 0x9be <oled_columb_range_select>
      baa:	03 c0       	rjmp	.+6      	; 0xbb2 <oled_print_char_inverted+0x1e>
-	} else {
-		oled_print_char_of_size_inverted(letter, printf_size);
      bac:	60 91 90 02 	lds	r22, 0x0290
      bb0:	aa df       	rcall	.-172    	; 0xb06 <oled_print_char_of_size_inverted>
-		uint8_t columb_adder = 0;
-	}
-	return 0;
-}
      bb2:	80 e0       	ldi	r24, 0x00	; 0
      bb4:	08 95       	ret
 
 00000bb6 <oled_printf>:
-
-void oled_printf(char text[]){
      bb6:	ef 92       	push	r14
      bb8:	ff 92       	push	r15
      bba:	0f 93       	push	r16
      bbc:	1f 93       	push	r17
      bbe:	cf 93       	push	r28
      bc0:	df 93       	push	r29
-	int lenght = strlen(text);
      bc2:	fc 01       	movw	r30, r24
      bc4:	01 90       	ld	r0, Z+
      bc6:	00 20       	and	r0, r0
@@ -1469,34 +1060,20 @@ void oled_printf(char text[]){
      bcc:	7f 01       	movw	r14, r30
      bce:	e8 1a       	sub	r14, r24
      bd0:	f9 0a       	sbc	r15, r25
-	//printf("size =  %d \r\n", lenght);
-	for (int c = 0; c<lenght; c++){
      bd2:	1e 14       	cp	r1, r14
      bd4:	1f 04       	cpc	r1, r15
      bd6:	5c f4       	brge	.+22     	; 0xbee <oled_printf+0x38>
      bd8:	8c 01       	movw	r16, r24
      bda:	c0 e0       	ldi	r28, 0x00	; 0
      bdc:	d0 e0       	ldi	r29, 0x00	; 0
-		//printf("letter =  %d \r\n", c);
-		oled_print_char(text[c]);
      bde:	f8 01       	movw	r30, r16
      be0:	81 91       	ld	r24, Z+
      be2:	8f 01       	movw	r16, r30
      be4:	c6 df       	rcall	.-116    	; 0xb72 <oled_print_char>
-}
-
-void oled_printf(char text[]){
-	int lenght = strlen(text);
-	//printf("size =  %d \r\n", lenght);
-	for (int c = 0; c<lenght; c++){
      be6:	21 96       	adiw	r28, 0x01	; 1
      be8:	ec 16       	cp	r14, r28
      bea:	fd 06       	cpc	r15, r29
      bec:	c1 f7       	brne	.-16     	; 0xbde <oled_printf+0x28>
-		//printf("letter =  %d \r\n", c);
-		oled_print_char(text[c]);
-	}
-}
      bee:	df 91       	pop	r29
      bf0:	cf 91       	pop	r28
      bf2:	1f 91       	pop	r17
@@ -1506,15 +1083,12 @@ void oled_printf(char text[]){
      bfa:	08 95       	ret
 
 00000bfc <oled_printf_inverted>:
-
-void oled_printf_inverted(char text[]){
      bfc:	ef 92       	push	r14
      bfe:	ff 92       	push	r15
      c00:	0f 93       	push	r16
      c02:	1f 93       	push	r17
      c04:	cf 93       	push	r28
      c06:	df 93       	push	r29
-	int lenght = strlen(text);
      c08:	fc 01       	movw	r30, r24
      c0a:	01 90       	ld	r0, Z+
      c0c:	00 20       	and	r0, r0
@@ -1523,34 +1097,20 @@ void oled_printf_inverted(char text[]){
      c12:	7f 01       	movw	r14, r30
      c14:	e8 1a       	sub	r14, r24
      c16:	f9 0a       	sbc	r15, r25
-	//printf("size =  %d \r\n", lenght);
-	for (int c = 0; c<lenght; c++){
      c18:	1e 14       	cp	r1, r14
      c1a:	1f 04       	cpc	r1, r15
      c1c:	5c f4       	brge	.+22     	; 0xc34 <oled_printf_inverted+0x38>
      c1e:	8c 01       	movw	r16, r24
      c20:	c0 e0       	ldi	r28, 0x00	; 0
      c22:	d0 e0       	ldi	r29, 0x00	; 0
-		//printf("letter =  %d \r\n", c);
-		oled_print_char_inverted(text[c]);
      c24:	f8 01       	movw	r30, r16
      c26:	81 91       	ld	r24, Z+
      c28:	8f 01       	movw	r16, r30
      c2a:	b4 df       	rcall	.-152    	; 0xb94 <oled_print_char_inverted>
-}
-
-void oled_printf_inverted(char text[]){
-	int lenght = strlen(text);
-	//printf("size =  %d \r\n", lenght);
-	for (int c = 0; c<lenght; c++){
      c2c:	21 96       	adiw	r28, 0x01	; 1
      c2e:	ec 16       	cp	r14, r28
      c30:	fd 06       	cpc	r15, r29
      c32:	c1 f7       	brne	.-16     	; 0xc24 <oled_printf_inverted+0x28>
-		//printf("letter =  %d \r\n", c);
-		oled_print_char_inverted(text[c]);
-	}
-}
      c34:	df 91       	pop	r29
      c36:	cf 91       	pop	r28
      c38:	1f 91       	pop	r17
@@ -1560,231 +1120,112 @@ void oled_printf_inverted(char text[]){
      c40:	08 95       	ret
 
 00000c42 <oled_get_joy_pos>:
-	oled_set_joy_pos(joy_pos);
-
-}
-
-int oled_get_joy_pos(){
-	return xmem_read(JOY_POS_ADDRESS);
      c42:	82 e0       	ldi	r24, 0x02	; 2
      c44:	98 e1       	ldi	r25, 0x18	; 24
      c46:	b4 d0       	rcall	.+360    	; 0xdb0 <xmem_read>
-}
      c48:	90 e0       	ldi	r25, 0x00	; 0
      c4a:	08 95       	ret
 
 00000c4c <oled_display_activity>:
-		//printf("letter =  %d \r\n", c);
-		oled_print_char_inverted(text[c]);
-	}
-}
-
-void oled_display_activity(){
      c4c:	cf 93       	push	r28
      c4e:	df 93       	push	r29
-	oled_clear_screen();
      c50:	e9 de       	rcall	.-558    	; 0xa24 <oled_clear_screen>
-	int joy_pos = oled_get_joy_pos();
      c52:	f7 df       	rcall	.-18     	; 0xc42 <oled_get_joy_pos>
      c54:	ec 01       	movw	r28, r24
-			oled_printf_inverted(current_activity->oled_string[i]);
-		else
-			oled_printf(current_activity->oled_string[i]);
-	}*/
-	
-	oled_page_select(1);
      c56:	81 e0       	ldi	r24, 0x01	; 1
      c58:	c6 de       	rcall	.-628    	; 0x9e6 <oled_page_select>
-	if(joy_pos == 0)
      c5a:	20 97       	sbiw	r28, 0x00	; 0
      c5c:	59 f4       	brne	.+22     	; 0xc74 <oled_display_activity+0x28>
-		oled_printf_inverted("Spring \n");
      c5e:	82 e7       	ldi	r24, 0x72	; 114
      c60:	91 e0       	ldi	r25, 0x01	; 1
      c62:	cc df       	rcall	.-104    	; 0xbfc <oled_printf_inverted>
-	else
-		oled_printf("Spring \n");
-	
-	oled_page_select(2);
      c64:	82 e0       	ldi	r24, 0x02	; 2
      c66:	bf de       	rcall	.-642    	; 0x9e6 <oled_page_select>
-	if(joy_pos == 1)
-		oled_printf_inverted("Summer \n");
-	else
-		oled_printf("Summer \n");
      c68:	8b e7       	ldi	r24, 0x7B	; 123
      c6a:	91 e0       	ldi	r25, 0x01	; 1
      c6c:	a4 df       	rcall	.-184    	; 0xbb6 <oled_printf>
-	
-	oled_page_select(3);
      c6e:	83 e0       	ldi	r24, 0x03	; 3
      c70:	ba de       	rcall	.-652    	; 0x9e6 <oled_page_select>
      c72:	19 c0       	rjmp	.+50     	; 0xca6 <oled_display_activity+0x5a>
-	
-	oled_page_select(1);
-	if(joy_pos == 0)
-		oled_printf_inverted("Spring \n");
-	else
-		oled_printf("Spring \n");
      c74:	82 e7       	ldi	r24, 0x72	; 114
      c76:	91 e0       	ldi	r25, 0x01	; 1
      c78:	9e df       	rcall	.-196    	; 0xbb6 <oled_printf>
-	
-	oled_page_select(2);
      c7a:	82 e0       	ldi	r24, 0x02	; 2
      c7c:	b4 de       	rcall	.-664    	; 0x9e6 <oled_page_select>
-	if(joy_pos == 1)
      c7e:	c1 30       	cpi	r28, 0x01	; 1
      c80:	d1 05       	cpc	r29, r1
      c82:	31 f4       	brne	.+12     	; 0xc90 <oled_display_activity+0x44>
-		oled_printf_inverted("Summer \n");
      c84:	8b e7       	ldi	r24, 0x7B	; 123
      c86:	91 e0       	ldi	r25, 0x01	; 1
      c88:	b9 df       	rcall	.-142    	; 0xbfc <oled_printf_inverted>
-	else
-		oled_printf("Summer \n");
-	
-	oled_page_select(3);
      c8a:	83 e0       	ldi	r24, 0x03	; 3
      c8c:	ac de       	rcall	.-680    	; 0x9e6 <oled_page_select>
      c8e:	0b c0       	rjmp	.+22     	; 0xca6 <oled_display_activity+0x5a>
-	
-	oled_page_select(2);
-	if(joy_pos == 1)
-		oled_printf_inverted("Summer \n");
-	else
-		oled_printf("Summer \n");
      c90:	8b e7       	ldi	r24, 0x7B	; 123
      c92:	91 e0       	ldi	r25, 0x01	; 1
      c94:	90 df       	rcall	.-224    	; 0xbb6 <oled_printf>
-	
-	oled_page_select(3);
      c96:	83 e0       	ldi	r24, 0x03	; 3
      c98:	a6 de       	rcall	.-692    	; 0x9e6 <oled_page_select>
-	if(joy_pos == 2)
      c9a:	22 97       	sbiw	r28, 0x02	; 2
      c9c:	21 f4       	brne	.+8      	; 0xca6 <oled_display_activity+0x5a>
-		oled_printf_inverted("Return \n");
      c9e:	84 e8       	ldi	r24, 0x84	; 132
      ca0:	91 e0       	ldi	r25, 0x01	; 1
      ca2:	ac df       	rcall	.-168    	; 0xbfc <oled_printf_inverted>
      ca4:	03 c0       	rjmp	.+6      	; 0xcac <oled_display_activity+0x60>
-	else
-		oled_printf("Return \n");
      ca6:	84 e8       	ldi	r24, 0x84	; 132
      ca8:	91 e0       	ldi	r25, 0x01	; 1
      caa:	85 df       	rcall	.-246    	; 0xbb6 <oled_printf>
-}
      cac:	df 91       	pop	r29
      cae:	cf 91       	pop	r28
      cb0:	08 95       	ret
 
 00000cb2 <oled_set_joy_pos>:
-int oled_get_joy_pos(){
-	return xmem_read(JOY_POS_ADDRESS);
-}
-
-void oled_set_joy_pos(int joy_pos){
-	xmem_write(joy_pos, JOY_POS_ADDRESS);
      cb2:	62 e0       	ldi	r22, 0x02	; 2
      cb4:	78 e1       	ldi	r23, 0x18	; 24
      cb6:	78 c0       	rjmp	.+240    	; 0xda8 <xmem_write>
      cb8:	08 95       	ret
 
 00000cba <oled_actualise_joy_pos>:
-	else
-		oled_printf("Return \n");
-}
-
-void oled_actualise_joy_pos(int joy_direction)
-{
      cba:	cf 93       	push	r28
      cbc:	df 93       	push	r29
      cbe:	ec 01       	movw	r28, r24
-	int joy_pos = oled_get_joy_pos();	
      cc0:	c0 df       	rcall	.-128    	; 0xc42 <oled_get_joy_pos>
-	if(joy_direction == UP)
      cc2:	c2 30       	cpi	r28, 0x02	; 2
      cc4:	d1 05       	cpc	r29, r1
      cc6:	21 f4       	brne	.+8      	; 0xcd0 <oled_actualise_joy_pos+0x16>
-		if (joy_pos==0){
      cc8:	00 97       	sbiw	r24, 0x00	; 0
      cca:	61 f0       	breq	.+24     	; 0xce4 <oled_actualise_joy_pos+0x2a>
-			joy_pos=2;
-		}else{
-			joy_pos = (joy_pos - 1);
      ccc:	01 97       	sbiw	r24, 0x01	; 1
      cce:	0f c0       	rjmp	.+30     	; 0xcee <oled_actualise_joy_pos+0x34>
-		}
-	else if(joy_direction == DOWN)
      cd0:	23 97       	sbiw	r28, 0x03	; 3
      cd2:	69 f4       	brne	.+26     	; 0xcee <oled_actualise_joy_pos+0x34>
-		if (joy_pos==2){
      cd4:	82 30       	cpi	r24, 0x02	; 2
      cd6:	91 05       	cpc	r25, r1
      cd8:	41 f0       	breq	.+16     	; 0xcea <oled_actualise_joy_pos+0x30>
-			joy_pos=0;
-		}else{
-			joy_pos = (joy_pos + 1)%3;
      cda:	01 96       	adiw	r24, 0x01	; 1
      cdc:	63 e0       	ldi	r22, 0x03	; 3
      cde:	70 e0       	ldi	r23, 0x00	; 0
      ce0:	33 d1       	rcall	.+614    	; 0xf48 <__divmodhi4>
      ce2:	05 c0       	rjmp	.+10     	; 0xcee <oled_actualise_joy_pos+0x34>
-void oled_actualise_joy_pos(int joy_direction)
-{
-	int joy_pos = oled_get_joy_pos();	
-	if(joy_direction == UP)
-		if (joy_pos==0){
-			joy_pos=2;
      ce4:	82 e0       	ldi	r24, 0x02	; 2
      ce6:	90 e0       	ldi	r25, 0x00	; 0
      ce8:	02 c0       	rjmp	.+4      	; 0xcee <oled_actualise_joy_pos+0x34>
-		}else{
-			joy_pos = (joy_pos - 1);
-		}
-	else if(joy_direction == DOWN)
-		if (joy_pos==2){
-			joy_pos=0;
      cea:	80 e0       	ldi	r24, 0x00	; 0
      cec:	90 e0       	ldi	r25, 0x00	; 0
-		}else{
-			joy_pos = (joy_pos + 1)%3;
-		}
-	oled_set_joy_pos(joy_pos);
      cee:	e1 df       	rcall	.-62     	; 0xcb2 <oled_set_joy_pos>
-
-}
      cf0:	df 91       	pop	r29
      cf2:	cf 91       	pop	r28
      cf4:	08 95       	ret
 
 00000cf6 <spi_init>:
-#include "spi.h"
-
-void spi_init() 
-{
-	/* Set MOSI and SCK and CS output, all others input */
-	DDRB = (1 << PB5) | (1 << PB7) | (1 << PB4);
      cf6:	80 eb       	ldi	r24, 0xB0	; 176
      cf8:	87 bb       	out	0x17, r24	; 23
-	PORTB |= (1 << PB4);
      cfa:	c4 9a       	sbi	0x18, 4	; 24
-	/* Enable interrupt */
-
-	// SPCR = 1<<SPIE;
-
-	/* Enable SPI, Master, set clock rate fck/16 , SPI mode 0 by default*/
-	SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);// | (1<<SPIE)
      cfc:	81 e5       	ldi	r24, 0x51	; 81
      cfe:	8d b9       	out	0x0d, r24	; 13
      d00:	08 95       	ret
 
 00000d02 <spi_read>:
-}
-
-void spi_read(uint8_t *receive_data, uint8_t data_length) 
-{
      d02:	cf 93       	push	r28
      d04:	df 93       	push	r29
      d06:	cd b7       	in	r28, 0x3d	; 61
@@ -1795,9 +1236,6 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      d10:	de bf       	out	0x3e, r29	; 62
      d12:	0f be       	out	0x3f, r0	; 63
      d14:	cd bf       	out	0x3d, r28	; 61
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	
-	for (int i = 0; i < data_length; i++)
      d16:	66 23       	and	r22, r22
      d18:	81 f0       	breq	.+32     	; 0xd3a <spi_read+0x38>
      d1a:	fe 01       	movw	r30, r28
@@ -1807,31 +1245,15 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      d22:	cf 01       	movw	r24, r30
      d24:	86 0f       	add	r24, r22
      d26:	91 1d       	adc	r25, r1
-	{
-		SPDR = dummy_data[i];
      d28:	21 91       	ld	r18, Z+
      d2a:	2f b9       	out	0x0f, r18	; 15
-		while (!(SPSR & (1 << SPIF)));
      d2c:	77 9b       	sbis	0x0e, 7	; 14
      d2e:	fe cf       	rjmp	.-4      	; 0xd2c <spi_read+0x2a>
-		receive_data[i] = SPDR;
      d30:	2f b1       	in	r18, 0x0f	; 15
      d32:	2d 93       	st	X+, r18
-
-void spi_read(uint8_t *receive_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	
-	for (int i = 0; i < data_length; i++)
      d34:	e8 17       	cp	r30, r24
      d36:	f9 07       	cpc	r31, r25
      d38:	b9 f7       	brne	.-18     	; 0xd28 <spi_read+0x26>
-		SPDR = dummy_data[i];
-		while (!(SPSR & (1 << SPIF)));
-		receive_data[i] = SPDR;
-	}
-	
-}
      d3a:	2a 96       	adiw	r28, 0x0a	; 10
      d3c:	0f b6       	in	r0, 0x3f	; 63
      d3e:	f8 94       	cli
@@ -1843,11 +1265,6 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      d4a:	08 95       	ret
 
 00000d4c <spi_write>:
-
-void spi_write(uint8_t *send_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	for (int i = 0; i < data_length; i++)
      d4c:	26 2f       	mov	r18, r22
      d4e:	30 e0       	ldi	r19, 0x00	; 0
      d50:	12 16       	cp	r1, r18
@@ -1857,21 +1274,11 @@ void spi_write(uint8_t *send_data, uint8_t data_length)
      d58:	f9 2f       	mov	r31, r25
      d5a:	80 e0       	ldi	r24, 0x00	; 0
      d5c:	90 e0       	ldi	r25, 0x00	; 0
-	{
-		SPDR = send_data[i];
      d5e:	41 91       	ld	r20, Z+
      d60:	4f b9       	out	0x0f, r20	; 15
-		while (!(SPSR & (1 << SPIF)));
      d62:	77 9b       	sbis	0x0e, 7	; 14
      d64:	fe cf       	rjmp	.-4      	; 0xd62 <spi_write+0x16>
-		dummy_data[i] = SPDR;
      d66:	4f b1       	in	r20, 0x0f	; 15
-}
-
-void spi_write(uint8_t *send_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	for (int i = 0; i < data_length; i++)
      d68:	01 96       	adiw	r24, 0x01	; 1
      d6a:	82 17       	cp	r24, r18
      d6c:	93 07       	cpc	r25, r19
@@ -1879,57 +1286,24 @@ void spi_write(uint8_t *send_data, uint8_t data_length)
      d70:	08 95       	ret
 
 00000d72 <USART_Transmit>:
-
-//for 5 to 8 Data bits
-void USART_Transmit(unsigned char data)
-{
-	//wait for empty transmit buffer
-	while(!(UCSR0A & (1<<UDRE0)));//or UDRE1
      d72:	5d 9b       	sbis	0x0b, 5	; 11
      d74:	fe cf       	rjmp	.-4      	; 0xd72 <USART_Transmit>
-	
-	//Put data into buffer, sends the data
-	UDR0 = data;//or UDR1
      d76:	8c b9       	out	0x0c, r24	; 12
      d78:	08 95       	ret
 
 00000d7a <USART_Receive>:
-}
-
-unsigned char USART_Receive(void)
-{
-	//Wait for data to be received
-	while((UCSR0A & (1<<RXC0)));
      d7a:	5f 99       	sbic	0x0b, 7	; 11
      d7c:	fe cf       	rjmp	.-4      	; 0xd7a <USART_Receive>
-	
-	//Get and return data from buffer
-	return UDR0;//or UDR1
      d7e:	8c b1       	in	r24, 0x0c	; 12
-}
      d80:	08 95       	ret
 
 00000d82 <USART_Init>:
-
-void USART_Init(unsigned int ubrr)
-{
-	// Set baud rate
-	UBRR0H = (unsigned char) (ubrr>>8);
      d82:	90 bd       	out	0x20, r25	; 32
-	UBRR0L = (unsigned char) ubrr;
      d84:	89 b9       	out	0x09, r24	; 9
-	
-	
-	// Enable receiver and transmitter
-	UCSR0B = (1<<RXEN0)  | (1<<TXEN0) | (1<<RXCIE0);
      d86:	88 e9       	ldi	r24, 0x98	; 152
      d88:	8a b9       	out	0x0a, r24	; 10
-	
-	//Set frame format: 8 data, 2 stop bit
-	UCSR0C = (1<<URSEL0) | (1<<USBS0) | (3<<UCSZ00); // or USBS1 or other one
      d8a:	8e e8       	ldi	r24, 0x8E	; 142
      d8c:	80 bd       	out	0x20, r24	; 32
-	fdevopen(USART_Transmit, USART_Receive);
      d8e:	6d eb       	ldi	r22, 0xBD	; 189
      d90:	76 e0       	ldi	r23, 0x06	; 6
      d92:	89 eb       	ldi	r24, 0xB9	; 185
@@ -1938,49 +1312,27 @@ void USART_Init(unsigned int ubrr)
      d98:	08 95       	ret
 
 00000d9a <xmem_init>:
-
-#include "xmem.h"
-#include "usart.h"
-
-void xmem_init(void){
-	MCUCR |= (1<<SRE);
      d9a:	85 b7       	in	r24, 0x35	; 53
      d9c:	80 68       	ori	r24, 0x80	; 128
      d9e:	85 bf       	out	0x35, r24	; 53
-	SFIOR |= (1<<XMM2);
      da0:	80 b7       	in	r24, 0x30	; 48
      da2:	80 62       	ori	r24, 0x20	; 32
      da4:	80 bf       	out	0x30, r24	; 48
      da6:	08 95       	ret
 
 00000da8 <xmem_write>:
-}
-
-void xmem_write(uint8_t data, uint16_t addr){
-	volatile char *ext_mem = (char *) BASE_ADDRESS;
-	ext_mem[addr] = data;
      da8:	fb 01       	movw	r30, r22
      daa:	f0 5f       	subi	r31, 0xF0	; 240
      dac:	80 83       	st	Z, r24
      dae:	08 95       	ret
 
 00000db0 <xmem_read>:
-}
-
-uint8_t xmem_read(uint16_t addr){
-	volatile char *ext_mem = (char*) BASE_ADDRESS;
-	uint8_t ret_val = ext_mem[addr];
      db0:	90 5f       	subi	r25, 0xF0	; 240
      db2:	fc 01       	movw	r30, r24
      db4:	80 81       	ld	r24, Z
-	return ret_val;
-}
      db6:	08 95       	ret
 
 00000db8 <SRAM_test>:
-
-void SRAM_test(void)
-{
      db8:	cf 92       	push	r12
      dba:	df 92       	push	r13
      dbc:	ef 92       	push	r14
@@ -1989,62 +1341,29 @@ void SRAM_test(void)
      dc2:	1f 93       	push	r17
      dc4:	cf 93       	push	r28
      dc6:	df 93       	push	r29
-	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;
-	uint16_t write_errors = 0;
-	uint16_t retrieval_errors = 0;
-	printf("Starting SRAM test...\n");
      dc8:	8d e8       	ldi	r24, 0x8D	; 141
      dca:	91 e0       	ldi	r25, 0x01	; 1
      dcc:	96 d1       	rcall	.+812    	; 0x10fa <puts>
-	// rand() stores some internal state, so calling this function in a loop will
-	// yield different seeds each time (unless srand() is called before this function)
-	uint16_t seed = rand();
      dce:	2c d1       	rcall	.+600    	; 0x1028 <rand>
      dd0:	6c 01       	movw	r12, r24
-	// Write phase: Immediately check that the correct value was stored
-	srand(seed);
      dd2:	2d d1       	rcall	.+602    	; 0x102e <srand>
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
      dd4:	c0 e0       	ldi	r28, 0x00	; 0
      dd6:	d0 e0       	ldi	r29, 0x00	; 0
-
-void SRAM_test(void)
-{
-	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;
-	uint16_t write_errors = 0;
      dd8:	00 e0       	ldi	r16, 0x00	; 0
      dda:	10 e0       	ldi	r17, 0x00	; 0
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
-		ext_ram[i] = some_value;
-		uint8_t retreived_value = ext_ram[i];
-		if (retreived_value != some_value) {
-			printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
      ddc:	0f 2e       	mov	r0, r31
      dde:	f3 ea       	ldi	r31, 0xA3	; 163
      de0:	ef 2e       	mov	r14, r31
      de2:	f1 e0       	ldi	r31, 0x01	; 1
      de4:	ff 2e       	mov	r15, r31
      de6:	f0 2d       	mov	r31, r0
-	// yield different seeds each time (unless srand() is called before this function)
-	uint16_t seed = rand();
-	// Write phase: Immediately check that the correct value was stored
-	srand(seed);
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
      de8:	1f d1       	rcall	.+574    	; 0x1028 <rand>
      dea:	fe 01       	movw	r30, r28
      dec:	f8 5e       	subi	r31, 0xE8	; 232
-		ext_ram[i] = some_value;
      dee:	80 83       	st	Z, r24
-		uint8_t retreived_value = ext_ram[i];
      df0:	20 81       	ld	r18, Z
-		if (retreived_value != some_value) {
      df2:	28 17       	cp	r18, r24
      df4:	a1 f0       	breq	.+40     	; 0xe1e <SRAM_test+0x66>
-			printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
      df6:	99 27       	eor	r25, r25
      df8:	9f 93       	push	r25
      dfa:	8f 93       	push	r24
@@ -2055,7 +1374,6 @@ void SRAM_test(void)
      e04:	ff 92       	push	r15
      e06:	ef 92       	push	r14
      e08:	67 d1       	rcall	.+718    	; 0x10d8 <printf>
-			write_errors++;
      e0a:	0f 5f       	subi	r16, 0xFF	; 255
      e0c:	1f 4f       	sbci	r17, 0xFF	; 255
      e0e:	8d b7       	in	r24, 0x3d	; 61
@@ -2066,63 +1384,29 @@ void SRAM_test(void)
      e18:	9e bf       	out	0x3e, r25	; 62
      e1a:	0f be       	out	0x3f, r0	; 63
      e1c:	8d bf       	out	0x3d, r24	; 61
-	// rand() stores some internal state, so calling this function in a loop will
-	// yield different seeds each time (unless srand() is called before this function)
-	uint16_t seed = rand();
-	// Write phase: Immediately check that the correct value was stored
-	srand(seed);
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
      e1e:	21 96       	adiw	r28, 0x01	; 1
      e20:	c1 15       	cp	r28, r1
      e22:	98 e0       	ldi	r25, 0x08	; 8
      e24:	d9 07       	cpc	r29, r25
      e26:	01 f7       	brne	.-64     	; 0xde8 <SRAM_test+0x30>
-			printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
-			write_errors++;
-		}
-	}
-	// Retrieval phase: Check that no values were changed during or after the write phase
-	srand(seed); // reset the PRNG to the state it had before the write phase
      e28:	c6 01       	movw	r24, r12
      e2a:	01 d1       	rcall	.+514    	; 0x102e <srand>
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
      e2c:	c0 e0       	ldi	r28, 0x00	; 0
      e2e:	d0 e0       	ldi	r29, 0x00	; 0
-void SRAM_test(void)
-{
-	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;
-	uint16_t write_errors = 0;
-	uint16_t retrieval_errors = 0;
      e30:	e1 2c       	mov	r14, r1
      e32:	f1 2c       	mov	r15, r1
-	srand(seed); // reset the PRNG to the state it had before the write phase
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
-		uint8_t retreived_value = ext_ram[i];
-		if (retreived_value != some_value) {
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
      e34:	0f 2e       	mov	r0, r31
      e36:	fc ed       	ldi	r31, 0xDC	; 220
      e38:	cf 2e       	mov	r12, r31
      e3a:	f1 e0       	ldi	r31, 0x01	; 1
      e3c:	df 2e       	mov	r13, r31
      e3e:	f0 2d       	mov	r31, r0
-		}
-	}
-	// Retrieval phase: Check that no values were changed during or after the write phase
-	srand(seed); // reset the PRNG to the state it had before the write phase
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
      e40:	f3 d0       	rcall	.+486    	; 0x1028 <rand>
      e42:	fe 01       	movw	r30, r28
      e44:	f8 5e       	subi	r31, 0xE8	; 232
-		uint8_t retreived_value = ext_ram[i];
      e46:	20 81       	ld	r18, Z
-		if (retreived_value != some_value) {
      e48:	28 17       	cp	r18, r24
      e4a:	a9 f0       	breq	.+42     	; 0xe76 <SRAM_test+0xbe>
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
      e4c:	99 27       	eor	r25, r25
      e4e:	9f 93       	push	r25
      e50:	8f 93       	push	r24
@@ -2133,7 +1417,6 @@ void SRAM_test(void)
      e5a:	df 92       	push	r13
      e5c:	cf 92       	push	r12
      e5e:	3c d1       	rcall	.+632    	; 0x10d8 <printf>
-			retrieval_errors++;
      e60:	8f ef       	ldi	r24, 0xFF	; 255
      e62:	e8 1a       	sub	r14, r24
      e64:	f8 0a       	sbc	r15, r24
@@ -2145,23 +1428,11 @@ void SRAM_test(void)
      e70:	9e bf       	out	0x3e, r25	; 62
      e72:	0f be       	out	0x3f, r0	; 63
      e74:	8d bf       	out	0x3d, r24	; 61
-			write_errors++;
-		}
-	}
-	// Retrieval phase: Check that no values were changed during or after the write phase
-	srand(seed); // reset the PRNG to the state it had before the write phase
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
      e76:	21 96       	adiw	r28, 0x01	; 1
      e78:	c1 15       	cp	r28, r1
      e7a:	98 e0       	ldi	r25, 0x08	; 8
      e7c:	d9 07       	cpc	r29, r25
      e7e:	01 f7       	brne	.-64     	; 0xe40 <SRAM_test+0x88>
-		if (retreived_value != some_value) {
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
-			retrieval_errors++;
-		}
-	}
-	printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
      e80:	ff 92       	push	r15
      e82:	ef 92       	push	r14
      e84:	1f 93       	push	r17
@@ -2177,7 +1448,6 @@ void SRAM_test(void)
      e98:	0f 90       	pop	r0
      e9a:	0f 90       	pop	r0
      e9c:	0f 90       	pop	r0
-}
      e9e:	df 91       	pop	r29
      ea0:	cf 91       	pop	r28
      ea2:	1f 91       	pop	r17
@@ -2189,29 +1459,16 @@ void SRAM_test(void)
      eae:	08 95       	ret
 
 00000eb0 <global_init>:
-#include "adc.h"
-#include "oled.h"
-#include "can_controller.h"
-
-void global_init(){
-	USART_Init(MYUBRR);
      eb0:	8f e1       	ldi	r24, 0x1F	; 31
      eb2:	90 e0       	ldi	r25, 0x00	; 0
      eb4:	66 df       	rcall	.-308    	; 0xd82 <USART_Init>
-	xmem_init();
      eb6:	71 df       	rcall	.-286    	; 0xd9a <xmem_init>
-	oled_init();
      eb8:	be dd       	rcall	.-1156   	; 0xa36 <oled_init>
-	adc_init();
      eba:	7f dc       	rcall	.-1794   	; 0x7ba <adc_init>
-	can_init();
      ebc:	95 cc       	rjmp	.-1750   	; 0x7e8 <can_init>
      ebe:	08 95       	ret
 
 00000ec0 <main>:
-}
-
-int main(void){
      ec0:	cf 93       	push	r28
      ec2:	df 93       	push	r29
      ec4:	cd b7       	in	r28, 0x3d	; 61
@@ -2222,59 +1479,28 @@ int main(void){
      ece:	de bf       	out	0x3e, r29	; 62
      ed0:	0f be       	out	0x3f, r0	; 63
      ed2:	cd bf       	out	0x3d, r28	; 61
-	
-	global_init();
      ed4:	ed df       	rcall	.-38     	; 0xeb0 <global_init>
-	
-	DDRB &= ~(0b0111);
      ed6:	87 b3       	in	r24, 0x17	; 23
      ed8:	88 7f       	andi	r24, 0xF8	; 248
      eda:	87 bb       	out	0x17, r24	; 23
-	SRAM_test();
      edc:	6d df       	rcall	.-294    	; 0xdb8 <SRAM_test>
-	
-	int left_s = 0, right_s = 0, x = 0, y = 0;
-	int pin = 1;
-	int temp_value = NEUTRAL;
-	oled_display_activity();	
      ede:	b6 de       	rcall	.-660    	; 0xc4c <oled_display_activity>
-	
-	
-	
-	
-	struct can_message message;
-	message.id = 3;
      ee0:	83 e0       	ldi	r24, 0x03	; 3
      ee2:	90 e0       	ldi	r25, 0x00	; 0
      ee4:	9a 83       	std	Y+2, r25	; 0x02
      ee6:	89 83       	std	Y+1, r24	; 0x01
-	message.length = 1;
      ee8:	81 e0       	ldi	r24, 0x01	; 1
      eea:	8b 83       	std	Y+3, r24	; 0x03
-	message.data[0] = (uint8_t) 'c';
      eec:	83 e6       	ldi	r24, 0x63	; 99
      eee:	8c 83       	std	Y+4, r24	; 0x04
-	
-	while(1){	
-		pin = (PINB & 0b0100)>>2;
-		
-		if(pin == 0)
-			printf("string number %d selected \n \r", oled_get_joy_pos());
      ef0:	0f 2e       	mov	r0, r31
      ef2:	f2 e7       	ldi	r31, 0x72	; 114
      ef4:	ef 2e       	mov	r14, r31
      ef6:	f2 e0       	ldi	r31, 0x02	; 2
      ef8:	ff 2e       	mov	r15, r31
      efa:	f0 2d       	mov	r31, r0
-	
-	
-	while(1){	
-		pin = (PINB & 0b0100)>>2;
-		
-		if(pin == 0)
      efc:	b2 99       	sbic	0x16, 2	; 22
      efe:	0a c0       	rjmp	.+20     	; 0xf14 <main+0x54>
-			printf("string number %d selected \n \r", oled_get_joy_pos());
      f00:	a0 de       	rcall	.-704    	; 0xc42 <oled_get_joy_pos>
      f02:	9f 93       	push	r25
      f04:	8f 93       	push	r24
@@ -2285,33 +1511,21 @@ int main(void){
      f0e:	0f 90       	pop	r0
      f10:	0f 90       	pop	r0
      f12:	0f 90       	pop	r0
-		
-		temp_value = adc_joy_pos_changed();
      f14:	56 dc       	rcall	.-1876   	; 0x7c2 <adc_joy_pos_changed>
      f16:	8c 01       	movw	r16, r24
-		if(temp_value != 5)
      f18:	85 30       	cpi	r24, 0x05	; 5
      f1a:	91 05       	cpc	r25, r1
      f1c:	79 f3       	breq	.-34     	; 0xefc <main+0x3c>
-		{
-			message.data[0] = temp_value;
      f1e:	8c 83       	std	Y+4, r24	; 0x04
-			
-			can_message_send(&message);
      f20:	ce 01       	movw	r24, r28
      f22:	01 96       	adiw	r24, 0x01	; 1
      f24:	b6 dc       	rcall	.-1684   	; 0x892 <can_message_send>
-			
-			if(temp_value == UP || temp_value == DOWN)
      f26:	c8 01       	movw	r24, r16
      f28:	02 97       	sbiw	r24, 0x02	; 2
      f2a:	02 97       	sbiw	r24, 0x02	; 2
      f2c:	38 f7       	brcc	.-50     	; 0xefc <main+0x3c>
-			{
-				oled_actualise_joy_pos(temp_value);
      f2e:	c8 01       	movw	r24, r16
      f30:	c4 de       	rcall	.-632    	; 0xcba <oled_actualise_joy_pos>
-				oled_display_activity();
      f32:	8c de       	rcall	.-744    	; 0xc4c <oled_display_activity>
      f34:	2f ef       	ldi	r18, 0xFF	; 255
      f36:	8f ef       	ldi	r24, 0xFF	; 255

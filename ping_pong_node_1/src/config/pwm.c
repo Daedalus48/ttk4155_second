@@ -38,8 +38,8 @@ void pwm_set_period(float time){
 
 void pwm_set_pulse(float time){
 	//makes sure pulse with is within bounderies
-	if (time<0.0009){time=0.0009}
-	else if(time>0.0021){time=0.0021};
+	if (time<0.0009){time=0.0009;}
+	else if(time>0.0021){time=0.0021;};
 	
 	OCR1A = (pwm_freq * time - 0.5);
 }
