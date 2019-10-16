@@ -3,7 +3,6 @@
 #define FOSC 4915200 //Clock speed
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
-#define BASE_ADDRESS 0x1000
 #define ADC_OFFSET 0x1400
 
 
@@ -13,83 +12,36 @@
 #include <stdlib.h>
 #include <string.h>
 #include "usart.h"
+#include "xmem.h"
 #include "adc.h"
 #include "oled.h"
 #include "can_controller.h"
 
-
-
-void SRAM_test(void)
-{
-	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;
-	uint16_t write_errors = 0;
-	uint16_t retrieval_errors = 0;
-	printf("Starting SRAM test...\n");
-	// rand() stores some internal state, so calling this function in a loop will
-	// yield different seeds each time (unless srand() is called before this function)
-	uint16_t seed = rand();
-	// Write phase: Immediately check that the correct value was stored
-	srand(seed);
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
-		ext_ram[i] = some_value;
-		uint8_t retreived_value = ext_ram[i];
-		if (retreived_value != some_value) {
-			printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
-			write_errors++;
-		}
-	}
-	// Retrieval phase: Check that no values were changed during or after the write phase
-	srand(seed); // reset the PRNG to the state it had before the write phase
-	for (uint16_t i = 0; i < ext_ram_size; i++) {
-		uint8_t some_value = rand();
-		uint8_t retreived_value = ext_ram[i];
-		if (retreived_value != some_value) {
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
-			retrieval_errors++;
-		}
-	}
-	printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
+void global_init(){
+	USART_Init(MYUBRR);
+	xmem_init();
+	oled_init();
+	adc_init();
+	can_init();
 }
-
-void xmem_init(void){
-	MCUCR |= (1<<SRE);
-	SFIOR |= (1<<XMM2);
-}
-
-void xmem_write(uint8_t data, uint16_t addr){
-	volatile char *ext_mem = (char *) BASE_ADDRESS;
-	ext_mem[addr] = data;
-}
-
-uint8_t xmem_read(uint16_t addr){
-	volatile char *ext_mem = (char*) BASE_ADDRESS;
-	uint8_t ret_val = ext_mem[addr];
-	return ret_val;
-}
-
 
 int main(void){
 	
-	USART_Init(MYUBRR);
-	xmem_init();
+	global_init();
 	
-	uint8_t data = 5;
 	DDRB &= ~(0b0111);
-	//SRAM_test();
+	SRAM_test();
 	
 	int left_s = 0, right_s = 0, x = 0, y = 0;
+	int pin = 1;
 	int temp_value = NEUTRAL;
-	oled_init();
-	adc_init();
 	oled_display_activity();	
 	
 	
 	
 	
 	
-	can_init();
+	
 	struct can_message message;
 	message.id = 3;
 	message.length = 1;
@@ -102,73 +54,27 @@ int main(void){
 	
 	
 	
-	while(1){
-		//can_message_send(&message);
-		//_delay_ms(50);
-		
-		/*if(temp_value = adc_joy_pos_changed_up_down())
-		{
-			
-			//printf("temp value %d \n \r", temp_value);
-			oled_actualise_joy_pos(temp_value);
-			oled_display_activity();
-			_delay_ms(400);
-			
-		}*/
-		temp_value = adc_joy_pos_changed();
-		if(temp_value != 5)
-		{
-			message.data[0] = temp_value;
-			printf("can send %d \n\r", message.data[0]);
-			can_message_send(&message);
-		}
-	}
-	
-	
-	/*can_get_message(&message2);
-	
-	
-	printf("In the main received %c \n\r \n\r", message2.data[0]);
-	
-	message.data[0] = (uint8_t) 'g';
-	
-	printf("In the main send %c \n\r", message.data[0]);
-	
-	can_message_send(&message);
-	_delay_ms(50);
-	can_get_message(&message2);
-	
-	
-	printf("In the main received %c \n\r \n\r", message2.data[0]);*/
-
-
-	
-	
-	//while(1){
-
-		/*if(temp_value = adc_joy_pos_changed())
-		{
-			
-			printf("temp value %d \n \r", temp_value);
-			oled_actualise_joy_pos(temp_value);
-			oled_display_activity();
-			_delay_ms(400);
-			
-		}
-	
+	while(1){	
 		pin = (PINB & 0b0100)>>2;
 		
 		if(pin == 0)
 			printf("string number %d selected \n \r", oled_get_joy_pos());
+		
+		temp_value = adc_joy_pos_changed();
+		if(temp_value != 5)
+		{
+			message.data[0] = temp_value;
 			
-		spi_transmit(str, strlen(str));
-		
-		spi_receive(received_str, strlen(str));
-		printf(received_str);*/
-		
-		
-	//}
-	
+			can_message_send(&message);
+			
+			if(temp_value == UP || temp_value == DOWN)
+			{
+				oled_actualise_joy_pos(temp_value);
+				oled_display_activity();
+				_delay_ms(400);
+			}
+		}
+	}
 	
 	return 0;
 }

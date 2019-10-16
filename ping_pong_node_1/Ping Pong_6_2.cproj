@@ -310,6 +310,12 @@
     <Compile Include="src\config\usart.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\xmem.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\xmem.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\main.c">
       <SubType>compile</SubType>
     </Compile>

@@ -57,4 +57,6 @@ void oled_actualise_joy_pos(int joy_direction);
 
 int oled_get_joy_pos();
 
+void oled_set_joy_pos(int joy_pos);
+
 #endif /* OLED_H_ */

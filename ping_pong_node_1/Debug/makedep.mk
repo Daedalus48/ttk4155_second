@@ -16,5 +16,7 @@ src\config\spi.c
 
 src\config\usart.c
 
+src\config\xmem.c
+
 src\main.c
 

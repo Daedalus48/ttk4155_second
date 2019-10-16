@@ -5,13 +5,15 @@
  *  Author: nelsonz
  */ 
 #include "adc.h"
+#include "xmem.h"
+
+#define JOY_DIR_ADDRESS 0x1800
 
 
-int joy_adc_direction;
 
-void adc_init()
-{
-	joy_adc_direction = NEUTRAL;
+
+void adc_init(){
+	set_joy_adc_direction(NEUTRAL);
 }
 
 volatile int adc_read(uint8_t channel){
@@ -129,11 +131,10 @@ int adc_joystick_direction(){
 
 int adc_joy_pos_changed(){
 	int ans = 0;
+	int joy_adc_direction = get_joy_adc_direction();
 	int previous_joy_adc_direction = joy_adc_direction;
 	joy_adc_direction = adc_joystick_direction();
-	/*printf("in adc joy pos changed \n \r");
-	printf("previous joy adc %d \n \r", previous_joy_adc_direction);
-	printf("joy adc direction %d \n \r", joy_adc_direction);*/
+
 	
 	if(previous_joy_adc_direction == joy_adc_direction){
 		ans = 5;
@@ -141,17 +142,17 @@ int adc_joy_pos_changed(){
 	else{
 		ans = joy_adc_direction;
 	}
-	//printf("answer % d \n \r \n \r", ans);
+	set_joy_adc_direction(joy_adc_direction);
 	return ans;
 }
 
 int adc_joy_pos_changed_up_down(){
-	int ans = 0;
+	/*int ans = 0;
 	int previous_joy_adc_direction = joy_adc_direction;
 	joy_adc_direction = adc_joystick_direction();
 	/*printf("in adc joy pos changed \n \r");
 	printf("previous joy adc %d \n \r", previous_joy_adc_direction);
-	printf("joy adc direction %d \n \r", joy_adc_direction);*/
+	printf("joy adc direction %d \n \r", joy_adc_direction);
 	
 	if(previous_joy_adc_direction == joy_adc_direction || joy_adc_direction == LEFT || joy_adc_direction == RIGHT || joy_adc_direction == NEUTRAL){
 		ans = 0;
@@ -160,7 +161,15 @@ int adc_joy_pos_changed_up_down(){
 		ans = joy_adc_direction;
 	}
 	//printf("answer % d \n \r \n \r", ans);
-	return ans;
+	return ans;*/
+}
+
+int get_joy_adc_direction(){
+	return xmem_read(JOY_DIR_ADDRESS);
+}
+
+void set_joy_adc_direction(int joy_adc_direction){
+	xmem_write(joy_adc_direction, JOY_DIR_ADDRESS);
 }
 
 int adc_test_function(){

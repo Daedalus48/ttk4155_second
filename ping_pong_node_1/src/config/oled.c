@@ -7,9 +7,13 @@
 
 #define OLEDC_OFFSET 0x1000
 #define OLEDD_OFFSET 0x1200
+
+#define JOY_POS_ADDRESS 0x1802
+
 #include <avr/pgmspace.h>
 #include "oled.h"
 #include "fonts.h"
+#include "xmem.h"
 
 enum oled_font_size{FONT_SIZE_LARGE, FONT_SIZE_MEDIUM, FONT_SIZE_SMALL};
 enum adc_joystick_dir{LEFT, RIGHT, UP, DOWN, NEUTRAL};
@@ -188,7 +192,7 @@ void oled_printf_inverted(char text[]){
 
 void oled_display_activity(){
 	oled_clear_screen();
-	
+	int joy_pos = oled_get_joy_pos();
 	
 	/*for(int i = 0; i < 2; i++)
 	{
@@ -198,6 +202,7 @@ void oled_display_activity(){
 		else
 			oled_printf(current_activity->oled_string[i]);
 	}*/
+	
 	oled_page_select(1);
 	if(joy_pos == 0)
 		oled_printf_inverted("Spring \n");
@@ -219,7 +224,7 @@ void oled_display_activity(){
 
 void oled_actualise_joy_pos(int joy_direction)
 {
-	
+	int joy_pos = oled_get_joy_pos();	
 	if(joy_direction == UP)
 		if (joy_pos==0){
 			joy_pos=2;
@@ -232,9 +237,14 @@ void oled_actualise_joy_pos(int joy_direction)
 		}else{
 			joy_pos = (joy_pos + 1)%3;
 		}
+	oled_set_joy_pos(joy_pos);
 
 }
 
 int oled_get_joy_pos(){
-	return joy_pos;
+	return xmem_read(JOY_POS_ADDRESS);
+}
+
+void oled_set_joy_pos(int joy_pos){
+	xmem_write(joy_pos, JOY_POS_ADDRESS);
 }

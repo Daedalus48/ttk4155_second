@@ -44,6 +44,9 @@ int adc_joy_pos_changed();
 
 int adc_joy_pos_changed_up_down();
 
+int get_joy_adc_direction();
+
+void set_joy_adc_direction(int joy_adc_direction);
 
 #endif /* ADC_H_ */
 
