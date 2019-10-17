@@ -9,10 +9,10 @@
 #ifndef PWM_H_
 #define PWM_H_
 
-void pwm_init(float signal_period, unsigned long clock_freq);
+void pwm_init();
 
-void pwm_set_signal_period(float time);
+void pwm_set_signal_period();
 
-void pwm_set_pulse_width(float time);
+void pwm_set_pulse_width(float pulse_width); // the argument pulse_width is given in ns. should be a value between 900 and 2100ns.
 
 #endif /* PWM_H_ */

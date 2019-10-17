@@ -11,9 +11,11 @@
 
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include "usart.h"
 #include "can_controller.h"
 #include "spi.h"
+#include "pwm.h"
 
 
 int main(void){
@@ -60,8 +62,9 @@ int main(void){
 	*/
 	int i = 4;
 	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
-	servo_init();
-			
+	
+	pwm_init();	
+	pwm_set_pulse_width(5000);	
     while(1)
     {
 		/*if(can_get_message(&message2)){
@@ -71,5 +74,7 @@ int main(void){
 		
 		_delay_ms(50);
 		//TODO:: Please write your application code */
+		
+		
     }
 }

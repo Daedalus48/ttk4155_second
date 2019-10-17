@@ -148,12 +148,6 @@
     <Compile Include="pwm.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="servo.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="servo.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="spi.c">
       <SubType>compile</SubType>
     </Compile>
