@@ -13,21 +13,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000278  00000000  00000000  00001918  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002da5  00000000  00000000  00001b90  2**0
+  5 .debug_info   00002d79  00000000  00000000  00001b90  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000010c5  00000000  00000000  00004935  2**0
+  6 .debug_abbrev 000010a7  00000000  00000000  00004909  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000025a6  00000000  00000000  000059fa  2**0
+  7 .debug_line   000025a6  00000000  00000000  000059b0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000005f0  00000000  00000000  00007fa0  2**2
+  8 .debug_frame  000005f0  00000000  00000000  00007f58  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00009484  00000000  00000000  00008590  2**0
+  9 .debug_str    00009484  00000000  00000000  00008548  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00001585  00000000  00000000  00011a14  2**0
+ 10 .debug_loc    00001585  00000000  00000000  000119cc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000248  00000000  00000000  00012f99  2**0
+ 11 .debug_ranges 00000248  00000000  00000000  00012f51  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_macro  00001618  00000000  00000000  000131e1  2**0
+ 12 .debug_macro  00001618  00000000  00000000  00013199  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2146,7 +2146,7 @@ int main(void){
      e90:	f4 df       	rcall	.-24     	; 0xe7a <global_init>
 	
 	
-	int left_s = 0, right_s = 0, x = 0, y = 0;
+	
 	
 	while(1){	
 		com_actualise_system();		

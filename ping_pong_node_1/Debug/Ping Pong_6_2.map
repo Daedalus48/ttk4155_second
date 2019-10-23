@@ -1477,7 +1477,7 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x2da5
+.debug_info     0x00000000     0x2d79
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x810 src/config/adc.o
  .debug_info    0x00000810      0x6d6 src/config/can_controller.o
@@ -1487,9 +1487,9 @@ END GROUP
  .debug_info    0x000024c6      0x154 src/config/spi.o
  .debug_info    0x0000261a      0x1f0 src/config/usart.o
  .debug_info    0x0000280a      0x2da src/config/xmem.o
- .debug_info    0x00002ae4      0x2c1 src/main.o
+ .debug_info    0x00002ae4      0x295 src/main.o
 
-.debug_abbrev   0x00000000     0x10c5
+.debug_abbrev   0x00000000     0x10a7
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x2f5 src/config/adc.o
  .debug_abbrev  0x000002f5      0x24a src/config/can_controller.o
@@ -1499,7 +1499,7 @@ END GROUP
  .debug_abbrev  0x00000b5f       0xf1 src/config/spi.o
  .debug_abbrev  0x00000c50      0x132 src/config/usart.o
  .debug_abbrev  0x00000d82      0x189 src/config/xmem.o
- .debug_abbrev  0x00000f0b      0x1ba src/main.o
+ .debug_abbrev  0x00000f0b      0x19c src/main.o
 
 .debug_line     0x00000000     0x25a6
  *(.debug_line .debug_line.* .debug_line_end)
@@ -1544,7 +1544,7 @@ END GROUP
  .debug_str     0x000093b1       0x91 src/config/xmem.o
                                0x6dfd (size before relaxing)
  .debug_str     0x00009442       0x42 src/main.o
-                               0x7d46 (size before relaxing)
+                               0x7d37 (size before relaxing)
 
 .debug_loc      0x00000000     0x1585
  *(.debug_loc)

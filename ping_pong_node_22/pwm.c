@@ -48,10 +48,22 @@ void pwm_set_pulse_width(float pulse_width){
 	//makes sure pulse with is within bounderies
 	if (pulse_width<900.0){pulse_width=900.0;}
 	if (pulse_width>2100.0){pulse_width=2100.0;}	
-	int pulse = (int) (pulse_width/20000.0*TOP_VALUE);	//pw*2
+	int pulse = (int) (pulse_width/20000*TOP_VALUE);	//pw*2
 	OCR1A = pulse;
 	
 	printf("OCR1A: %d\n\r",  OCR1A);
 	
 	//OCR1A = 1150;
+}
+
+float pwm_scale_joystick_val(float x_val){
+		return (x_val*4.7059+900);	
+}
+
+void pwm_follow_joystick_val(float *pw, float x_val){	//smoothens joystick signal
+	float diff = *pw - x_val;
+	if ((diff<-12)||(12<diff)){
+		if (*pw<x_val){*pw = *pw + 12;}
+		else {*pw = *pw - 12;}
+	}
 }

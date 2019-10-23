@@ -64,29 +64,31 @@ int main(void){
 	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
 	
 	pwm_init();	
-	pwm_set_pulse_width(900);	
-	int pw = 1600;
+	//pwm_set_pulse_width(50000);	
+	float pw = 1600;
+	float x_val = 130;
 
     while(1)
     {
 		if(can_get_message(&message2)){
 			
-			printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
+			//printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
 			
-			if (message2.data[0]==0){pw = 2100;}
-			else if (message2.data[0]==1){pw = 900;}
-			else if (message2.data[0]==4){pw=1600;}
-			
+				
+			x_val = (float) message2.data[0];
+			pwm_follow_joystick_val(&pw, x_val);
+			pw = pwm_scale_joystick_val(pw);
 			pwm_set_pulse_width(pw);
+			
 			
 		}
 		
-		_delay_ms(50);
-		//TODO:: Please write your application code */
+		
+		//_delay_ms(50);
+		
+		//TODO:: Please write your application code 
 		
 		
-		
-		
-		
-    }
+	}
+	return 0;
 }

@@ -38,8 +38,6 @@ int main(void){
 	
 	
 	
-	int left_s = 0, right_s = 0, x = 0, y = 0;
-	
 	while(1){	
 		com_actualise_system();		
 	}
