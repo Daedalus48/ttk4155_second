@@ -65,8 +65,11 @@ int main(void){
 	
 	pwm_init();	
 	//pwm_set_pulse_width(50000);	
-	float pw = 1600;
+	float pw = 1500;
 	float x_val = 130;
+	
+	
+	int a = 0; //just for printf
 
     while(1)
     {
@@ -75,16 +78,22 @@ int main(void){
 			//printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
 			
 				
-			x_val = (float) message2.data[0];
-			pwm_follow_joystick_val(&pw, x_val);
-			pw = pwm_scale_joystick_val(pw);
+			x_val = 255-(float) message2.data[0];
+			a = (int) pw;
+			printf("ow b: %d\n\r",  a);
+			//pw = pwm_follow_joystick_val(pw, x_val);
+			//a = (int) pw;
+			//printf("pw not scaled: %d\n\r",  a);
+			pw = pwm_scale_joystick_val(x_val);
+			a = (int) pw;
+			printf("pw scaled: %d\n\r",  a);
 			pwm_set_pulse_width(pw);
 			
 			
 		}
 		
 		
-		//_delay_ms(50);
+		//_delay_ms(1000);
 		
 		//TODO:: Please write your application code 
 		

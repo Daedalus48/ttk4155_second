@@ -17,6 +17,6 @@ void pwm_set_pulse_width(float pulse_width); // the argument pulse_width is give
 
 float pwm_scale_joystick_val(float x_val);
 
-void pwm_follow_joystick_val(float *pw, float x_val)
+float pwm_follow_joystick_val(float pw, float x_val);
 
 #endif /* PWM_H_ */
