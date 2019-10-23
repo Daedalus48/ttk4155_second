@@ -12,6 +12,10 @@ src\config\mcp2515_driver.c
 
 src\config\oled.c
 
+src\config\pwm.c
+
+src\config\servo.c
+
 src\config\spi.c
 
 src\config\usart.c

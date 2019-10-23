@@ -11,9 +11,11 @@
 
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include "usart.h"
 #include "can_controller.h"
 #include "spi.h"
+#include "pwm.h"
 
 
 int main(void){
@@ -24,7 +26,7 @@ int main(void){
 	can_init();
 	
 
-	
+	/*
 	struct can_message message;
 	message.id = 3;
 	message.length = 1;
@@ -36,7 +38,7 @@ int main(void){
 	message2.length = 1;
 	
 	
-	
+	*/
 	/*
 	printf("In the main send %c \n\r", message.data[0]);
 	
@@ -60,15 +62,19 @@ int main(void){
 	*/
 	int i = 4;
 	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
-			
+	
+	pwm_init();	
+	pwm_set_pulse_width(5000);	
     while(1)
     {
-		if(can_get_message(&message2)){
+		/*if(can_get_message(&message2)){
 			i = message2.data[0];
 			printf("Atmega2560 received a new message %s \n \r \n\r", joy_equivalence[i]);
 		}
 		
 		_delay_ms(50);
-		//TODO:: Please write your application code 
+		//TODO:: Please write your application code */
+		
+		
     }
 }

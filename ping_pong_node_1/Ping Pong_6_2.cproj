@@ -271,6 +271,9 @@
     <Compile Include="src\config\adc.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\bit_macros.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\can.h">
       <SubType>compile</SubType>
     </Compile>
@@ -296,6 +299,18 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\oled.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\pwm.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\pwm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\servo.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\servo.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\spi.c">
