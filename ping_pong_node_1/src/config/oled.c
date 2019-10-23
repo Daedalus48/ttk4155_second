@@ -64,7 +64,7 @@ int oled_init(){
 	oled_clear_screen();
 	//current_activity = &oled_main;
 	joy_pos = 0;
-	//oled_display_activity();
+	oled_display_activity();
 }
 
 void oled_columb_range_select(uint8_t start, uint8_t end) {

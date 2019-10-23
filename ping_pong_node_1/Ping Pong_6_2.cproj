@@ -283,6 +283,12 @@
     <Compile Include="src\config\can_controller.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\communication.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\communication.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\fonts.h">
       <SubType>compile</SubType>
     </Compile>
@@ -299,18 +305,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\oled.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\pwm.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\pwm.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\servo.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\servo.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\spi.c">

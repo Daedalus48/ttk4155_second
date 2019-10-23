@@ -16,8 +16,8 @@
 #include "adc.h"
 #include "oled.h"
 #include "can_controller.h"
-#include "pwm.h"
-#include "servo.h"
+#include "communication.h"
+
 
 void global_init(){
 	USART_Init(MYUBRR);
@@ -25,64 +25,23 @@ void global_init(){
 	oled_init();
 	adc_init();
 	can_init();
-	servo_init(F_CPU);
+	//SRAM_test();
+	
+	DDRB &= ~(0b0111);	
 }
 
 int main(void){
 	
 	global_init();
 	
-	DDRB &= ~(0b0111);
-	/*
-	SRAM_test();
+	
+	
+	
 	
 	int left_s = 0, right_s = 0, x = 0, y = 0;
-	int pin = 1;
-	int temp_value = NEUTRAL;
-	oled_display_activity();	
-	
-	
-	
-	
-	
-	
-	struct can_message message;
-	message.id = 3;
-	message.length = 1;
-	message.data[0] = (uint8_t) 'c';
-	
-	
-	struct can_message message2;
-	message2.id = 3;
-	message2.length = 1;
-	
-	*/
-	//servo_set_servo(0);
 	
 	while(1){	
-		/*pin = (PINB & 0b0100)>>2;
-		
-		if(pin == 0)
-			printf("string number %d selected \n \r", oled_get_joy_pos());
-		
-		temp_value = adc_joy_pos_changed();
-		if(temp_value != 5)
-		{
-			message.data[0] = temp_value;
-			
-			can_message_send(&message);
-			
-			if(temp_value == UP || temp_value == DOWN)
-			{
-				oled_actualise_joy_pos(temp_value);
-				oled_display_activity();
-				_delay_ms(400);
-			}
-			
-		
-		}
-		*/
-		//printf("pw: %d \n\r", OCR1A);
+		com_actualise_system();		
 	}
 
 		

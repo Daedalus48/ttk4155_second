@@ -8,13 +8,11 @@ src\config\adc.c
 
 src\config\can_controller.c
 
+src\config\communication.c
+
 src\config\mcp2515_driver.c
 
 src\config\oled.c
-
-src\config\pwm.c
-
-src\config\servo.c
 
 src\config\spi.c
 

@@ -53,10 +53,9 @@ C_SRCS +=  \
 ../src/ASF/common/boards/user_board/init.c \
 ../src/config/adc.c \
 ../src/config/can_controller.c \
+../src/config/communication.c \
 ../src/config/mcp2515_driver.c \
 ../src/config/oled.c \
-../src/config/pwm.c \
-../src/config/servo.c \
 ../src/config/spi.c \
 ../src/config/usart.c \
 ../src/config/xmem.c \
@@ -73,10 +72,9 @@ OBJS +=  \
 src/ASF/common/boards/user_board/init.o \
 src/config/adc.o \
 src/config/can_controller.o \
+src/config/communication.o \
 src/config/mcp2515_driver.o \
 src/config/oled.o \
-src/config/pwm.o \
-src/config/servo.o \
 src/config/spi.o \
 src/config/usart.o \
 src/config/xmem.o \
@@ -86,10 +84,9 @@ OBJS_AS_ARGS +=  \
 src/ASF/common/boards/user_board/init.o \
 src/config/adc.o \
 src/config/can_controller.o \
+src/config/communication.o \
 src/config/mcp2515_driver.o \
 src/config/oled.o \
-src/config/pwm.o \
-src/config/servo.o \
 src/config/spi.o \
 src/config/usart.o \
 src/config/xmem.o \
@@ -99,10 +96,9 @@ C_DEPS +=  \
 src/ASF/common/boards/user_board/init.d \
 src/config/adc.d \
 src/config/can_controller.d \
+src/config/communication.d \
 src/config/mcp2515_driver.d \
 src/config/oled.d \
-src/config/pwm.d \
-src/config/servo.d \
 src/config/spi.d \
 src/config/usart.d \
 src/config/xmem.d \
@@ -112,10 +108,9 @@ C_DEPS_AS_ARGS +=  \
 src/ASF/common/boards/user_board/init.d \
 src/config/adc.d \
 src/config/can_controller.d \
+src/config/communication.d \
 src/config/mcp2515_driver.d \
 src/config/oled.d \
-src/config/pwm.d \
-src/config/servo.d \
 src/config/spi.d \
 src/config/usart.d \
 src/config/xmem.d \
@@ -156,6 +151,13 @@ src/config/can_controller.o: ../src/config/can_controller.c
 	@echo Finished building: $<
 	
 
+src/config/communication.o: ../src/config/communication.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"../common/applications/user_application/user_board/config" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/mega/utils" -I"../src/ASF/common/utils" -I"../src/ASF/mega/utils/preprocessor" -I"../src" -I"../src/ASF/common/boards/user_board"  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall -mmcu=atmega162 -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 src/config/mcp2515_driver.o: ../src/config/mcp2515_driver.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
@@ -164,20 +166,6 @@ src/config/mcp2515_driver.o: ../src/config/mcp2515_driver.c
 	
 
 src/config/oled.o: ../src/config/oled.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 4.8.1
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"../common/applications/user_application/user_board/config" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/mega/utils" -I"../src/ASF/common/utils" -I"../src/ASF/mega/utils/preprocessor" -I"../src" -I"../src/ASF/common/boards/user_board"  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall -mmcu=atmega162 -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-src/config/pwm.o: ../src/config/pwm.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 4.8.1
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"../common/applications/user_application/user_board/config" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/mega/utils" -I"../src/ASF/common/utils" -I"../src/ASF/mega/utils/preprocessor" -I"../src" -I"../src/ASF/common/boards/user_board"  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall -mmcu=atmega162 -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-src/config/servo.o: ../src/config/servo.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"../common/applications/user_application/user_board/config" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/mega/utils" -I"../src/ASF/common/utils" -I"../src/ASF/mega/utils/preprocessor" -I"../src" -I"../src/ASF/common/boards/user_board"  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall -mmcu=atmega162 -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

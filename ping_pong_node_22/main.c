@@ -26,7 +26,7 @@ int main(void){
 	can_init();
 	
 
-	/*
+	
 	struct can_message message;
 	message.id = 3;
 	message.length = 1;
@@ -38,7 +38,7 @@ int main(void){
 	message2.length = 1;
 	
 	
-	*/
+	
 	/*
 	printf("In the main send %c \n\r", message.data[0]);
 	
@@ -64,16 +64,28 @@ int main(void){
 	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
 	
 	pwm_init();	
-	pwm_set_pulse_width(5000);	
+	pwm_set_pulse_width(900);	
+	int pw = 1600;
+
     while(1)
     {
-		/*if(can_get_message(&message2)){
-			i = message2.data[0];
-			printf("Atmega2560 received a new message %s \n \r \n\r", joy_equivalence[i]);
+		if(can_get_message(&message2)){
+			
+			printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
+			
+			if (message2.data[0]==0){pw = 2100;}
+			else if (message2.data[0]==1){pw = 900;}
+			else if (message2.data[0]==4){pw=1600;}
+			
+			pwm_set_pulse_width(pw);
+			
 		}
 		
 		_delay_ms(50);
 		//TODO:: Please write your application code */
+		
+		
+		
 		
 		
     }
