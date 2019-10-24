@@ -10,12 +10,14 @@
 #define MYUBRR FOSC/16/BAUD-1
 
 
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include "usart.h"
 #include "can_controller.h"
 #include "spi.h"
 #include "pwm.h"
+#include "adc.h"
 
 
 int main(void){
@@ -60,17 +62,21 @@ int main(void){
 	
 	printf("In the main received %c \n\r \n\r", message2.data[0]);
 	*/
-	int i = 4;
-	char joy_equivalence[5][40] = {"Left", "Right", "Up", "Down", "Neutral"};
+
 	
 	pwm_init();	
+	adc_init();
+	
+	int a;
+	
 	//pwm_set_pulse_width(50000);	
 	float pw = 1500;
 	float x_val = 130;
 	
+	int old_val = adc_read();
+	int new_val = adc_read();
 	
-	int a = 0; //just for printf
-
+	int loose_counter = 0;
     while(1)
     {
 		if(can_get_message(&message2)){
@@ -80,20 +86,36 @@ int main(void){
 				
 			x_val = 255-(float) message2.data[0];
 			a = (int) pw;
-			printf("ow b: %d\n\r",  a);
+			//printf("ow b: %d\n\r",  a);
 			//pw = pwm_follow_joystick_val(pw, x_val);
 			//a = (int) pw;
 			//printf("pw not scaled: %d\n\r",  a);
 			pw = pwm_scale_joystick_val(x_val);
 			a = (int) pw;
-			printf("pw scaled: %d\n\r",  a);
+			//printf("pw scaled: %d\n\r",  a);
 			pwm_set_pulse_width(pw);
 			
 			
 		}
 		
+		new_val = adc_read();
 		
-		//_delay_ms(1000);
+		
+		if( (old_val == 0) && (new_val == 1) )
+		{
+			// traitement sur front montant
+			old_val = 1;
+			_delay_ms(50);
+		}
+		else if( (old_val == 1) && (new_val == 0) )
+		{
+			// traitement sur front descendant
+			loose_counter++;
+			printf("You lost %d times \n\r", loose_counter);
+			old_val = 0;
+			_delay_ms(50);
+		}
+		
 		
 		//TODO:: Please write your application code 
 		
