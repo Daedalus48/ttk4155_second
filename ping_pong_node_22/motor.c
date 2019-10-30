@@ -29,6 +29,8 @@ void motor_init(void)
 }
 
 void motor_dac_write(uint8_t data) {
+	if (data < 0){data = 0;}
+	if (data > 255){data = 255;}
 	uint8_t address = 0b01010000;
 	uint8_t command = 0b0;
 	
@@ -42,15 +44,16 @@ void motor_dac_write(uint8_t data) {
 void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 	if (dir){
 		PORTH |= (1 << PH1); // Direction right on dc_motor
-		//printf("right \n\r");
+		printf("right \n\r");
 	}else{
 		PORTH &= ~(1 << PH1); // Direction left on dc_motor
-		//printf("left \n\r");
+		printf("left \n\r");
 	}
 	
 }
 
 void motor_speed_control(uint8_t slider_pos){
+	printf("r  %d \n \r \n\r", slider_pos);
 	if (slider_pos < 128){
 		motor_set_dir(0);
 		motor_dac_write((127 - slider_pos) * 0.5);
@@ -96,28 +99,35 @@ void motor_reset_encoder() {
 }
 
 void motor_pid_controller(uint8_t reference){
-	uint8_t kp = 2.5;
-	uint8_t kd = 0.1;
-	uint8_t ki = 2;
+	double kp = 1.2;
+	double kd = 0.2;
+	double ki = 0.8;
 	uint16_t freq = 20;
 	uint16_t encoder_min = 280;
 	uint16_t encoder_max = 8000;
 	reference = -reference;
+	int var = 1;
 	
 	uint16_t encoder = motor_read_encoder();
-	//int error = (reference * (encoder_max - encider_min) / 255 + encoder_min) - encoder;
-	int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
-	printf("e  %d \n \r \n\r", error);
+	//printf("enc  %d \n \r \n\r", encoder);
+	//double scalor = 255 / (encoder_max - encoder_min); 
+	double scalor = 0.033031;
+	double encoder_diff =(double) encoder - (double) encoder_min;
+	var = (int) encoder_diff;
+	double measured_val = encoder_diff * scalor;
+	int error = reference - (int) measured_val;
+	//printf("e  %d \n \r \n\r", error);
+	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	sum_error += error;
-	int u = ( kp * error );// + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
+	int u = ( kp * error ) + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
 	prev_error = error;
-	if (error > 0){motor_set_dir(0);}
+	if (u > 0){motor_set_dir(0);}
 	else {
 		motor_set_dir(1);
-		u *= -1;
+		u = -u;
 	}
 	if ( 100 < u ){ u = 100; };
-	if ( u < 5 ){ u = 0; };
+	//if ( u < 15 ){ u = 0; };
 	motor_dac_write(u);
-	//printf("u  %d \n \r \n\r", u);
+	printf("u  %d ", u);
 }
