@@ -10,9 +10,13 @@ main.c
 
 mcp2515_driver.c
 
+motor.c
+
 pwm.c
 
 spi.c
+
+TWI_Master.c
 
 usart.c
 

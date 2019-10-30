@@ -41,8 +41,10 @@ C_SRCS +=  \
 ../can_controller.c \
 ../main.c \
 ../mcp2515_driver.c \
+../motor.c \
 ../pwm.c \
 ../spi.c \
+../TWI_Master.c \
 ../usart.c
 
 
@@ -57,8 +59,10 @@ adc.o \
 can_controller.o \
 main.o \
 mcp2515_driver.o \
+motor.o \
 pwm.o \
 spi.o \
+TWI_Master.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
@@ -66,8 +70,10 @@ adc.o \
 can_controller.o \
 main.o \
 mcp2515_driver.o \
+motor.o \
 pwm.o \
 spi.o \
+TWI_Master.o \
 usart.o
 
 C_DEPS +=  \
@@ -75,8 +81,10 @@ adc.d \
 can_controller.d \
 main.d \
 mcp2515_driver.d \
+motor.d \
 pwm.d \
 spi.d \
+TWI_Master.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
@@ -84,8 +92,10 @@ adc.d \
 can_controller.d \
 main.d \
 mcp2515_driver.d \
+motor.d \
 pwm.d \
 spi.d \
+TWI_Master.d \
 usart.d
 
 OUTPUT_FILE_PATH +=ping_pong_node_2.elf
@@ -102,6 +112,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

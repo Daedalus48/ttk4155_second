@@ -34,7 +34,7 @@ void com_actualise_system(){
 		_delay_ms(400);
 	}
 	
-	message.data[0] = adc_read(1);
+	message.data[0] = adc_read(4);
 	printf("send message %d \n\r", message.data[0]);
 	can_message_send(&message);
 		

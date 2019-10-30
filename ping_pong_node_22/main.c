@@ -8,6 +8,7 @@
 #define FOSC 16000000 //Clock speed
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
+#define F_CPU 16000000
 
 
 
@@ -18,6 +19,7 @@
 #include "spi.h"
 #include "pwm.h"
 #include "adc.h"
+#include "motor.h"
 
 
 int main(void){
@@ -38,32 +40,7 @@ int main(void){
 	struct can_message message2;
 	message2.id = 3;
 	message2.length = 1;
-	
-	
-	
-	/*
-	printf("In the main send %c \n\r", message.data[0]);
-	
-	can_message_send(&message);
-	_delay_ms(50);
-	can_get_message(&message2);
-	
-	
-	printf("In the main received %c \n\r \n\r", message2.data[0]);
-	
-	message.data[0] = (uint8_t) 'g';
-	
-	printf("In the main send %c \n\r", message.data[0]);
-	
-	can_message_send(&message);
-	_delay_ms(50);
-	can_get_message(&message2);
-	
-	
-	printf("In the main received %c \n\r \n\r", message2.data[0]);
-	*/
 
-	
 	pwm_init();	
 	adc_init();
 	
@@ -77,9 +54,28 @@ int main(void){
 	int new_val = adc_read();
 	
 	int loose_counter = 0;
+	sei();
+	motor_init();
+	//_delay_ms(1500);
+
     while(1)
     {
-		if(can_get_message(&message2)){
+		//motor_speed_control(can_get_message(&message));
+		
+		
+		//motor_dac_write(80);
+		if(can_get_message(&message)){
+			motor_speed_control(message.data[0]);
+			//printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);
+		}
+		/*
+		motor_set_dir(0);
+		_delay_ms(1000);
+		motor_set_dir(1);
+		_delay_ms(1000);
+		
+		//this code is for the servo motor control
+		/*if(can_get_message(&message2)){
 			
 			//printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
 			
@@ -96,26 +92,24 @@ int main(void){
 			pwm_set_pulse_width(pw);
 			
 			
-		}
+		}*/
 		
-		new_val = adc_read();
+		/*new_val = adc_read();
 		
 		
 		if( (old_val == 0) && (new_val == 1) )
 		{
-			// traitement sur front montant
 			old_val = 1;
 			_delay_ms(50);
 		}
 		else if( (old_val == 1) && (new_val == 0) )
 		{
-			// traitement sur front descendant
 			loose_counter++;
 			printf("You lost %d times \n\r", loose_counter);
 			old_val = 0;
 			_delay_ms(50);
 		}
-		
+		*/
 		
 		//TODO:: Please write your application code 
 		

@@ -861,8 +861,8 @@ void com_actualise_system(){
 		_delay_ms(400);
 	}
 	
-	message.data[0] = adc_read(1);
-     966:	81 e0       	ldi	r24, 0x01	; 1
+	message.data[0] = adc_read(4);
+     966:	84 e0       	ldi	r24, 0x04	; 4
      968:	c8 de       	rcall	.-624    	; 0x6fa <adc_read>
      96a:	8c 83       	std	Y+4, r24	; 0x04
 	printf("send message %d \n\r", message.data[0]);
