@@ -10,6 +10,9 @@
 #include <util/delay.h>
 
 
+uint16_t prev_error = 0;
+int sum_error = 0;
+
 
 void motor_init(void)
 {
@@ -21,6 +24,7 @@ void motor_init(void)
 	DDRH |= (1 << PH1) | (1 << PH3) | (1 << PH4) | (1 << PH5) | (1 << PH6);  // Set MJ1 as output
 	PORTH |= (1 << PH1); // Direction right on dc_motor
 	PORTH |= (1 << PH4); // Enable motor
+	DDRK = 0x00;
 	motor_dac_write(80);
 }
 
@@ -38,10 +42,10 @@ void motor_dac_write(uint8_t data) {
 void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 	if (dir){
 		PORTH |= (1 << PH1); // Direction right on dc_motor
-		printf("right \n\r");
+		//printf("right \n\r");
 	}else{
 		PORTH &= ~(1 << PH1); // Direction left on dc_motor
-		printf("left \n\r");
+		//printf("left \n\r");
 	}
 	
 }
@@ -70,14 +74,14 @@ int16_t motor_read_encoder(){
 	_delay_ms(20);
 	
 	msb = PINK; // read msb
-	printf("msb  %d \n \r \n\r", msb);
+	//printf("msb  %d \n \r \n\r", msb);
 	
 	PORTH |= (1 << PH3); // set SEL high to get low byte
 	
 	_delay_ms(20);
 	
 	lsb = PINK; // read lsb
-	printf("lsb  %d \n \r \n\r", lsb);
+	//printf("lsb  %d \n \r \n\r", lsb);
 	
 	PORTH |= (1 << PH5); // Disable encoder read
 	
@@ -85,42 +89,35 @@ int16_t motor_read_encoder(){
 	return encoder_val;
 }
 
-
-/*
-uint8_t	reverse(uint8_t x)
-{
-	x = (((x & 0xaa) >> 1) | ((x & 0x55) << 1));
-	x = (((x & 0xcc) >> 2) | ((x & 0x33) << 2));
-	x = (((x & 0xf0) >> 4) | ((x & 0x0f) << 4));
-	return x;
+void motor_reset_encoder() {
+	PORTH &= ~(1<<PH6);
+	_delay_us(200);
+	PORTH |= (1<<PH6);
 }
 
-int16_t motor_read_encoder_2(){
-	volatile int16_t encoder_val;
-	volatile uint8_t lsb;
-	volatile uint8_t msb;
+void motor_pid_controller(uint8_t reference){
+	uint8_t kp = 2.5;
+	uint8_t kd = 0.1;
+	uint8_t ki = 2;
+	uint16_t freq = 62.5;
+	uint16_t encoder_min = 280;
+	uint16_t encoder_max = 8000;
+	reference = -reference;
 	
-	PORTF &= ~(1 << PF7); //set !OE low. enable output
-	PORTF &= ~(1 << PF5); //set SEL low to get high byte
-	
-	_delay_ms(20);
-	
-	msb = PINK; // read msb
-	printf("msb  %d \n \r \n\r", msb);
-	
-	PORTF |= (1 << PF5); // set SEL high to get low byte
-	
-	_delay_ms(20);
-	
-	lsb = PINK; // read lsb
-	printf("lsb  %d \n \r \n\r", lsb);
-	
-	PORTF |= (1 << PF7); // Disable encoder read
-	
-	msb = reverse(msb);
-	lsb = reverse(lsb);
-	
-	encoder_val = ((msb<<8) | lsb); //process data
-	return encoder_val;
+	uint16_t encoder = motor_read_encoder();
+	//int error = (reference * (encoder_max - encider_min) / 255 + encoder_min) - encoder;
+	int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
+	printf("e  %d \n \r \n\r", error);
+	sum_error += error;
+	int u = ( kp * error ) + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
+	prev_error = error;
+	if (error > 0){motor_set_dir(0);}
+	else {
+		motor_set_dir(1);
+		u *= -1;
+	}
+	if ( 100 < u ){ u = 100; };
+	if ( u < 5 ){ u = 0; };
+	motor_dac_write(u);
+	//printf("u  %d \n \r \n\r", u);
 }
-*/

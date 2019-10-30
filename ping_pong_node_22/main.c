@@ -56,7 +56,8 @@ int main(void){
 	int loose_counter = 0;
 	sei();
 	motor_init();
-	_delay_ms(1500);
+	_delay_ms(2000);
+	motor_reset_encoder();
 	int16_t encoder = 0;
 
     while(1)
@@ -66,11 +67,12 @@ int main(void){
 		
 		//motor_dac_write(80);
 		if(can_get_message(&message)){
-			motor_speed_control(message.data[0]);
+			motor_pid_controller(message.data[0]);
+			//motor_speed_control(message.data[0]);
 			//printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);
 		}encoder = motor_read_encoder();
-		printf("encoder %d \n \r \n\r", encoder);
-		_delay_ms(500);
+		//printf("encoder %d \n \r \n\r", encoder);
+		//_delay_ms(500);
 		/*
 		motor_set_dir(0);
 		_delay_ms(1000);
