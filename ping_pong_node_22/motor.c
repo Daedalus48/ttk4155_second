@@ -99,7 +99,7 @@ void motor_pid_controller(uint8_t reference){
 	uint8_t kp = 2.5;
 	uint8_t kd = 0.1;
 	uint8_t ki = 2;
-	uint16_t freq = 62.5;
+	uint16_t freq = 20;
 	uint16_t encoder_min = 280;
 	uint16_t encoder_max = 8000;
 	reference = -reference;
@@ -109,7 +109,7 @@ void motor_pid_controller(uint8_t reference){
 	int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	printf("e  %d \n \r \n\r", error);
 	sum_error += error;
-	int u = ( kp * error ) + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
+	int u = ( kp * error );// + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
 	prev_error = error;
 	if (error > 0){motor_set_dir(0);}
 	else {
