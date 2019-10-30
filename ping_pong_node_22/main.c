@@ -56,7 +56,8 @@ int main(void){
 	int loose_counter = 0;
 	sei();
 	motor_init();
-	//_delay_ms(1500);
+	_delay_ms(1500);
+	int16_t encoder = 0;
 
     while(1)
     {
@@ -67,7 +68,9 @@ int main(void){
 		if(can_get_message(&message)){
 			motor_speed_control(message.data[0]);
 			//printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);
-		}
+		}encoder = motor_read_encoder();
+		printf("encoder %d \n \r \n\r", encoder);
+		_delay_ms(500);
 		/*
 		motor_set_dir(0);
 		_delay_ms(1000);

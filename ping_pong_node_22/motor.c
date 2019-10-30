@@ -58,3 +58,69 @@ void motor_speed_control(uint8_t slider_pos){
 		//printf(" %d \n \r \n\r", (slider_pos - 127) * 2);
 	}
 }
+
+int16_t motor_read_encoder(){
+	volatile int16_t encoder_val;
+	volatile uint8_t lsb;
+	volatile uint8_t msb;
+	
+	PORTH &= ~(1 << PH5); //set !OE low. enable output
+	PORTH &= ~(1 << PH3); //set SEL low to get high byte
+	
+	_delay_ms(20);
+	
+	msb = PINK; // read msb
+	printf("msb  %d \n \r \n\r", msb);
+	
+	PORTH |= (1 << PH3); // set SEL high to get low byte
+	
+	_delay_ms(20);
+	
+	lsb = PINK; // read lsb
+	printf("lsb  %d \n \r \n\r", lsb);
+	
+	PORTH |= (1 << PH5); // Disable encoder read
+	
+	encoder_val = ((msb<<8) | lsb); //process data
+	return encoder_val;
+}
+
+
+/*
+uint8_t	reverse(uint8_t x)
+{
+	x = (((x & 0xaa) >> 1) | ((x & 0x55) << 1));
+	x = (((x & 0xcc) >> 2) | ((x & 0x33) << 2));
+	x = (((x & 0xf0) >> 4) | ((x & 0x0f) << 4));
+	return x;
+}
+
+int16_t motor_read_encoder_2(){
+	volatile int16_t encoder_val;
+	volatile uint8_t lsb;
+	volatile uint8_t msb;
+	
+	PORTF &= ~(1 << PF7); //set !OE low. enable output
+	PORTF &= ~(1 << PF5); //set SEL low to get high byte
+	
+	_delay_ms(20);
+	
+	msb = PINK; // read msb
+	printf("msb  %d \n \r \n\r", msb);
+	
+	PORTF |= (1 << PF5); // set SEL high to get low byte
+	
+	_delay_ms(20);
+	
+	lsb = PINK; // read lsb
+	printf("lsb  %d \n \r \n\r", lsb);
+	
+	PORTF |= (1 << PF7); // Disable encoder read
+	
+	msb = reverse(msb);
+	lsb = reverse(lsb);
+	
+	encoder_val = ((msb<<8) | lsb); //process data
+	return encoder_val;
+}
+*/
