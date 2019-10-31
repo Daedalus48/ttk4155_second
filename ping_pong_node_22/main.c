@@ -24,6 +24,9 @@
 
 int main(void){
 	
+	DDRD |= (1 << PD3);//init solenoid
+	PORTD &= (1 << PD3);//init solenoid
+	
 	USART_Init(MYUBRR);
 	printf("start \n\r \n");
 	
@@ -36,10 +39,6 @@ int main(void){
 	message.length = 1;
 	message.data[0] = (uint8_t) 'c';
 	
-	
-	struct can_message message2;
-	message2.id = 3;
-	message2.length = 1;
 
 	pwm_init();	
 	adc_init();
@@ -60,16 +59,41 @@ int main(void){
 	motor_reset_encoder();
 	motor_dac_write(0);
 	int16_t encoder = 0;
+	
+	
+	
 
     while(1)
     {
 		
-		
 		//motor_dac_write(80);
 		if(can_get_message(&message)){
-			motor_pid_controller(message.data[0]);
+			if(message.id == 1){
+				x_val = 255-(float) message.data[0];
+				a = (int) pw;
+				//printf("ow b: %d\n\r",  a);
+				//pw = pwm_follow_joystick_val(pw, x_val);
+				//a = (int) pw;
+				//printf("pw not scaled: %d\n\r",  a);
+				pw = pwm_scale_joystick_val(x_val);
+				a = (int) pw;
+				//printf("pw scaled: %d\n\r",  a);
+				pwm_set_pulse_width(pw);
+			}
+			else if(message.id == 2){
+				motor_pid_controller(message.data[0]);
+			}
+			else if(message.id == 3){
+				printf("\n\r shot \n\r");
+				
+				PORTD |= (1 << PD3);
+				_delay_ms(100);
+				PORTD &= ~(1 << PD3);
+				
+			}
+			
 			//motor_speed_control(message.data[0]);
-			//printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);
+			/*printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);*/
 		}
 		//encoder = motor_read_encoder();
 		//printf("encoder %d \n \r \n\r", encoder);
