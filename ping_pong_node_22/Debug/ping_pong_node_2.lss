@@ -21,11 +21,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  00000574  00000000  00000000  00005b9c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000006b8  00000000  00000000  00006110  2**0
+  9 .debug_str    000006ff  00000000  00000000  00006110  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000114d  00000000  00000000  000067c8  2**0
+ 10 .debug_loc    0000114d  00000000  00000000  0000680f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000188  00000000  00000000  00007915  2**0
+ 11 .debug_ranges 00000188  00000000  00000000  0000795c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -272,46 +272,30 @@ Disassembly of section .text:
      1c6:	1c cf       	rjmp	.-456    	; 0x0 <__vectors>
 
 000001c8 <adc_init>:
- */ 
-#include "adc.h"
-#include <avr/io.h>
-
-void adc_init(){
-	ADCSRA |= (1 << ADPS0 | 1 << ADPS1 | 1 << ADPS2);	
      1c8:	ea e7       	ldi	r30, 0x7A	; 122
      1ca:	f0 e0       	ldi	r31, 0x00	; 0
      1cc:	80 81       	ld	r24, Z
      1ce:	87 60       	ori	r24, 0x07	; 7
      1d0:	80 83       	st	Z, r24
-	ADCSRA |= (1 << ADEN);
      1d2:	80 81       	ld	r24, Z
      1d4:	80 68       	ori	r24, 0x80	; 128
      1d6:	80 83       	st	Z, r24
      1d8:	08 95       	ret
 
 000001da <adc_read>:
-}
-
-int adc_read(){
-	ADMUX |= (1 << REFS1);
      1da:	ec e7       	ldi	r30, 0x7C	; 124
      1dc:	f0 e0       	ldi	r31, 0x00	; 0
      1de:	80 81       	ld	r24, Z
      1e0:	80 68       	ori	r24, 0x80	; 128
      1e2:	80 83       	st	Z, r24
-	ADCSRA |= (1 << ADSC);
      1e4:	ea e7       	ldi	r30, 0x7A	; 122
      1e6:	f0 e0       	ldi	r31, 0x00	; 0
      1e8:	80 81       	ld	r24, Z
      1ea:	80 64       	ori	r24, 0x40	; 64
      1ec:	80 83       	st	Z, r24
-	
-	while (ADCSRA & (1 << ADSC));
      1ee:	80 81       	ld	r24, Z
      1f0:	86 fd       	sbrc	r24, 6
      1f2:	fd cf       	rjmp	.-6      	; 0x1ee <adc_read+0x14>
-	
-	if(ADC < THRESHOLD){
      1f4:	20 91 78 00 	lds	r18, 0x0078
      1f8:	30 91 79 00 	lds	r19, 0x0079
      1fc:	81 e0       	ldi	r24, 0x01	; 1
@@ -321,19 +305,9 @@ int adc_read(){
      204:	10 f4       	brcc	.+4      	; 0x20a <adc_read+0x30>
      206:	80 e0       	ldi	r24, 0x00	; 0
      208:	90 e0       	ldi	r25, 0x00	; 0
-		return 0;
-	}
-	return 1;
-}
      20a:	08 95       	ret
 
 0000020c <can_init>:
-		printf("can message send %d", msg->data[i]);
-	}
-	printf("\n\r");
-	mcp2515_request(MCP_RTS_TX0);
-	//Do something...
-}
      20c:	cf 93       	push	r28
      20e:	df 93       	push	r29
      210:	cd b7       	in	r28, 0x3d	; 61
@@ -421,12 +395,6 @@ int adc_read(){
      2b4:	08 95       	ret
 
 000002b6 <can_data_receive>:
-{
-	
-}
-*/
-void can_data_receive(struct can_message* msg, int buffer)
-{
      2b6:	ff 92       	push	r15
      2b8:	0f 93       	push	r16
      2ba:	1f 93       	push	r17
@@ -442,22 +410,15 @@ void can_data_receive(struct can_message* msg, int buffer)
      2ce:	cd bf       	out	0x3d, r28	; 61
      2d0:	8c 01       	movw	r16, r24
      2d2:	f6 2e       	mov	r15, r22
-	uint8_t result[MAX_CAN_LENGTH];
-	
-		
-	mcp2515_read(MCP_CANINTF, result, 1);
      2d4:	41 e0       	ldi	r20, 0x01	; 1
      2d6:	be 01       	movw	r22, r28
      2d8:	6f 5f       	subi	r22, 0xFF	; 255
      2da:	7f 4f       	sbci	r23, 0xFF	; 255
      2dc:	8c e2       	ldi	r24, 0x2C	; 44
      2de:	45 d1       	rcall	.+650    	; 0x56a <mcp2515_read>
-
-	if (!result[0]){
      2e0:	89 81       	ldd	r24, Y+1	; 0x01
      2e2:	81 11       	cpse	r24, r1
      2e4:	0b c0       	rjmp	.+22     	; 0x2fc <can_data_receive+0x46>
-		printf("CANINTF out %d \n\r", result[0] & 0b1);
      2e6:	1f 92       	push	r1
      2e8:	1f 92       	push	r1
      2ea:	21 e8       	ldi	r18, 0x81	; 129
@@ -469,11 +430,6 @@ void can_data_receive(struct can_message* msg, int buffer)
      2f6:	0f 90       	pop	r0
      2f8:	0f 90       	pop	r0
      2fa:	0f 90       	pop	r0
-	}
-	
-	uint8_t i;
-	
-	mcp2515_read(MCP_RXB0DLC + buffer, result, 1);
      2fc:	41 e0       	ldi	r20, 0x01	; 1
      2fe:	be 01       	movw	r22, r28
      300:	6f 5f       	subi	r22, 0xFF	; 255
@@ -481,12 +437,9 @@ void can_data_receive(struct can_message* msg, int buffer)
      304:	85 e6       	ldi	r24, 0x65	; 101
      306:	8f 0d       	add	r24, r15
      308:	30 d1       	rcall	.+608    	; 0x56a <mcp2515_read>
-	msg->length = result[0];
      30a:	89 81       	ldd	r24, Y+1	; 0x01
      30c:	f8 01       	movw	r30, r16
      30e:	82 83       	std	Z+2, r24	; 0x02
-	
-	mcp2515_read(MCP_RXB0SIDH + buffer, result, 1);
      310:	41 e0       	ldi	r20, 0x01	; 1
      312:	be 01       	movw	r22, r28
      314:	6f 5f       	subi	r22, 0xFF	; 255
@@ -494,14 +447,11 @@ void can_data_receive(struct can_message* msg, int buffer)
      318:	81 e6       	ldi	r24, 0x61	; 97
      31a:	8f 0d       	add	r24, r15
      31c:	26 d1       	rcall	.+588    	; 0x56a <mcp2515_read>
-	msg->id = result[0];
      31e:	29 81       	ldd	r18, Y+1	; 0x01
      320:	30 e0       	ldi	r19, 0x00	; 0
      322:	f8 01       	movw	r30, r16
      324:	31 83       	std	Z+1, r19	; 0x01
      326:	20 83       	st	Z, r18
-	
-	mcp2515_read(MCP_RXB0D(0) + buffer, result, msg->length);
      328:	42 81       	ldd	r20, Z+2	; 0x02
      32a:	be 01       	movw	r22, r28
      32c:	6f 5f       	subi	r22, 0xFF	; 255
@@ -509,8 +459,6 @@ void can_data_receive(struct can_message* msg, int buffer)
      330:	86 e6       	ldi	r24, 0x66	; 102
      332:	8f 0d       	add	r24, r15
      334:	1a d1       	rcall	.+564    	; 0x56a <mcp2515_read>
-	
-	for (i = 0; i < msg->length; i++)
      336:	f8 01       	movw	r30, r16
      338:	92 81       	ldd	r25, Z+2	; 0x02
      33a:	99 23       	and	r25, r25
@@ -521,31 +469,16 @@ void can_data_receive(struct can_message* msg, int buffer)
      344:	d8 01       	movw	r26, r16
      346:	13 96       	adiw	r26, 0x03	; 3
      348:	f9 01       	movw	r30, r18
-	{
-		msg->data[i] = result[i];
      34a:	81 91       	ld	r24, Z+
      34c:	8d 93       	st	X+, r24
      34e:	8e 2f       	mov	r24, r30
      350:	82 1b       	sub	r24, r18
-	mcp2515_read(MCP_RXB0SIDH + buffer, result, 1);
-	msg->id = result[0];
-	
-	mcp2515_read(MCP_RXB0D(0) + buffer, result, msg->length);
-	
-	for (i = 0; i < msg->length; i++)
      352:	89 17       	cp	r24, r25
      354:	d0 f3       	brcs	.-12     	; 0x34a <can_data_receive+0x94>
-		msg->data[i] = result[i];
-		//printf("can messsage received %c", msg->data[i]);
-	}
-	//printf("\n\r");
-	
-	mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00);
      356:	40 e0       	ldi	r20, 0x00	; 0
      358:	61 e0       	ldi	r22, 0x01	; 1
      35a:	8c e2       	ldi	r24, 0x2C	; 44
      35c:	3b d1       	rcall	.+630    	; 0x5d4 <mcp2515_bit_modify>
-}
      35e:	2a 96       	adiw	r28, 0x0a	; 10
      360:	0f b6       	in	r0, 0x3f	; 63
      362:	f8 94       	cli
@@ -560,9 +493,6 @@ void can_data_receive(struct can_message* msg, int buffer)
      374:	08 95       	ret
 
 00000376 <can_get_message>:
-
-int can_get_message(struct can_message* message)
-{
      376:	0f 93       	push	r16
      378:	1f 93       	push	r17
      37a:	cf 93       	push	r28
@@ -576,63 +506,41 @@ int can_get_message(struct can_message* message)
      38a:	0f be       	out	0x3f, r0	; 63
      38c:	cd bf       	out	0x3d, r28	; 61
      38e:	8c 01       	movw	r16, r24
-	uint8_t result[MAX_CAN_LENGTH];
-	mcp2515_read(MCP_CANINTF, result, 1);
      390:	41 e0       	ldi	r20, 0x01	; 1
      392:	be 01       	movw	r22, r28
      394:	6f 5f       	subi	r22, 0xFF	; 255
      396:	7f 4f       	sbci	r23, 0xFF	; 255
      398:	8c e2       	ldi	r24, 0x2C	; 44
      39a:	e7 d0       	rcall	.+462    	; 0x56a <mcp2515_read>
-
-	
-	if ((result[0] & 0x01) == 0x01)
      39c:	89 81       	ldd	r24, Y+1	; 0x01
      39e:	80 ff       	sbrs	r24, 0
      3a0:	0b c0       	rjmp	.+22     	; 0x3b8 <can_get_message+0x42>
-	{
-		can_data_receive(message,0);
      3a2:	60 e0       	ldi	r22, 0x00	; 0
      3a4:	70 e0       	ldi	r23, 0x00	; 0
      3a6:	c8 01       	movw	r24, r16
      3a8:	86 df       	rcall	.-244    	; 0x2b6 <can_data_receive>
-		mcp2515_bit_modify(MCP_CANINTF,0x01,0x00);
      3aa:	40 e0       	ldi	r20, 0x00	; 0
      3ac:	61 e0       	ldi	r22, 0x01	; 1
      3ae:	8c e2       	ldi	r24, 0x2C	; 44
      3b0:	11 d1       	rcall	.+546    	; 0x5d4 <mcp2515_bit_modify>
-		return 1;
      3b2:	81 e0       	ldi	r24, 0x01	; 1
      3b4:	90 e0       	ldi	r25, 0x00	; 0
      3b6:	0f c0       	rjmp	.+30     	; 0x3d6 <can_get_message+0x60>
-	}
-	else if ((result[0] & 0x02) == 0x02)
      3b8:	81 ff       	sbrs	r24, 1
      3ba:	0b c0       	rjmp	.+22     	; 0x3d2 <can_get_message+0x5c>
-	{
-		can_data_receive(message,1);
      3bc:	61 e0       	ldi	r22, 0x01	; 1
      3be:	70 e0       	ldi	r23, 0x00	; 0
      3c0:	c8 01       	movw	r24, r16
      3c2:	79 df       	rcall	.-270    	; 0x2b6 <can_data_receive>
-		mcp2515_bit_modify(MCP_CANINTF,0x02,0x00);
      3c4:	40 e0       	ldi	r20, 0x00	; 0
      3c6:	62 e0       	ldi	r22, 0x02	; 2
      3c8:	8c e2       	ldi	r24, 0x2C	; 44
      3ca:	04 d1       	rcall	.+520    	; 0x5d4 <mcp2515_bit_modify>
-		return 1;
      3cc:	81 e0       	ldi	r24, 0x01	; 1
      3ce:	90 e0       	ldi	r25, 0x00	; 0
      3d0:	02 c0       	rjmp	.+4      	; 0x3d6 <can_get_message+0x60>
-	}
-	else
-	{
-		return 0;
      3d2:	80 e0       	ldi	r24, 0x00	; 0
      3d4:	90 e0       	ldi	r25, 0x00	; 0
-	}
-	
-}
      3d6:	2a 96       	adiw	r28, 0x0a	; 10
      3d8:	0f b6       	in	r0, 0x3f	; 63
      3da:	f8 94       	cli
@@ -646,12 +554,6 @@ int can_get_message(struct can_message* message)
      3ea:	08 95       	ret
 
 000003ec <main>:
-#include "pwm.h"
-#include "adc.h"
-#include "motor.h"
-
-
-int main(void){
      3ec:	cf 93       	push	r28
      3ee:	df 93       	push	r29
      3f0:	cd b7       	in	r28, 0x3d	; 61
@@ -662,73 +564,34 @@ int main(void){
      3fa:	de bf       	out	0x3e, r29	; 62
      3fc:	0f be       	out	0x3f, r0	; 63
      3fe:	cd bf       	out	0x3d, r28	; 61
-	
-	DDRD |= (1 << PD3);//init solenoid
      400:	53 9a       	sbi	0x0a, 3	; 10
-	PORTD &= (1 << PD3);//init solenoid
      402:	8b b1       	in	r24, 0x0b	; 11
      404:	88 70       	andi	r24, 0x08	; 8
      406:	8b b9       	out	0x0b, r24	; 11
-	
-	USART_Init(MYUBRR);
      408:	87 e6       	ldi	r24, 0x67	; 103
      40a:	90 e0       	ldi	r25, 0x00	; 0
      40c:	bd d3       	rcall	.+1914   	; 0xb88 <USART_Init>
-	printf("start \n\r \n");
      40e:	83 e9       	ldi	r24, 0x93	; 147
      410:	92 e0       	ldi	r25, 0x02	; 2
      412:	46 d6       	rcall	.+3212   	; 0x10a0 <puts>
-	
-	can_init();
      414:	fb de       	rcall	.-522    	; 0x20c <can_init>
-	
-
-	
-	struct can_message message;
-	message.id = 3;
      416:	83 e0       	ldi	r24, 0x03	; 3
      418:	90 e0       	ldi	r25, 0x00	; 0
      41a:	9a 83       	std	Y+2, r25	; 0x02
      41c:	89 83       	std	Y+1, r24	; 0x01
-	message.length = 1;
      41e:	81 e0       	ldi	r24, 0x01	; 1
      420:	8b 83       	std	Y+3, r24	; 0x03
-	message.data[0] = (uint8_t) 'C';
      422:	83 e4       	ldi	r24, 0x43	; 67
      424:	8c 83       	std	Y+4, r24	; 0x04
-	
-
-	pwm_init();	
      426:	3b d2       	rcall	.+1142   	; 0x89e <pwm_init>
-	adc_init();
      428:	cf de       	rcall	.-610    	; 0x1c8 <adc_init>
-	
-	//pwm_set_pulse_width(50000);	
-	float pw = 1500;
-	float x_val = 130;
-	
-	int old_val = adc_read();
      42a:	d7 de       	rcall	.-594    	; 0x1da <adc_read>
-	int new_val = adc_read();
      42c:	d6 de       	rcall	.-596    	; 0x1da <adc_read>
-	
-	int loose_counter = 0;
-	sei();
      42e:	78 94       	sei
-	motor_init();
      430:	fc d0       	rcall	.+504    	; 0x62a <motor_init>
-	
-	motor_reset_encoder();
      432:	5a d1       	rcall	.+692    	; 0x6e8 <motor_reset_encoder>
-	motor_dac_write(0);
      434:	80 e0       	ldi	r24, 0x00	; 0
      436:	e6 d0       	rcall	.+460    	; 0x604 <motor_dac_write>
-	adc_init();
-	
-	int a;
-	
-	//pwm_set_pulse_width(50000);	
-	float pw = 1500;
      438:	0f 2e       	mov	r0, r31
      43a:	41 2c       	mov	r4, r1
      43c:	f0 e8       	ldi	r31, 0x80	; 128
@@ -738,52 +601,31 @@ int main(void){
      444:	f4 e4       	ldi	r31, 0x44	; 68
      446:	7f 2e       	mov	r7, r31
      448:	f0 2d       	mov	r31, r0
-    while(1)
-    {
-		
-		//motor_dac_write(80);
-		if(can_get_message(&message)){
-			printf("Atmega2560 received a new id %d \n \r \n\r", message.id);
      44a:	0d e9       	ldi	r16, 0x9D	; 157
      44c:	12 e0       	ldi	r17, 0x02	; 2
-			if(message.id == 1){
-				printf("servo control \n\r");
      44e:	0f 2e       	mov	r0, r31
      450:	f4 ec       	ldi	r31, 0xC4	; 196
      452:	8f 2e       	mov	r8, r31
      454:	f2 e0       	ldi	r31, 0x02	; 2
      456:	9f 2e       	mov	r9, r31
      458:	f0 2d       	mov	r31, r0
-				x_val = 255-(float) message.data[0];
-				a = (int) pw;
-				printf("ow b: %d\n\r",  a);
      45a:	0f 2e       	mov	r0, r31
      45c:	f5 ed       	ldi	r31, 0xD5	; 213
      45e:	af 2e       	mov	r10, r31
      460:	f2 e0       	ldi	r31, 0x02	; 2
      462:	bf 2e       	mov	r11, r31
      464:	f0 2d       	mov	r31, r0
-				//pw = pwm_follow_joystick_val(pw, x_val);
-				//a = (int) pw;
-				printf("pw not scaled: %d\n\r",  a);
      466:	0f 2e       	mov	r0, r31
      468:	f0 ee       	ldi	r31, 0xE0	; 224
      46a:	2f 2e       	mov	r2, r31
      46c:	f2 e0       	ldi	r31, 0x02	; 2
      46e:	3f 2e       	mov	r3, r31
      470:	f0 2d       	mov	r31, r0
-
-    while(1)
-    {
-		
-		//motor_dac_write(80);
-		if(can_get_message(&message)){
      472:	ce 01       	movw	r24, r28
      474:	01 96       	adiw	r24, 0x01	; 1
      476:	7f df       	rcall	.-258    	; 0x376 <can_get_message>
      478:	89 2b       	or	r24, r25
      47a:	d9 f3       	breq	.-10     	; 0x472 <main+0x86>
-			printf("Atmega2560 received a new id %d \n \r \n\r", message.id);
      47c:	8a 81       	ldd	r24, Y+2	; 0x02
      47e:	8f 93       	push	r24
      480:	89 81       	ldd	r24, Y+1	; 0x01
@@ -791,7 +633,6 @@ int main(void){
      484:	1f 93       	push	r17
      486:	0f 93       	push	r16
      488:	fa d5       	rcall	.+3060   	; 0x107e <printf>
-			if(message.id == 1){
      48a:	89 81       	ldd	r24, Y+1	; 0x01
      48c:	9a 81       	ldd	r25, Y+2	; 0x02
      48e:	0f 90       	pop	r0
@@ -802,11 +643,9 @@ int main(void){
      498:	91 05       	cpc	r25, r1
      49a:	09 f0       	breq	.+2      	; 0x49e <main+0xb2>
      49c:	36 c0       	rjmp	.+108    	; 0x50a <main+0x11e>
-				printf("servo control \n\r");
      49e:	9f 92       	push	r9
      4a0:	8f 92       	push	r8
      4a2:	ed d5       	rcall	.+3034   	; 0x107e <printf>
-				x_val = 255-(float) message.data[0];
      4a4:	6c 81       	ldd	r22, Y+4	; 0x04
      4a6:	70 e0       	ldi	r23, 0x00	; 0
      4a8:	80 e0       	ldi	r24, 0x00	; 0
@@ -821,35 +660,27 @@ int main(void){
      4ba:	76 d3       	rcall	.+1772   	; 0xba8 <__subsf3>
      4bc:	6b 01       	movw	r12, r22
      4be:	7c 01       	movw	r14, r24
-				a = (int) pw;
      4c0:	c3 01       	movw	r24, r6
      4c2:	b2 01       	movw	r22, r4
      4c4:	42 d4       	rcall	.+2180   	; 0xd4a <__fixsfsi>
      4c6:	76 2e       	mov	r7, r22
      4c8:	67 2e       	mov	r6, r23
-				printf("ow b: %d\n\r",  a);
      4ca:	7f 93       	push	r23
      4cc:	6f 93       	push	r22
      4ce:	bf 92       	push	r11
      4d0:	af 92       	push	r10
      4d2:	d5 d5       	rcall	.+2986   	; 0x107e <printf>
-				//pw = pwm_follow_joystick_val(pw, x_val);
-				//a = (int) pw;
-				printf("pw not scaled: %d\n\r",  a);
      4d4:	6f 92       	push	r6
      4d6:	7f 92       	push	r7
      4d8:	3f 92       	push	r3
      4da:	2f 92       	push	r2
      4dc:	d0 d5       	rcall	.+2976   	; 0x107e <printf>
-				pw = pwm_scale_joystick_val(x_val);
      4de:	c7 01       	movw	r24, r14
      4e0:	b6 01       	movw	r22, r12
      4e2:	45 d2       	rcall	.+1162   	; 0x96e <pwm_scale_joystick_val>
      4e4:	2b 01       	movw	r4, r22
      4e6:	3c 01       	movw	r6, r24
-				a = (int) pw;
      4e8:	30 d4       	rcall	.+2144   	; 0xd4a <__fixsfsi>
-				printf("pw scaled: %d\n\r",  a);
      4ea:	7f 93       	push	r23
      4ec:	6f 93       	push	r22
      4ee:	a4 ef       	ldi	r26, 0xF4	; 244
@@ -857,7 +688,6 @@ int main(void){
      4f2:	bf 93       	push	r27
      4f4:	af 93       	push	r26
      4f6:	c3 d5       	rcall	.+2950   	; 0x107e <printf>
-				pwm_set_pulse_width(pw);
      4f8:	c3 01       	movw	r24, r6
      4fa:	b2 01       	movw	r22, r4
      4fc:	ef d1       	rcall	.+990    	; 0x8dc <pwm_set_pulse_width>
@@ -867,31 +697,20 @@ int main(void){
      504:	0f be       	out	0x3f, r0	; 63
      506:	cd bf       	out	0x3d, r28	; 61
      508:	b4 cf       	rjmp	.-152    	; 0x472 <main+0x86>
-				
-			}
-			else if(message.id == 2){
      50a:	82 30       	cpi	r24, 0x02	; 2
      50c:	91 05       	cpc	r25, r1
      50e:	19 f4       	brne	.+6      	; 0x516 <main+0x12a>
-		
-				motor_pid_controller(message.data[0]);
      510:	8c 81       	ldd	r24, Y+4	; 0x04
      512:	f7 d0       	rcall	.+494    	; 0x702 <motor_pid_controller>
      514:	ae cf       	rjmp	.-164    	; 0x472 <main+0x86>
-			
-			}
-			else if(message.id == 3){
      516:	03 97       	sbiw	r24, 0x03	; 3
      518:	09 f0       	breq	.+2      	; 0x51c <main+0x130>
      51a:	ab cf       	rjmp	.-170    	; 0x472 <main+0x86>
-				printf("\n\r shot \n\r");
      51c:	a4 e0       	ldi	r26, 0x04	; 4
      51e:	b3 e0       	ldi	r27, 0x03	; 3
      520:	bf 93       	push	r27
      522:	af 93       	push	r26
      524:	ac d5       	rcall	.+2904   	; 0x107e <printf>
-				
-				PORTD |= (1 << PD3);
      526:	5b 9a       	sbi	0x0b, 3	; 11
 	#else
 		//round up by default
@@ -908,20 +727,12 @@ int main(void){
      534:	e1 f7       	brne	.-8      	; 0x52e <main+0x142>
      536:	00 c0       	rjmp	.+0      	; 0x538 <main+0x14c>
      538:	00 00       	nop
-				_delay_ms(100);
-				PORTD &= ~(1 << PD3);
      53a:	5b 98       	cbi	0x0b, 3	; 11
      53c:	0f 90       	pop	r0
      53e:	0f 90       	pop	r0
      540:	98 cf       	rjmp	.-208    	; 0x472 <main+0x86>
 
 00000542 <mcp2515_reset>:
-		
-	uint8_t cmd[] = {rqs};
-	spi_write(cmd, 1);		
-	
-	PORTB |= (1<<PB7); // Deselect CAN-controller
-}
      542:	cf 93       	push	r28
      544:	df 93       	push	r29
      546:	1f 92       	push	r1
@@ -1003,36 +814,23 @@ int main(void){
      5d2:	08 95       	ret
 
 000005d4 <mcp2515_bit_modify>:
-
-// Modify bits in the register / See datasheet 12.10
-void mcp2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data) 
-{
      5d4:	cf 93       	push	r28
      5d6:	df 93       	push	r29
      5d8:	00 d0       	rcall	.+0      	; 0x5da <mcp2515_bit_modify+0x6>
      5da:	1f 92       	push	r1
      5dc:	cd b7       	in	r28, 0x3d	; 61
      5de:	de b7       	in	r29, 0x3e	; 62
-	PORTB &= ~(1<<PB7); // Select CAN-controller
      5e0:	2f 98       	cbi	0x05, 7	; 5
-	//SPSR &= ~(1 << SPIF);	
-
-	uint8_t bit_list[] = {MCP_BITMOD, address, mask, data};
      5e2:	95 e0       	ldi	r25, 0x05	; 5
      5e4:	99 83       	std	Y+1, r25	; 0x01
      5e6:	8a 83       	std	Y+2, r24	; 0x02
      5e8:	6b 83       	std	Y+3, r22	; 0x03
      5ea:	4c 83       	std	Y+4, r20	; 0x04
-	spi_write(bit_list, 4);	
      5ec:	64 e0       	ldi	r22, 0x04	; 4
      5ee:	ce 01       	movw	r24, r28
      5f0:	01 96       	adiw	r24, 0x01	; 1
      5f2:	f7 d1       	rcall	.+1006   	; 0x9e2 <spi_write>
-	
-	PORTB |= (1<<PB7); //Deselect CAN-controller
      5f4:	2f 9a       	sbi	0x05, 7	; 5
-
-}
      5f6:	0f 90       	pop	r0
      5f8:	0f 90       	pop	r0
      5fa:	0f 90       	pop	r0
@@ -1428,27 +1226,17 @@ void motor_pid_controller(uint8_t reference){
      878:	08 95       	ret
 
 0000087a <pwm_set_signal_period>:
-	
-}
-
-void pwm_set_signal_period(){
-	//prescale
-	set_bit(TCCR1B, CS11);
      87a:	e1 e8       	ldi	r30, 0x81	; 129
      87c:	f0 e0       	ldi	r31, 0x00	; 0
      87e:	80 81       	ld	r24, Z
      880:	82 60       	ori	r24, 0x02	; 2
      882:	80 83       	st	Z, r24
-	clear_bit(TCCR1B, CS12);
      884:	80 81       	ld	r24, Z
      886:	8b 7f       	andi	r24, 0xFB	; 251
      888:	80 83       	st	Z, r24
-	clear_bit(TCCR1B, CS10);
      88a:	80 81       	ld	r24, Z
      88c:	8e 7f       	andi	r24, 0xFE	; 254
      88e:	80 83       	st	Z, r24
-	
-	ICR1 = TOP_VALUE;	//set period to 20ms
      890:	80 e4       	ldi	r24, 0x40	; 64
      892:	9c e9       	ldi	r25, 0x9C	; 156
      894:	90 93 87 00 	sts	0x0087, r25
@@ -1456,53 +1244,30 @@ void pwm_set_signal_period(){
      89c:	08 95       	ret
 
 0000089e <pwm_init>:
-#define  TOP_VALUE FOSC/8/50
-
-
-void pwm_init(){
-	// set mode to fast pwm
-	set_bit(TCCR1B, WGM13);
      89e:	e1 e8       	ldi	r30, 0x81	; 129
      8a0:	f0 e0       	ldi	r31, 0x00	; 0
      8a2:	80 81       	ld	r24, Z
      8a4:	80 61       	ori	r24, 0x10	; 16
      8a6:	80 83       	st	Z, r24
-	set_bit(TCCR1B, WGM12);
      8a8:	80 81       	ld	r24, Z
      8aa:	88 60       	ori	r24, 0x08	; 8
      8ac:	80 83       	st	Z, r24
-	set_bit(TCCR1A, WGM11);
      8ae:	e0 e8       	ldi	r30, 0x80	; 128
      8b0:	f0 e0       	ldi	r31, 0x00	; 0
      8b2:	80 81       	ld	r24, Z
      8b4:	82 60       	ori	r24, 0x02	; 2
      8b6:	80 83       	st	Z, r24
-	clear_bit(TCCR1A, WGM10);
      8b8:	80 81       	ld	r24, Z
      8ba:	8e 7f       	andi	r24, 0xFE	; 254
      8bc:	80 83       	st	Z, r24
-	
-	//set output on PB5 to compare
-	set_bit(TCCR1A, COM1A1);
      8be:	80 81       	ld	r24, Z
      8c0:	80 68       	ori	r24, 0x80	; 128
      8c2:	80 83       	st	Z, r24
-	clear_bit(TCCR1A, COM1A0);
      8c4:	80 81       	ld	r24, Z
      8c6:	8f 7b       	andi	r24, 0xBF	; 191
      8c8:	80 83       	st	Z, r24
-	pwm_set_signal_period();
      8ca:	d7 df       	rcall	.-82     	; 0x87a <pwm_set_signal_period>
-	
-	//set PB5 to output mode
-	set_bit(DDRB, PB5);
      8cc:	25 9a       	sbi	0x04, 5	; 4
-void pwm_set_pulse_width(float pulse_width){
-	//makes sure pulse with is within bounderies
-	if (pulse_width<900.0){pulse_width=900.0;}
-	if (pulse_width>2100.0){pulse_width=2100.0;}	
-	int pulse = (int) (pulse_width/20000*TOP_VALUE);	//pw*2
-	OCR1A = pulse;
      8ce:	88 eb       	ldi	r24, 0xB8	; 184
      8d0:	9b e0       	ldi	r25, 0x0B	; 11
      8d2:	90 93 89 00 	sts	0x0089, r25
@@ -1510,20 +1275,12 @@ void pwm_set_pulse_width(float pulse_width){
      8da:	08 95       	ret
 
 000008dc <pwm_set_pulse_width>:
-	
-	ICR1 = TOP_VALUE;	//set period to 20ms
-	//ICR1 = 1250;
-}
-
-void pwm_set_pulse_width(float pulse_width){
      8dc:	cf 92       	push	r12
      8de:	df 92       	push	r13
      8e0:	ef 92       	push	r14
      8e2:	ff 92       	push	r15
      8e4:	6b 01       	movw	r12, r22
      8e6:	7c 01       	movw	r14, r24
-	//makes sure pulse with is within bounderies
-	if (pulse_width<900.0){pulse_width=900.0;}
      8e8:	20 e0       	ldi	r18, 0x00	; 0
      8ea:	30 e0       	ldi	r19, 0x00	; 0
      8ec:	41 e6       	ldi	r20, 0x61	; 97
@@ -1531,7 +1288,6 @@ void pwm_set_pulse_width(float pulse_width){
      8f0:	c0 d1       	rcall	.+896    	; 0xc72 <__cmpsf2>
      8f2:	88 23       	and	r24, r24
      8f4:	54 f0       	brlt	.+20     	; 0x90a <pwm_set_pulse_width+0x2e>
-	if (pulse_width>2100.0){pulse_width=2100.0;}	
      8f6:	20 e0       	ldi	r18, 0x00	; 0
      8f8:	30 e4       	ldi	r19, 0x40	; 64
      8fa:	43 e0       	ldi	r20, 0x03	; 3
@@ -1542,12 +1298,6 @@ void pwm_set_pulse_width(float pulse_width){
      904:	18 16       	cp	r1, r24
      906:	54 f0       	brlt	.+20     	; 0x91c <pwm_set_pulse_width+0x40>
      908:	12 c0       	rjmp	.+36     	; 0x92e <pwm_set_pulse_width+0x52>
-	//ICR1 = 1250;
-}
-
-void pwm_set_pulse_width(float pulse_width){
-	//makes sure pulse with is within bounderies
-	if (pulse_width<900.0){pulse_width=900.0;}
      90a:	0f 2e       	mov	r0, r31
      90c:	c1 2c       	mov	r12, r1
      90e:	d1 2c       	mov	r13, r1
@@ -1557,7 +1307,6 @@ void pwm_set_pulse_width(float pulse_width){
      916:	ff 2e       	mov	r15, r31
      918:	f0 2d       	mov	r31, r0
      91a:	09 c0       	rjmp	.+18     	; 0x92e <pwm_set_pulse_width+0x52>
-	if (pulse_width>2100.0){pulse_width=2100.0;}	
      91c:	0f 2e       	mov	r0, r31
      91e:	c1 2c       	mov	r12, r1
      920:	f0 e4       	ldi	r31, 0x40	; 64
@@ -1567,7 +1316,6 @@ void pwm_set_pulse_width(float pulse_width){
      928:	f5 e4       	ldi	r31, 0x45	; 69
      92a:	ff 2e       	mov	r15, r31
      92c:	f0 2d       	mov	r31, r0
-	int pulse = (int) (pulse_width/20000*TOP_VALUE);	//pw*2
      92e:	20 e0       	ldi	r18, 0x00	; 0
      930:	30 e4       	ldi	r19, 0x40	; 64
      932:	4c e9       	ldi	r20, 0x9C	; 156
@@ -1591,14 +1339,8 @@ void pwm_set_pulse_width(float pulse_width){
      956:	52 e4       	ldi	r21, 0x42	; 66
      958:	90 d1       	rcall	.+800    	; 0xc7a <__divsf3>
      95a:	f7 d1       	rcall	.+1006   	; 0xd4a <__fixsfsi>
-	OCR1A = pulse;
      95c:	70 93 89 00 	sts	0x0089, r23
      960:	60 93 88 00 	sts	0x0088, r22
-	
-	//printf("OCR1A: %d\n\r",  OCR1A);
-	
-	//OCR1A = 1150;
-}
      964:	ff 90       	pop	r15
      966:	ef 90       	pop	r14
      968:	df 90       	pop	r13
@@ -1606,9 +1348,6 @@ void pwm_set_pulse_width(float pulse_width){
      96c:	08 95       	ret
 
 0000096e <pwm_scale_joystick_val>:
-
-float pwm_scale_joystick_val(float x_val){
-		return (x_val*4.7059+900);	
      96e:	2c eb       	ldi	r18, 0xBC	; 188
      970:	36 e9       	ldi	r19, 0x96	; 150
      972:	46 e9       	ldi	r20, 0x96	; 150
@@ -1619,38 +1358,20 @@ float pwm_scale_joystick_val(float x_val){
      97c:	41 e6       	ldi	r20, 0x61	; 97
      97e:	54 e4       	ldi	r21, 0x44	; 68
      980:	14 c1       	rjmp	.+552    	; 0xbaa <__addsf3>
-}
      982:	08 95       	ret
 
 00000984 <spi_init>:
-#define MISO_PIN PB3
-
-void spi_init() {
-
-  /* Set MOSI and SCK and CS output, all others input */
-  DDRB |= (1 << MOSI_PIN) | (1 << SCK_PIN) | (1 << SS_PIN) | (1 << PB0);
      984:	84 b1       	in	r24, 0x04	; 4
      986:	87 68       	ori	r24, 0x87	; 135
      988:	84 b9       	out	0x04, r24	; 4
-  PORTB |= (1 << SS_PIN) | (1 << PB0); // Set Master mode
      98a:	85 b1       	in	r24, 0x05	; 5
      98c:	81 68       	ori	r24, 0x81	; 129
      98e:	85 b9       	out	0x05, r24	; 5
-  /* Enable interrupt */
-  // SPSR = (1<<SPIF);
-
-  /* Enable SPI interrupt, SPI, Master, set clock rate fck/16 , SPI mode 0 by
-   * default*/
-  SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);
      990:	81 e5       	ldi	r24, 0x51	; 81
      992:	8c bd       	out	0x2c, r24	; 44
      994:	08 95       	ret
 
 00000996 <spi_read>:
-}
-
-void spi_read(uint8_t *receive_data, uint8_t data_length) 
-{
      996:	cf 93       	push	r28
      998:	df 93       	push	r29
      99a:	cd b7       	in	r28, 0x3d	; 61
@@ -1661,9 +1382,6 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      9a4:	de bf       	out	0x3e, r29	; 62
      9a6:	0f be       	out	0x3f, r0	; 63
      9a8:	cd bf       	out	0x3d, r28	; 61
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	
-	for (int i = 0; i < data_length; i++)
      9aa:	66 23       	and	r22, r22
      9ac:	89 f0       	breq	.+34     	; 0x9d0 <spi_read+0x3a>
      9ae:	fe 01       	movw	r30, r28
@@ -1673,35 +1391,16 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      9b6:	cf 01       	movw	r24, r30
      9b8:	86 0f       	add	r24, r22
      9ba:	91 1d       	adc	r25, r1
-	{
-		SPDR = dummy_data[i];
      9bc:	21 91       	ld	r18, Z+
      9be:	2e bd       	out	0x2e, r18	; 46
-		int j = 0;
-		while (!(SPSR & (1 << SPIF))){
      9c0:	0d b4       	in	r0, 0x2d	; 45
      9c2:	07 fe       	sbrs	r0, 7
      9c4:	fd cf       	rjmp	.-6      	; 0x9c0 <spi_read+0x2a>
-			//printf("I am stuck here %d\n\r ",j++);			
-		}
-		receive_data[i] = SPDR;
      9c6:	2e b5       	in	r18, 0x2e	; 46
      9c8:	2d 93       	st	X+, r18
-
-void spi_read(uint8_t *receive_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	
-	for (int i = 0; i < data_length; i++)
      9ca:	e8 17       	cp	r30, r24
      9cc:	f9 07       	cpc	r31, r25
      9ce:	b1 f7       	brne	.-20     	; 0x9bc <spi_read+0x26>
-			//printf("I am stuck here %d\n\r ",j++);			
-		}
-		receive_data[i] = SPDR;
-	}
-	
-}
      9d0:	2a 96       	adiw	r28, 0x0a	; 10
      9d2:	0f b6       	in	r0, 0x3f	; 63
      9d4:	f8 94       	cli
@@ -1713,11 +1412,6 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
      9e0:	08 95       	ret
 
 000009e2 <spi_write>:
-
-void spi_write(uint8_t *send_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	for (int i = 0; i < data_length; i++)
      9e2:	26 2f       	mov	r18, r22
      9e4:	30 e0       	ldi	r19, 0x00	; 0
      9e6:	12 16       	cp	r1, r18
@@ -1727,22 +1421,12 @@ void spi_write(uint8_t *send_data, uint8_t data_length)
      9ee:	f9 2f       	mov	r31, r25
      9f0:	80 e0       	ldi	r24, 0x00	; 0
      9f2:	90 e0       	ldi	r25, 0x00	; 0
-	{
-		SPDR = send_data[i];
      9f4:	41 91       	ld	r20, Z+
      9f6:	4e bd       	out	0x2e, r20	; 46
-		while (!(SPSR & (1 << SPIF)));
      9f8:	0d b4       	in	r0, 0x2d	; 45
      9fa:	07 fe       	sbrs	r0, 7
      9fc:	fd cf       	rjmp	.-6      	; 0x9f8 <spi_write+0x16>
-		dummy_data[i] = SPDR;
      9fe:	4e b5       	in	r20, 0x2e	; 46
-}
-
-void spi_write(uint8_t *send_data, uint8_t data_length) 
-{
-	uint8_t dummy_data[MAX_CAN_LENGTH];
-	for (int i = 0; i < data_length; i++)
      a00:	01 96       	adiw	r24, 0x01	; 1
      a02:	82 17       	cp	r24, r18
      a04:	93 07       	cpc	r25, r19
@@ -1750,12 +1434,6 @@ void spi_write(uint8_t *send_data, uint8_t data_length)
      a08:	08 95       	ret
 
 00000a0a <TWI_Master_Initialise>:
-    {
-      msg[ i ] = TWI_buf[ i ];
-    }
-  }
-  return( TWI_statusReg.lastTransOK );                                   
-}
      a0a:	8c e0       	ldi	r24, 0x0C	; 12
      a0c:	80 93 b8 00 	sts	0x00B8, r24
      a10:	8f ef       	ldi	r24, 0xFF	; 255
@@ -1796,12 +1474,6 @@ void spi_write(uint8_t *send_data, uint8_t data_length)
      a60:	08 95       	ret
 
 00000a62 <__vector_39>:
-This function is the Interrupt Service Routine (ISR), and called when the TWI interrupt is triggered;
-that is whenever a TWI event has occurred. This function should not be called directly from the main
-application.
-****************************************************************************/
-ISR(TWI_vect)
-{
      a62:	1f 92       	push	r1
      a64:	0f 92       	push	r0
      a66:	0f b6       	in	r0, 0x3f	; 63
@@ -1817,9 +1489,6 @@ ISR(TWI_vect)
      a7a:	bf 93       	push	r27
      a7c:	ef 93       	push	r30
      a7e:	ff 93       	push	r31
-  static unsigned char TWI_bufPtr;
-  
-  switch (TWSR)
      a80:	80 91 b9 00 	lds	r24, 0x00B9
      a84:	90 e0       	ldi	r25, 0x00	; 0
      a86:	fc 01       	movw	r30, r24
@@ -1831,20 +1500,11 @@ ISR(TWI_vect)
      a92:	ee 58       	subi	r30, 0x8E	; 142
      a94:	ff 4f       	sbci	r31, 0xFF	; 255
      a96:	a3 c2       	rjmp	.+1350   	; 0xfde <__tablejump2__>
-  {
-    case TWI_START:             // START has been transmitted  
-    case TWI_REP_START:         // Repeated START has been transmitted
-      TWI_bufPtr = 0;                                     // Set buffer pointer to the TWI Address location
      a98:	10 92 28 03 	sts	0x0328, r1
-    case TWI_MTX_ADR_ACK:       // SLA+W has been tramsmitted and ACK received
-    case TWI_MTX_DATA_ACK:      // Data byte has been tramsmitted and ACK received
-      if (TWI_bufPtr < TWI_msgSize)
      a9c:	e0 91 28 03 	lds	r30, 0x0328
      aa0:	80 91 2a 03 	lds	r24, 0x032A
      aa4:	e8 17       	cp	r30, r24
      aa6:	70 f4       	brcc	.+28     	; 0xac4 <__vector_39+0x62>
-      {
-        TWDR = TWI_buf[TWI_bufPtr++];
      aa8:	81 e0       	ldi	r24, 0x01	; 1
      aaa:	8e 0f       	add	r24, r30
      aac:	80 93 28 03 	sts	0x0328, r24
@@ -1853,29 +1513,15 @@ ISR(TWI_vect)
      ab4:	fc 4f       	sbci	r31, 0xFC	; 252
      ab6:	80 81       	ld	r24, Z
      ab8:	80 93 bb 00 	sts	0x00BB, r24
-        TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      abc:	85 e8       	ldi	r24, 0x85	; 133
      abe:	80 93 bc 00 	sts	0x00BC, r24
      ac2:	43 c0       	rjmp	.+134    	; 0xb4a <__vector_39+0xe8>
-               (1<<TWIE)|(1<<TWINT)|                      // Enable TWI Interupt and clear the flag to send byte
-               (0<<TWEA)|(0<<TWSTA)|(0<<TWSTO)|           //
-               (0<<TWWC);                                 //  
-      }else                    // Send STOP after last byte
-      {
-        TWI_statusReg.lastTransOK = TRUE;                 // Set status bits to completed successfully. 
      ac4:	80 91 29 03 	lds	r24, 0x0329
      ac8:	81 60       	ori	r24, 0x01	; 1
      aca:	80 93 29 03 	sts	0x0329, r24
-        TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      ace:	84 e9       	ldi	r24, 0x94	; 148
      ad0:	80 93 bc 00 	sts	0x00BC, r24
      ad4:	3a c0       	rjmp	.+116    	; 0xb4a <__vector_39+0xe8>
-               (0<<TWEA)|(0<<TWSTA)|(1<<TWSTO)|           // Initiate a STOP condition.
-               (0<<TWWC);                                 //
-      }
-      break;
-    case TWI_MRX_DATA_ACK:      // Data byte has been received and ACK tramsmitted
-      TWI_buf[TWI_bufPtr++] = TWDR;
      ad6:	e0 91 28 03 	lds	r30, 0x0328
      ada:	81 e0       	ldi	r24, 0x01	; 1
      adc:	8e 0f       	add	r24, r30
@@ -1885,8 +1531,6 @@ ISR(TWI_vect)
      ae8:	e5 5d       	subi	r30, 0xD5	; 213
      aea:	fc 4f       	sbci	r31, 0xFC	; 252
      aec:	80 83       	st	Z, r24
-    case TWI_MRX_ADR_ACK:       // SLA+R has been tramsmitted and ACK received
-      if (TWI_bufPtr < (TWI_msgSize-1) )                  // Detect the last byte to NACK it.
      aee:	20 91 28 03 	lds	r18, 0x0328
      af2:	30 e0       	ldi	r19, 0x00	; 0
      af4:	80 91 2a 03 	lds	r24, 0x032A
@@ -1895,70 +1539,31 @@ ISR(TWI_vect)
      afc:	28 17       	cp	r18, r24
      afe:	39 07       	cpc	r19, r25
      b00:	24 f4       	brge	.+8      	; 0xb0a <__vector_39+0xa8>
-      {
-        TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      b02:	85 ec       	ldi	r24, 0xC5	; 197
      b04:	80 93 bc 00 	sts	0x00BC, r24
      b08:	20 c0       	rjmp	.+64     	; 0xb4a <__vector_39+0xe8>
-               (1<<TWIE)|(1<<TWINT)|                      // Enable TWI Interupt and clear the flag to read next byte
-               (1<<TWEA)|(0<<TWSTA)|(0<<TWSTO)|           // Send ACK after reception
-               (0<<TWWC);                                 //  
-      }else                    // Send NACK after next reception
-      {
-        TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      b0a:	85 e8       	ldi	r24, 0x85	; 133
      b0c:	80 93 bc 00 	sts	0x00BC, r24
      b10:	1c c0       	rjmp	.+56     	; 0xb4a <__vector_39+0xe8>
-               (0<<TWEA)|(0<<TWSTA)|(0<<TWSTO)|           // Send NACK after reception
-               (0<<TWWC);                                 // 
-      }    
-      break; 
-    case TWI_MRX_DATA_NACK:     // Data byte has been received and NACK tramsmitted
-      TWI_buf[TWI_bufPtr] = TWDR;
      b12:	80 91 bb 00 	lds	r24, 0x00BB
      b16:	e0 91 28 03 	lds	r30, 0x0328
      b1a:	f0 e0       	ldi	r31, 0x00	; 0
      b1c:	e5 5d       	subi	r30, 0xD5	; 213
      b1e:	fc 4f       	sbci	r31, 0xFC	; 252
      b20:	80 83       	st	Z, r24
-      TWI_statusReg.lastTransOK = TRUE;                 // Set status bits to completed successfully. 
      b22:	80 91 29 03 	lds	r24, 0x0329
      b26:	81 60       	ori	r24, 0x01	; 1
      b28:	80 93 29 03 	sts	0x0329, r24
-      TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      b2c:	84 e9       	ldi	r24, 0x94	; 148
      b2e:	80 93 bc 00 	sts	0x00BC, r24
-             (0<<TWIE)|(1<<TWINT)|                      // Disable TWI Interrupt and clear the flag
-             (0<<TWEA)|(0<<TWSTA)|(1<<TWSTO)|           // Initiate a STOP condition.
-             (0<<TWWC);                                 //
-      break;      
      b32:	0b c0       	rjmp	.+22     	; 0xb4a <__vector_39+0xe8>
-    case TWI_ARB_LOST:          // Arbitration lost
-      TWCR = (1<<TWEN)|                                 // TWI Interface enabled
      b34:	85 ea       	ldi	r24, 0xA5	; 165
      b36:	80 93 bc 00 	sts	0x00BC, r24
-             (1<<TWIE)|(1<<TWINT)|                      // Enable TWI Interupt and clear the flag
-             (0<<TWEA)|(1<<TWSTA)|(0<<TWSTO)|           // Initiate a (RE)START condition.
-             (0<<TWWC);                                 //
-      break;
      b3a:	07 c0       	rjmp	.+14     	; 0xb4a <__vector_39+0xe8>
-    case TWI_MRX_ADR_NACK:      // SLA+R has been tramsmitted and NACK received    
-    case TWI_MTX_DATA_NACK:     // Data byte has been tramsmitted and NACK received
-//    case TWI_NO_STATE              // No relevant state information available; TWINT = “0”
-    case TWI_BUS_ERROR:         // Bus error due to an illegal START or STOP condition
-    default:     
-      TWI_state = TWSR;                                 // Store TWSR and automatically sets clears noErrors bit.
      b3c:	80 91 b9 00 	lds	r24, 0x00B9
      b40:	80 93 16 02 	sts	0x0216, r24
-                                                        // Reset TWI Interface
-      TWCR = (1<<TWEN)|                                 // Enable TWI-interface and release TWI pins
      b44:	84 e0       	ldi	r24, 0x04	; 4
      b46:	80 93 bc 00 	sts	0x00BC, r24
-             (0<<TWIE)|(0<<TWINT)|                      // Disable Interupt
-             (0<<TWEA)|(0<<TWSTA)|(0<<TWSTO)|           // No Signal requests
-             (0<<TWWC);                                 //
-  }
-}
      b4a:	ff 91       	pop	r31
      b4c:	ef 91       	pop	r30
      b4e:	bf 91       	pop	r27

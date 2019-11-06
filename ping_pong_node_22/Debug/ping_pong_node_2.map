@@ -966,7 +966,7 @@ END GROUP
  .debug_frame   0x00000478       0xb8 TWI_Master.o
  .debug_frame   0x00000530       0x44 usart.o
 
-.debug_str      0x00000000      0x6b8
+.debug_str      0x00000000      0x6ff
  *(.debug_str)
  .debug_str     0x00000000      0x14a adc.o
                                 0x17e (size before relaxing)
@@ -976,15 +976,15 @@ END GROUP
                                 0x320 (size before relaxing)
  .debug_str     0x0000035f       0x76 mcp2515_driver.o
                                 0x242 (size before relaxing)
- .debug_str     0x000003d5      0x112 motor.o
-                                0x348 (size before relaxing)
- .debug_str     0x000004e7       0x3f pwm.o
+ .debug_str     0x000003d5      0x159 motor.o
+                                0x343 (size before relaxing)
+ .debug_str     0x0000052e       0x3f pwm.o
                                 0x220 (size before relaxing)
- .debug_str     0x00000526       0x39 spi.o
+ .debug_str     0x0000056d       0x39 spi.o
                                 0x1b6 (size before relaxing)
- .debug_str     0x0000055f       0xcd TWI_Master.o
+ .debug_str     0x000005a6       0xcd TWI_Master.o
                                 0x26c (size before relaxing)
- .debug_str     0x0000062c       0x8c usart.o
+ .debug_str     0x00000673       0x8c usart.o
                                 0x1d7 (size before relaxing)
 
 .debug_loc      0x00000000     0x114d

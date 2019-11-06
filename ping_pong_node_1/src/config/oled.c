@@ -14,6 +14,7 @@
 #include "oled.h"
 #include "fonts.h"
 #include "xmem.h"
+#include "communication.h"
 
 enum oled_font_size{FONT_SIZE_LARGE, FONT_SIZE_MEDIUM, FONT_SIZE_SMALL};
 enum adc_joystick_dir{LEFT, RIGHT, UP, DOWN, NEUTRAL};
@@ -28,6 +29,7 @@ enum menu{main_menu, gain_menu, high_score_menu};
 
 int joy_pos;
 int high_score = 0;
+int lives = 3;
 
 
 void oled_write_c(uint8_t data) {
@@ -217,6 +219,8 @@ void oled_actualise_joy_pos(int joy_direction, int cur_menu){
 		number_of_pages = 2;
 	}else if (cur_menu == gain_menu){
 		number_of_pages = 2;
+	}else if (cur_menu == high_score_menu){
+		number_of_pages = 1;
 	}
 	
 	
@@ -281,4 +285,32 @@ void oled_navigate_gain_menu(){
 	oled_printf_inverted("Hard \n");
 	else
 	oled_printf("Hard \n");
+}
+
+void oled_in_game_mode(){
+	oled_clear_screen();
+	oled_page_select(1);
+	oled_printf("GAME ACTIVE \n");
+	oled_page_select(2);
+	oled_printf("lives left: ");
+	char lives_left [1];
+	sprintf(lives_left, "%d", lives);
+	oled_printf(lives_left);
+	oled_printf("\n");
+	oled_page_select(3);
+	oled_printf("score: ");
+	char scr [4];
+	sprintf(scr, "%d", com_get_score());
+	oled_printf(scr);
+	oled_printf("\n");
+	oled_page_select(4);
+	oled_printf("high score: ");
+	char hs [4];
+	sprintf(hs, "%d", high_score);
+	oled_printf(hs);
+	oled_printf("\n");
+}
+
+int oled_get_lives(){
+	return lives;
 }

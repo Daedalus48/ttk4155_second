@@ -65,4 +65,8 @@ void oled_print_high_score();
 
 void oled_navigate_gain_menu();
 
+void oled_in_game_mode();
+
+int oled_get_lives();
+
 #endif /* OLED_H_ */

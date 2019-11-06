@@ -37,13 +37,16 @@ int main(void){
 	
 	global_init();
 	
-	
-	/*
-	int current_mode = GAME;
+	int current_mode = IDLE;
 	while(1){
 		switch(current_mode){
 			case IDLE:
 				com_navigate_display();
+				//com_actualise_system();
+				if (com_get_start_game()){
+					current_mode = GAME;
+					com_set_start_game();
+				}
 				break;
 			case GAME:
 				if (new_game){
@@ -51,16 +54,25 @@ int main(void){
 					new_game = 0;
 				}
 				com_play_game();
+				if (com_get_back()){
+					current_mode = IDLE;
+					com_set_back();
+				}
 				break;
 			default:
 				com_navigate_display();
 				break;
 		}
-	}
-	*/
+	}/*
+	while(1){
+		int pin = (PINB & 0b0001);
+		printf("button: %d\n\r",  pin);
+	}*/
 	
-	/*
-	while(1){	
+	
+/*
+	
+		while(1){	
 		com_actualise_system();
 		_delay_ms(50);
 	}*/
