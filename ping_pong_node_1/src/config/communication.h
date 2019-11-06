@@ -8,7 +8,7 @@
 #define COMMUNICATION_H_
 #include <avr/io.h>
 
-void com_actualise_system();
+//void com_actualise_system();
 void com_navigate_display();
 void com_play_game();
 void com_gain_menu();

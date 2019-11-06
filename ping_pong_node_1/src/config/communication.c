@@ -16,6 +16,7 @@ int score = 0;
 int back = 0;
 start_game = 0;
 
+/*
 void com_actualise_system(){
 	
 	int pin = 1;
@@ -76,7 +77,7 @@ void com_actualise_system(){
 	}
 	
 
-}
+}*/
 
 void com_navigate_display(){
 	int pin = 1;
