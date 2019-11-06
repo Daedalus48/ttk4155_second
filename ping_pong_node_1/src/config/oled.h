@@ -53,10 +53,16 @@ void oled_printf_inverted(char text[]);
 
 void oled_display_activity();
 
-void oled_actualise_joy_pos(int joy_direction);
+void oled_actualise_joy_pos(int joy_direction, int cur_menu);
 
 int oled_get_joy_pos();
 
 void oled_set_joy_pos(int joy_pos);
+
+void oled_set_high_score(int score);
+
+void oled_print_high_score();
+
+void oled_navigate_gain_menu();
 
 #endif /* OLED_H_ */

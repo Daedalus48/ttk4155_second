@@ -30,21 +30,45 @@ void global_init(){
 	DDRB &= ~(0b0111);	
 }
 
+
 int main(void){
+	enum mode{IDLE, GAME};
+	int new_game = 1;
 	
 	global_init();
 	
 	
-	
-	
-	
-	while(1){	
-		com_actualise_system();		
+	/*
+	int current_mode = GAME;
+	while(1){
+		switch(current_mode){
+			case IDLE:
+				com_navigate_display();
+				break;
+			case GAME:
+				if (new_game){
+					com_reset_score();
+					new_game = 0;
+				}
+				com_play_game();
+				break;
+			default:
+				com_navigate_display();
+				break;
+		}
 	}
-
+	*/
+	
+	/*
+	while(1){	
+		com_actualise_system();
+		_delay_ms(50);
+	}*/
+	//oled_print_high_score();
 		
 	return 0;
 }
+//left PB0; right PB1; shoot PB2
 
 	
 	

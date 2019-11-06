@@ -37,7 +37,7 @@ int main(void){
 	struct can_message message;
 	message.id = 3;
 	message.length = 1;
-	message.data[0] = (uint8_t) 'c';
+	message.data[0] = (uint8_t) 'C';
 	
 
 	pwm_init();	
@@ -55,7 +55,7 @@ int main(void){
 	int loose_counter = 0;
 	sei();
 	motor_init();
-	_delay_ms(2000);
+	
 	motor_reset_encoder();
 	motor_dac_write(0);
 	int16_t encoder = 0;
@@ -68,20 +68,25 @@ int main(void){
 		
 		//motor_dac_write(80);
 		if(can_get_message(&message)){
+			printf("Atmega2560 received a new id %d \n \r \n\r", message.id);
 			if(message.id == 1){
+				printf("servo control \n\r");
 				x_val = 255-(float) message.data[0];
 				a = (int) pw;
-				//printf("ow b: %d\n\r",  a);
+				printf("ow b: %d\n\r",  a);
 				//pw = pwm_follow_joystick_val(pw, x_val);
 				//a = (int) pw;
-				//printf("pw not scaled: %d\n\r",  a);
+				printf("pw not scaled: %d\n\r",  a);
 				pw = pwm_scale_joystick_val(x_val);
 				a = (int) pw;
-				//printf("pw scaled: %d\n\r",  a);
+				printf("pw scaled: %d\n\r",  a);
 				pwm_set_pulse_width(pw);
+				
 			}
 			else if(message.id == 2){
+		
 				motor_pid_controller(message.data[0]);
+			
 			}
 			else if(message.id == 3){
 				printf("\n\r shot \n\r");
@@ -90,14 +95,13 @@ int main(void){
 				_delay_ms(100);
 				PORTD &= ~(1 << PD3);
 				
-			}
-			
+			}			
 			//motor_speed_control(message.data[0]);
 			/*printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);*/
 		}
 		//encoder = motor_read_encoder();
 		//printf("encoder %d \n \r \n\r", encoder);
-		_delay_ms(50);
+		//_delay_ms(50);
 		/*
 		motor_set_dir(0);
 		_delay_ms(1000);

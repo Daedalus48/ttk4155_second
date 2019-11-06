@@ -10,6 +10,12 @@
 #include <util/delay.h>
 
 
+double kp = 1.2;
+double kd = 0.2;
+double ki = 0.8;
+uint16_t freq = 20;
+uint16_t encoder_min = 280;
+uint16_t encoder_max = 8000;
 uint16_t prev_error = 0;
 int sum_error = 0;
 
@@ -26,6 +32,7 @@ void motor_init(void)
 	PORTH |= (1 << PH4); // Enable motor
 	DDRK = 0x00;
 	motor_dac_write(80);
+	_delay_ms(2000);
 }
 
 void motor_dac_write(uint8_t data) {
@@ -44,10 +51,10 @@ void motor_dac_write(uint8_t data) {
 void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 	if (dir){
 		PORTH |= (1 << PH1); // Direction right on dc_motor
-		printf("right \n\r");
+		//printf("right \n\r");
 	}else{
 		PORTH &= ~(1 << PH1); // Direction left on dc_motor
-		printf("left \n\r");
+		//printf("left \n\r");
 	}
 	
 }
@@ -99,19 +106,13 @@ void motor_reset_encoder() {
 }
 
 void motor_pid_controller(uint8_t reference){
-	double kp = 1.2;
-	double kd = 0.2;
-	double ki = 0.8;
-	uint16_t freq = 20;
-	uint16_t encoder_min = 280;
-	uint16_t encoder_max = 8000;
 	reference = -reference;
 	int var = 1;
 	
 	uint16_t encoder = motor_read_encoder();
 	//printf("enc  %d \n \r \n\r", encoder);
 	//double scalor = 255 / (encoder_max - encoder_min); 
-	double scalor = 0.033031;
+	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
 	var = (int) encoder_diff;
 	double measured_val = encoder_diff * scalor;
@@ -130,4 +131,8 @@ void motor_pid_controller(uint8_t reference){
 	//if ( u < 15 ){ u = 0; };
 	motor_dac_write(u);
 	printf("u  %d ", u);
+}
+
+void motor_set_gain(){
+	
 }

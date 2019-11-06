@@ -17,6 +17,7 @@
 
 enum oled_font_size{FONT_SIZE_LARGE, FONT_SIZE_MEDIUM, FONT_SIZE_SMALL};
 enum adc_joystick_dir{LEFT, RIGHT, UP, DOWN, NEUTRAL};
+enum menu{main_menu, gain_menu, high_score_menu};
 	
 //struct oled_activity may_spring = {"Birds \n", "Sun rays \n", NULL, NULL};
 //struct oled_activity july_summer = {"Beach \n", "Sun burnt \n", NULL, NULL}; 
@@ -26,6 +27,7 @@ enum adc_joystick_dir{LEFT, RIGHT, UP, DOWN, NEUTRAL};
 //struct oled_activity *current_activity = NULL;
 
 int joy_pos;
+int high_score = 0;
 
 
 void oled_write_c(uint8_t data) {
@@ -174,18 +176,14 @@ uint8_t oled_print_char_inverted(char letter) {
 
 void oled_printf(char text[]){
 	int lenght = strlen(text);
-	//printf("size =  %d \r\n", lenght);
 	for (int c = 0; c<lenght; c++){
-		//printf("letter =  %d \r\n", c);
 		oled_print_char(text[c]);
 	}
 }
 
 void oled_printf_inverted(char text[]){
 	int lenght = strlen(text);
-	//printf("size =  %d \r\n", lenght);
 	for (int c = 0; c<lenght; c++){
-		//printf("letter =  %d \r\n", c);
 		oled_print_char_inverted(text[c]);
 	}
 }
@@ -194,50 +192,49 @@ void oled_display_activity(){
 	oled_clear_screen();
 	int joy_pos = oled_get_joy_pos();
 	
-	/*for(int i = 0; i < 2; i++)
-	{
-		oled_page_select(i+1);
-		if(joy_pos == i)
-			oled_printf_inverted(current_activity->oled_string[i]);
-		else
-			oled_printf(current_activity->oled_string[i]);
-	}*/
-	
 	oled_page_select(1);
 	if(joy_pos == 0)
-		oled_printf_inverted("Spring \n");
+		oled_printf_inverted("Play Game \n");
 	else
-		oled_printf("Spring \n");
+		oled_printf("Play Game \n");
 	
 	oled_page_select(2);
 	if(joy_pos == 1)
-		oled_printf_inverted("Summer \n");
+		oled_printf_inverted("Set Gain \n");
 	else
-		oled_printf("Summer \n");
+		oled_printf("Set Gain \n");
 	
 	oled_page_select(3);
 	if(joy_pos == 2)
-		oled_printf_inverted("Return \n");
+		oled_printf_inverted("High Score \n");
 	else
-		oled_printf("Return \n");
+		oled_printf("High Score \n");
 }
 
-void oled_actualise_joy_pos(int joy_direction)
-{
+void oled_actualise_joy_pos(int joy_direction, int cur_menu){
+	int number_of_pages = 2;
+	if (cur_menu == main_menu){
+		number_of_pages = 2;
+	}else if (cur_menu == gain_menu){
+		number_of_pages = 2;
+	}
+	
+	
 	int joy_pos = oled_get_joy_pos();	
 	if(joy_direction == UP)
 		if (joy_pos==0){
-			joy_pos=2;
+			joy_pos=number_of_pages;
 		}else{
 			joy_pos = (joy_pos - 1);
 		}
 	else if(joy_direction == DOWN)
-		if (joy_pos==2){
+		if (joy_pos==number_of_pages){
 			joy_pos=0;
 		}else{
-			joy_pos = (joy_pos + 1)%3;
+			joy_pos = (joy_pos + 1)%(number_of_pages+1);
 		}
 	oled_set_joy_pos(joy_pos);
+	printf("pos: %d\n\r",  joy_pos);
 
 }
 
@@ -247,4 +244,41 @@ int oled_get_joy_pos(){
 
 void oled_set_joy_pos(int joy_pos){
 	xmem_write(joy_pos, JOY_POS_ADDRESS);
+}
+
+void oled_set_high_score(int score){
+	high_score = score;
+}
+
+void oled_print_high_score(){
+	oled_clear_screen();
+	oled_page_select(1);
+	oled_printf("High score :\n");
+	oled_page_select(2);
+	char high_score_char [4];
+	sprintf(high_score_char, "%d", high_score);
+	oled_printf(high_score_char);
+}
+
+void oled_navigate_gain_menu(){
+	oled_clear_screen();
+	int joy_pos = oled_get_joy_pos();
+	
+	oled_page_select(1);
+	if(joy_pos == 0)
+	oled_printf_inverted("Easy \n");
+	else
+	oled_printf("Easy \n");
+	
+	oled_page_select(2);
+	if(joy_pos == 1)
+	oled_printf_inverted("Medium \n");
+	else
+	oled_printf("Medium \n");
+	
+	oled_page_select(3);
+	if(joy_pos == 2)
+	oled_printf_inverted("Hard \n");
+	else
+	oled_printf("Hard \n");
 }

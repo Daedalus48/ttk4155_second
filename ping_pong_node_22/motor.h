@@ -16,5 +16,6 @@ void motor_speed_control(uint8_t slider_pos);
 int16_t motor_read_encoder();
 void motor_reset_encoder();
 void motor_pid_controller(uint8_t reference);
+void motor_set_gain();
 
 #endif /* MOTOR_H_*/
