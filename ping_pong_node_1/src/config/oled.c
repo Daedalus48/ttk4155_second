@@ -405,30 +405,39 @@ void oled_in_game_with_gain_control(int page, int kp, int ki, int kd){
 	oled_page_select(1);
 	oled_printf_inverted("PID CONTROL\n");
 	
-	char prop[4], integ[4], der[4];
-	sprintf(prop, "%d", kp);
-	sprintf(integ, "%d", ki);
-	sprintf(der, "%d", kd);
+	char str[4];
 	
 	oled_page_select(2);
 	if(page == 2){
 		oled_printf_inverted("Kp = ");
 	}else{
 		oled_printf("Kp = ");
-	}oled_printf(prop);
+	}sprintf(str, "%d", kp/100);
+	oled_printf(str);
+	oled_printf(".");
+	sprintf(str, "%d", kp%100);
+	oled_printf(str);
 	oled_printf("\n");
 	oled_page_select(3);
 	if(page == 3){
 		oled_printf_inverted("Ki = ");
 	}else{
 		oled_printf("Ki = ");
-	}oled_printf(integ);
+	}sprintf(str, "%d", ki/100);
+	oled_printf(str);
+	oled_printf(".");
+	sprintf(str, "%d", ki%100);
+	oled_printf(str);
 	oled_printf("\n");
 	oled_page_select(4);
 	if(page == 4){
 		oled_printf_inverted("Kd = ");
 	}else{
 		oled_printf("Kd = ");
-	}oled_printf(der);
+	}sprintf(str, "%d", kd/100);
+	oled_printf(str);
+	oled_printf(".");
+	sprintf(str, "%d", kd%100);
+	oled_printf(str);
 	oled_printf("\n");
 }

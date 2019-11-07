@@ -303,7 +303,7 @@ void com_set_start_game(){
 }
 
 void com_play_game_with_gain_control(){
-	int new_val;
+	/*int new_val;*/
 	
 	struct can_message message_servo;
 	message_servo.id = 1;
@@ -313,13 +313,13 @@ void com_play_game_with_gain_control(){
 	message_motor.id = 2;
 	message_motor.length = 1;
 	
-	struct can_message message_solenoid;
+	/*struct can_message message_solenoid;
 	message_solenoid.id = 3;
-	message_solenoid.length = 1;
+	message_solenoid.length = 1;*/
 	
 	struct can_message message_prop_gain;
-	message_solenoid.id = 5;
-	message_solenoid.length = 1;
+	message_prop_gain.id = 5;
+	message_prop_gain.length = 1;
 	
 	message_servo.data[0] = adc_read(1);
 	can_message_send(&message_servo);
@@ -329,7 +329,7 @@ void com_play_game_with_gain_control(){
 	
 	switch (selected_gain){
 		case 2:
-			kp = adc_read(3);
+			kp = adc_read(2);
 			break;
 		case 3:
 			ki = adc_read(3);
@@ -344,7 +344,7 @@ void com_play_game_with_gain_control(){
 	message_prop_gain.data[0] = kp;
 	can_message_send(&message_prop_gain);
 	
-	new_val = (PINB & 0b0100)>>2;
+	/*new_val = (PINB & 0b0100)>>2;
 	
 	if( (old_val == 0) && (new_val == 1) )
 	{
@@ -357,7 +357,7 @@ void com_play_game_with_gain_control(){
 		can_message_send(&message_solenoid);
 		old_val = 0;
 		_delay_ms(50);
-	}
+	}*/
 	oled_in_game_with_gain_control(selected_gain, kp, ki, kd);
 	if (PINB & 0b0001){
 		back = 1;
