@@ -53,7 +53,6 @@ int main(void){
 	
 	int a;
 	
-	//pwm_set_pulse_width(50000);	
 	float pw = 1500;
 	float x_val = 130;
 	
@@ -72,7 +71,6 @@ int main(void){
 
     while(1){
 		if(can_get_message(&message_input)){
-			printf("Leviathan \n\r");
 			if(message_input.id == 1){
 				x_val = 255-(float) message_input.data[0];
 				a = (int) pw;
@@ -101,7 +99,7 @@ int main(void){
 			}
 			else if (message_input.id == 4){
 				int gain_choise = message_input.data[0];
-				printf("numb %d\n\r", gain_choise);
+				motor_set_gain(gain_choise);
 			}				
 		}
 

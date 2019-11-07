@@ -129,6 +129,24 @@ void motor_pid_controller(uint8_t reference){
 	printf("u  %d \n\r", u);
 }
 
-void motor_set_gain(){
-	
+void motor_set_gain(int gain_choise){
+	switch (gain_choise){
+		case 0:
+			kp = 1.2;
+			kd = 0.2;
+			ki = 0.8;
+			break;
+		case 1:
+			kp = 0.05;
+			kd = 0.2;
+			ki = 0.8;
+			break;
+		case 2:
+			kp = 2.0;
+			kd = 0.0;
+			ki = 0.0;
+			break;
+		default:
+			break;
+	}
 }

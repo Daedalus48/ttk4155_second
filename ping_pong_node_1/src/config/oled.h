@@ -79,4 +79,6 @@ void oled_reset_hs();
 
 void oled_game_over();
 
+void oled_print_difficulty(int difficulty);
+
 #endif /* OLED_H_ */

@@ -137,22 +137,24 @@ void com_navigate_display(){
 			
 			switch (joy_pos){
 				case 0:
-					printf("easy \n\r");
-					message_gain.data[0] = 0;
-					break;
+				oled_print_difficulty(0);
+				message_gain.data[0] = 0;
+				break;
 				case 1:
-					printf("medium \n\r");
-					message_gain.data[0] = 1;
-					break;
+				oled_print_difficulty(1);
+				message_gain.data[0] = 1;
+				break;
 				case 2:
-					printf("hard \n\r");
-					message_gain.data[0] = 2;
-					break;
+				oled_print_difficulty(2);
+				message_gain.data[0] = 2;
+				break;
 				default:
-					break;
+				break;
 			}
 			
 			can_message_send(&message_gain);
+			_delay_ms(5000);
+			oled_navigate_gain_menu();
 		}
 	}
 	
@@ -177,15 +179,15 @@ void com_navigate_display(){
 			
 			switch (joy_pos){
 				case 0:
-					printf("easy \n\r");
+					oled_print_difficulty(0);
 					message_gain.data[0] = 0;
 					break;
 				case 1:
-					printf("medium \n\r");
+					oled_print_difficulty(1);
 					message_gain.data[0] = 1;
 					break;
 				case 2:
-					printf("hard \n\r");
+					oled_print_difficulty(2);
 					message_gain.data[0] = 2;
 					break;
 				default:
@@ -193,6 +195,8 @@ void com_navigate_display(){
 			}
 			
 			can_message_send(&message_gain);
+			_delay_ms(5000);
+			oled_navigate_gain_menu();
 		}
 	}
 	
