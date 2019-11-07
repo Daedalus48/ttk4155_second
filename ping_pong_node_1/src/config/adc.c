@@ -31,48 +31,16 @@ volatile int adc_read(uint8_t channel){
 		return 0;
 	}
 }
-/*
-int adc_slider_adjust(int value){
-	int ans = value * 200;
-	ans = ans/250;
-	ans = ans - 100;
-	if (ans<-100){
-		ans = -100;
-	}else if (ans>100){
-		ans = 100;
-	}return ans;
-}
-
-int adc_joystick_adjust(int value){
-	int ans = value * 200;
-	
-	ans = ans/250;
-	
-	ans = ans - 100;
-	
-	if (ans<-100){
-		ans = -100;
-	}else if (ans>100){
-		ans = 100;
-	}else if ((ans<20) && (ans>-20)){
-		ans = 0;
-	}
-	return ans;
-}*/
 
 int adc_get_slider_pos(int *left_s, int *right_s){
 	*left_s = adc_read(3);
 	*right_s = adc_read(4);
-	//*left_s = adc_slider_adjust(left_temp);
-	//*right_s = adc_slider_adjust(right_temp);
 	return 0;
 }
 
 int adc_get_joystick_pos(int *y, int *x){
 	*y = adc_read(2);
 	*x = adc_read(1);
-	//*y = adc_joystick_adjust(y_temp);
-	//*x = adc_joystick_adjust(x_temp);
 	return 0;
 }
 
@@ -86,25 +54,6 @@ int adc_joystick_angle(){	//still problematic
 	}
 	return ans;
 }
-/*
-int adc_joystick_direction(){
-	int x = 0, y = 0;
-	int ans = NEUTRAL;
-	adc_get_joystick_pos(&y, &x);
-	if (abs(x)<abs(y)){
-		if (y<0){
-			ans = DOWN;
-		}else if(y>0){
-			ans = UP;
-		}
-	}else if (abs(y)<abs(x)){
-		if (x<0){
-			ans = LEFT;
-		}else if(x>0){
-			ans = RIGHT;
-		}
-	}return ans;
-}*/
 
 int adc_joystick_direction(){
 	int x = 0, y = 0;

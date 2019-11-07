@@ -65,7 +65,7 @@ void oled_print_high_score();
 
 void oled_navigate_gain_menu();
 
-void oled_in_game_mode();
+void oled_in_game_mode(int difficulty);
 
 int oled_get_lives();
 
@@ -80,5 +80,7 @@ void oled_reset_hs();
 void oled_game_over();
 
 void oled_print_difficulty(int difficulty);
+
+void oled_in_game_with_gain_control(int page, int kp, int ki, int kd);
 
 #endif /* OLED_H_ */

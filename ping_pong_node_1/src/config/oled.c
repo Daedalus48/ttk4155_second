@@ -197,28 +197,35 @@ void oled_display_activity(){
 	int joy_pos = oled_get_joy_pos();
 	
 	oled_page_select(1);
-	if(joy_pos == 0)
+	if(joy_pos == 0){
 		oled_printf_inverted("Play Game \n");
-	else
+	}else{
 		oled_printf("Play Game \n");
-	
+	}
 	oled_page_select(2);
-	if(joy_pos == 1)
+	if(joy_pos == 1){
 		oled_printf_inverted("Set Gain \n");
-	else
+	}else{
 		oled_printf("Set Gain \n");
-	
+	}
 	oled_page_select(3);
-	if(joy_pos == 2)
+	if(joy_pos == 2){
 		oled_printf_inverted("High Score \n");
-	else
+	}else{
 		oled_printf("High Score \n");
+	}
+	oled_page_select(4);
+	if(joy_pos == 3){
+		oled_printf_inverted("PID Control \n");
+		}else{
+		oled_printf("Pid Control \n");
+	}
 }
 
 void oled_actualise_joy_pos(int joy_direction, int cur_menu){
 	int number_of_pages = 2;
 	if (cur_menu == main_menu){
-		number_of_pages = 2;
+		number_of_pages = 3;
 	}else if (cur_menu == gain_menu){
 		number_of_pages = 2;
 	}else if (cur_menu == high_score_menu){
@@ -275,25 +282,26 @@ void oled_navigate_gain_menu(){
 	int joy_pos = oled_get_joy_pos();
 	
 	oled_page_select(1);
-	if(joy_pos == 0)
-	oled_printf_inverted("Easy \n");
-	else
-	oled_printf("Easy \n");
-	
+	if(joy_pos == 0){
+		oled_printf_inverted("Easy \n");
+	}else{
+		oled_printf("Easy \n");
+	}
 	oled_page_select(2);
-	if(joy_pos == 1)
-	oled_printf_inverted("Medium \n");
-	else
-	oled_printf("Medium \n");
-	
+	if(joy_pos == 1){
+		oled_printf_inverted("Medium \n");
+	}else{
+		oled_printf("Medium \n");
+	}
 	oled_page_select(3);
-	if(joy_pos == 2)
-	oled_printf_inverted("Hard \n");
-	else
+	if(joy_pos == 2){
+		oled_printf_inverted("Hard \n");
+	}else{
 	oled_printf("Hard \n");
+	}
 }
 
-void oled_in_game_mode(){
+void oled_in_game_mode(int difficulty){
 	oled_clear_screen();
 	oled_page_select(1);
 	oled_printf("GAME ACTIVE \n");
@@ -315,6 +323,14 @@ void oled_in_game_mode(){
 	sprintf(hs, "%d", high_score);
 	oled_printf(hs);
 	oled_printf("\n");
+	oled_page_select(5);
+	if (difficulty == 0){
+		oled_printf("easy \n");
+	}else if (difficulty == 1){
+		oled_printf("medium \n");
+	}else{
+		oled_printf("hard \n");
+	}
 }
 
 int oled_get_lives(){
@@ -384,3 +400,35 @@ void oled_print_difficulty(int difficulty){
 	}
 }
 
+void oled_in_game_with_gain_control(int page, int kp, int ki, int kd){
+	oled_clear_screen();
+	oled_page_select(1);
+	oled_printf_inverted("PID CONTROL\n");
+	
+	char prop[4], integ[4], der[4];
+	sprintf(prop, "%d", kp);
+	sprintf(integ, "%d", ki);
+	sprintf(der, "%d", kd);
+	
+	oled_page_select(2);
+	if(page == 2){
+		oled_printf_inverted("Kp = ");
+	}else{
+		oled_printf("Kp = ");
+	}oled_printf(prop);
+	oled_printf("\n");
+	oled_page_select(3);
+	if(page == 3){
+		oled_printf_inverted("Ki = ");
+	}else{
+		oled_printf("Ki = ");
+	}oled_printf(integ);
+	oled_printf("\n");
+	oled_page_select(4);
+	if(page == 4){
+		oled_printf_inverted("Kd = ");
+	}else{
+		oled_printf("Kd = ");
+	}oled_printf(der);
+	oled_printf("\n");
+}

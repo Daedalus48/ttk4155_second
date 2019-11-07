@@ -24,17 +24,11 @@ void adc_init();
 
 volatile int adc_read(uint8_t channel);
 
-//int adc_slider_adjust(int value);
-
-//int adc_joystick_adjust(int value);
-
 int adc_get_slider_pos(int *left_s, int *right_s);
 
 int adc_get_joystick_pos(int *y, int *x);
 
 int adc_joystick_angle();
-
-//int adc_joystick_direction();
 
 int adc_joystick_direction();
 

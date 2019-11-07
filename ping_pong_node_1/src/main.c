@@ -33,7 +33,7 @@ void global_init(){
 
 
 int main(void){
-	enum mode{IDLE, GAME};
+	enum mode{IDLE, GAME, CONTROL};
 	int new_game = 1;
 	
 	
@@ -49,11 +49,13 @@ int main(void){
 		switch(current_mode){
 			case IDLE:
 				com_navigate_display();
-				//com_actualise_system();
 				if (com_get_start_game()){
 					current_mode = GAME;
 					com_set_start_game();
-				}
+				}else if (com_get_start_pid_control()){
+				current_mode = CONTROL;
+				com_reset_start_pid_control();
+			}
 				break;
 			case GAME:
 				if (new_game){
@@ -76,6 +78,13 @@ int main(void){
 						com_reset_score();
 					}
 					
+				}
+				break;
+			case CONTROL:
+				com_play_game_with_gain_control();
+				if (com_get_back()){
+					current_mode = IDLE;
+					com_set_back();
 				}
 				break;
 			default:

@@ -11,10 +11,17 @@
 
 int old_val = 1;
 enum menu{main_menu, gain_menu, high_score_menu};
+enum difficulty{easy, medium, hard};
 int current_menu = main_menu;
+int current_difficulty = easy;
 int score = 0;
 int back = 0;
 int start_game = 0;
+int start_pid_control = 0;
+int kp = 120;
+int ki = 80;
+int kd = 20;
+int selected_gain = 2;
 
 /*
 void com_actualise_system(){
@@ -124,7 +131,8 @@ void com_navigate_display(){
 		}else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 2)){
 			current_menu = high_score_menu;
 			oled_print_high_score();
-		}else if (current_menu == high_score_menu){
+		}else if((current_menu == main_menu)&&(oled_get_joy_pos() == 3)){start_pid_control = 1;}
+		else if (current_menu == high_score_menu){
 			oled_reset_hs();
 			oled_print_high_score();
 		}else if (current_menu == gain_menu){
@@ -137,19 +145,22 @@ void com_navigate_display(){
 			
 			switch (joy_pos){
 				case 0:
-				oled_print_difficulty(0);
-				message_gain.data[0] = 0;
-				break;
+					oled_print_difficulty(0);
+					message_gain.data[0] = 0;
+					current_difficulty = easy;
+					break;
 				case 1:
-				oled_print_difficulty(1);
-				message_gain.data[0] = 1;
-				break;
+					oled_print_difficulty(1);
+					message_gain.data[0] = 1;
+					current_difficulty = medium;
+					break;
 				case 2:
-				oled_print_difficulty(2);
-				message_gain.data[0] = 2;
-				break;
+					oled_print_difficulty(2);
+					message_gain.data[0] = 2;
+					current_difficulty = hard;
+					break;
 				default:
-				break;
+					break;
 			}
 			
 			can_message_send(&message_gain);
@@ -166,7 +177,8 @@ void com_navigate_display(){
 		}else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 2)){
 			current_menu = high_score_menu;
 			oled_print_high_score();
-		}else if(current_menu == high_score_menu){
+		}else if((current_menu == main_menu)&&(oled_get_joy_pos() == 3)){start_pid_control = 1;}
+		else if(current_menu == high_score_menu){
 			oled_reset_hs();
 			oled_print_high_score();
 		}else if (current_menu == gain_menu){
@@ -181,14 +193,17 @@ void com_navigate_display(){
 				case 0:
 					oled_print_difficulty(0);
 					message_gain.data[0] = 0;
+					current_difficulty = easy;
 					break;
 				case 1:
 					oled_print_difficulty(1);
 					message_gain.data[0] = 1;
+					current_difficulty = medium;
 					break;
 				case 2:
 					oled_print_difficulty(2);
 					message_gain.data[0] = 2;
+					current_difficulty = hard;
 					break;
 				default:
 					break;
@@ -244,7 +259,7 @@ void com_play_game(){
 		old_val = 0;
 		_delay_ms(50);
 	}
-	oled_in_game_mode();
+	oled_in_game_mode(current_difficulty);
 	if ((oled_get_lives()==0)||(PINB & 0b0001)){
 		back = 1;
 		oled_game_over();
@@ -285,4 +300,77 @@ int com_get_start_game(){
 
 void com_set_start_game(){
 	start_game = 0;
+}
+
+void com_play_game_with_gain_control(){
+	int new_val;
+	
+	struct can_message message_servo;
+	message_servo.id = 1;
+	message_servo.length = 1;
+	
+	struct can_message message_motor;
+	message_motor.id = 2;
+	message_motor.length = 1;
+	
+	struct can_message message_solenoid;
+	message_solenoid.id = 3;
+	message_solenoid.length = 1;
+	
+	struct can_message message_prop_gain;
+	message_solenoid.id = 5;
+	message_solenoid.length = 1;
+	
+	message_servo.data[0] = adc_read(1);
+	can_message_send(&message_servo);
+	
+	message_motor.data[0] = adc_read(4);
+	can_message_send(&message_motor);
+	
+	switch (selected_gain){
+		case 2:
+			kp = adc_read(3);
+			break;
+		case 3:
+			ki = adc_read(3);
+			break;
+		case 4:
+			kd = adc_read(3);
+			break;
+		default:
+			break;
+	}
+	
+	message_prop_gain.data[0] = kp;
+	can_message_send(&message_prop_gain);
+	
+	new_val = (PINB & 0b0100)>>2;
+	
+	if( (old_val == 0) && (new_val == 1) )
+	{
+		old_val = 1;
+		_delay_ms(50);
+	}
+	else if( (old_val == 1) && (new_val == 0) )
+	{
+		message_solenoid.data[0] = 1;
+		can_message_send(&message_solenoid);
+		old_val = 0;
+		_delay_ms(50);
+	}
+	oled_in_game_with_gain_control(selected_gain, kp, ki, kd);
+	if (PINB & 0b0001){
+		back = 1;
+		oled_display_activity();
+		oled_reset_lives();
+		com_reset_score();
+	}
+}
+
+int com_get_start_pid_control(){
+	return start_pid_control;
+}
+
+void com_reset_start_pid_control(){
+	start_pid_control = 0;
 }
