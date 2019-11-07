@@ -13,6 +13,7 @@ void com_navigate_display();
 void com_play_game();
 void com_gain_menu();
 void com_reset_score();
+void com_set_score(int score_node2);
 int com_get_score();
 int com_get_back();
 void com_set_back();

@@ -20,6 +20,7 @@
 
 
 void global_init(){
+	
 	USART_Init(MYUBRR);
 	xmem_init();
 	oled_init();
@@ -35,7 +36,13 @@ int main(void){
 	enum mode{IDLE, GAME};
 	int new_game = 1;
 	
+	
 	global_init();
+	
+	struct can_message message;
+	message.id = 3;
+	message.length = 1;
+	message.data[0] = 124;
 	
 	int current_mode = IDLE;
 	while(1){
@@ -63,6 +70,22 @@ int main(void){
 				com_navigate_display();
 				break;
 		}
+		_delay_ms(100);
+		
+		
+		if (can_get_message(&message))
+		{
+			if(message.id == 1){
+				com_set_score(message.data[0]);
+			}
+			else if(message.id == 2){
+				oled_reduce_lives();
+				oled_actualise_high_score();
+				com_reset_score();
+			}
+			
+		}
+		
 	}/*
 	while(1){
 		int pin = (PINB & 0b0001);

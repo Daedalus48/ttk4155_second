@@ -9,6 +9,7 @@
 #define OLEDD_OFFSET 0x1200
 
 #define JOY_POS_ADDRESS 0x1802
+#define HS_POS_ADDRESS 0x1804
 
 #include <avr/pgmspace.h>
 #include "oled.h"
@@ -68,6 +69,7 @@ int oled_init(){
 	oled_clear_screen();
 	//current_activity = &oled_main;
 	joy_pos = 0;
+	high_score = xmem_read(HS_POS_ADDRESS);
 	oled_display_activity();
 }
 
@@ -258,10 +260,14 @@ void oled_print_high_score(){
 	oled_clear_screen();
 	oled_page_select(1);
 	oled_printf("High score :\n");
+	
 	oled_page_select(2);
 	char high_score_char [4];
 	sprintf(high_score_char, "%d", high_score);
 	oled_printf(high_score_char);
+	
+	oled_page_select(3);
+	oled_printf_inverted("Reset");
 }
 
 void oled_navigate_gain_menu(){
@@ -314,3 +320,31 @@ void oled_in_game_mode(){
 int oled_get_lives(){
 	return lives;
 }
+
+void oled_reduce_lives(){
+	lives--;
+}
+
+void oled_reset_lives(){
+	lives = 3;
+}
+
+void oled_actualise_high_score(){
+	int score = com_get_score();
+	if(score > high_score){
+		high_score = score;
+	}
+	xmem_write(high_score, HS_POS_ADDRESS);
+}
+
+void oled_reset_hs(){
+	high_score = 0;
+	xmem_write(high_score, HS_POS_ADDRESS);
+}
+
+void oled_game_over(){
+	oled_clear_screen();
+	oled_page_select(1);
+	oled_printf("GAME OVER... \n");
+}
+

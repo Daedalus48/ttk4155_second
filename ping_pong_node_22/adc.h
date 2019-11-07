@@ -7,7 +7,7 @@
 #ifndef ADC_H
 #define ADC_H
 
-#define THRESHOLD 200
+#define THRESHOLD 100
 
 void adc_init(void);
 int adc_read( void );

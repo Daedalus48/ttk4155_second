@@ -63,7 +63,6 @@ void can_message_send(struct can_message* msg)
 	for (i = 0; i < msg->length; i++)
 	{
 		mcp2515_write(MCP_TXB0D(0), msg->data[i], 1);
-		printf("can message send %d", msg->data[i]);
 	}
 	printf("\n\r");
 	mcp2515_request(MCP_RTS_TX0);

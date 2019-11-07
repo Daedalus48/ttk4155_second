@@ -32,12 +32,20 @@ int main(void){
 	
 	can_init();
 	
-
+	struct can_message message_input;
+	message_input.id = 1;
+	message_input.length = 1;
+	message_input.data[0] = (uint8_t) 0;
 	
-	struct can_message message;
-	message.id = 3;
-	message.length = 1;
-	message.data[0] = (uint8_t) 'C';
+	struct can_message message_score;
+	message_score.id = 1;
+	message_score.length = 1;
+	message_score.data[0] = (uint8_t) 0;
+	
+	struct can_message message_game_over;
+	message_game_over.id = 2;
+	message_game_over.length = 1;
+	message_game_over.data[0] = (uint8_t) 1;
 	
 
 	pwm_init();	
@@ -52,7 +60,7 @@ int main(void){
 	int old_val = adc_read();
 	int new_val = adc_read();
 	
-	int loose_counter = 0;
+	int succesfull_bounce = 0;
 	sei();
 	motor_init();
 	
@@ -60,6 +68,7 @@ int main(void){
 	motor_dac_write(0);
 	int16_t encoder = 0;
 	
+	int enable_game_fail = 0;
 	
 	
 
@@ -67,38 +76,47 @@ int main(void){
     {
 		
 		//motor_dac_write(80);
-		if(can_get_message(&message)){
-			printf("Atmega2560 received a new id %d \n \r \n\r", message.id);
-			if(message.id == 1){
-				printf("servo control \n\r");
-				x_val = 255-(float) message.data[0];
+		if(can_get_message(&message_input)){
+			
+			if(message_input.id == 1){
+				//printf("servo control \n\r");
+				x_val = 255-(float) message_input.data[0];
 				a = (int) pw;
-				printf("ow b: %d\n\r",  a);
+				//printf("ow b: %d\n\r",  a);
 				//pw = pwm_follow_joystick_val(pw, x_val);
 				//a = (int) pw;
-				printf("pw not scaled: %d\n\r",  a);
+				//printf("pw not scaled: %d\n\r",  a);
 				pw = pwm_scale_joystick_val(x_val);
 				a = (int) pw;
-				printf("pw scaled: %d\n\r",  a);
+				//printf("pw scaled: %d\n\r",  a);
 				pwm_set_pulse_width(pw);
 				
 			}
-			else if(message.id == 2){
-		
-				motor_pid_controller(message.data[0]);
+			else if(message_input.id == 2){
+				//printf("motor control \n\r");
+				motor_pid_controller(message_input.data[0]);
 			
 			}
-			else if(message.id == 3){
-				printf("\n\r shot \n\r");
-				
+			else if(message_input.id == 3){	
+				printf("shot \n\r");			
 				PORTD |= (1 << PD3);
 				_delay_ms(100);
 				PORTD &= ~(1 << PD3);
+				if (succesfull_bounce < 0)
+				{
+					succesfull_bounce = 0;
+				}
+				message_score.data[0] = succesfull_bounce;
+				can_message_send(&message_score);
+				succesfull_bounce++;
+				enable_game_fail = 1;
 				
-			}			
-			//motor_speed_control(message.data[0]);
-			/*printf("Atmega2560 received a new message %d \n \r \n\r", message.data[0]);*/
+			}	
+			else printf("Atmega2560 received a new message id %d \n \r \n\r", message_input.id);	
+
+			
 		}
+		
 		//encoder = motor_read_encoder();
 		//printf("encoder %d \n \r \n\r", encoder);
 		//_delay_ms(50);
@@ -128,22 +146,25 @@ int main(void){
 			
 		}*/
 		
-		/*new_val = adc_read();
-		
+		new_val = adc_read();
+
 		
 		if( (old_val == 0) && (new_val == 1) )
 		{
 			old_val = 1;
 			_delay_ms(50);
 		}
-		else if( (old_val == 1) && (new_val == 0) )
+		else if( (old_val == 1) && (new_val == 0) && enable_game_fail)
 		{
-			loose_counter++;
-			printf("You lost %d times \n\r", loose_counter);
 			old_val = 0;
 			_delay_ms(50);
+			succesfull_bounce = 0;
+			enable_game_fail = 0;
+			message_score.data[0] = succesfull_bounce;
+			can_message_send(&message_game_over);
+			can_message_send(&message_score);
 		}
-		*/
+		
 		
 		//TODO:: Please write your application code 
 		

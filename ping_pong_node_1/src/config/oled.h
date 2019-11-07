@@ -69,4 +69,14 @@ void oled_in_game_mode();
 
 int oled_get_lives();
 
+void oled_reduce_lives();
+
+void oled_reset_lives();
+
+void oled_actualise_high_score();
+
+void oled_reset_hs();
+
+void oled_game_over();
+
 #endif /* OLED_H_ */

@@ -143,6 +143,10 @@ void com_navigate_display(){
 			//printf("hs_menu %d \n \r");
 			oled_print_high_score();
 		}
+		else if(current_menu == high_score_menu){
+			oled_reset_hs();
+			oled_print_high_score();
+		}
 	}
 	if ((PINB & 0b0001)&&((current_menu == gain_menu ) || (current_menu == high_score_menu))){
 		current_menu = main_menu;
@@ -167,11 +171,11 @@ void com_play_game(){
 	message_solenoid.length = 1;
 	
 	
-	message_servo.data[0] = adc_read(2);
+	message_servo.data[0] = adc_read(1);
 	//printf("servo send %d \n\r", message_servo.data[0]);
 	can_message_send(&message_servo);
 	
-	message_motor.data[0] = adc_read(1);
+	message_motor.data[0] = adc_read(4);
 	//printf("motor send %d \n\r", message_motor.data[0]);
 	can_message_send(&message_motor);
 	
@@ -185,6 +189,7 @@ void com_play_game(){
 	else if( (old_val == 1) && (new_val == 0) )
 	{
 		message_solenoid.data[0] = 1;
+		printf("shot \n\r");
 		can_message_send(&message_solenoid);
 		old_val = 0;
 		_delay_ms(50);
@@ -192,8 +197,12 @@ void com_play_game(){
 	oled_in_game_mode();
 	if ((oled_get_lives()==0)||(PINB & 0b0001)){
 		back = 1;
+		oled_game_over();
+		_delay_ms(3000);
 		oled_display_activity();
-		}
+		oled_reset_lives();
+		com_reset_score();
+	}
 }
 
 void com_gain_menu(){
@@ -205,7 +214,12 @@ void com_reset_score(){
 }
 
 int com_get_score(){
+	
 	return score;
+}
+
+void com_set_score(int score_node2){
+	score = score_node2;
 }
 
 int com_get_back(){
