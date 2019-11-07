@@ -65,6 +65,18 @@ int main(void){
 					current_mode = IDLE;
 					com_set_back();
 				}
+				if (can_get_message(&message))
+				{
+					if(message.id == 1){
+						com_set_score(message.data[0]);
+					}
+					else if(message.id == 2){
+						oled_reduce_lives();
+						oled_actualise_high_score();
+						com_reset_score();
+					}
+					
+				}
 				break;
 			default:
 				com_navigate_display();
@@ -73,33 +85,9 @@ int main(void){
 		_delay_ms(100);
 		
 		
-		if (can_get_message(&message))
-		{
-			if(message.id == 1){
-				com_set_score(message.data[0]);
-			}
-			else if(message.id == 2){
-				oled_reduce_lives();
-				oled_actualise_high_score();
-				com_reset_score();
-			}
-			
-		}
 		
-	}/*
-	while(1){
-		int pin = (PINB & 0b0001);
-		printf("button: %d\n\r",  pin);
-	}*/
-	
-	
-/*
-	
-		while(1){	
-		com_actualise_system();
-		_delay_ms(50);
-	}*/
-	//oled_print_high_score();
+		
+	}
 		
 	return 0;
 }

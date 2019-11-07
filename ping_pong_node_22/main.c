@@ -69,31 +69,19 @@ int main(void){
 	int16_t encoder = 0;
 	
 	int enable_game_fail = 0;
-	
-	
 
-    while(1)
-    {
-		
-		//motor_dac_write(80);
+    while(1){
 		if(can_get_message(&message_input)){
-			
+			printf("Leviathan \n\r");
 			if(message_input.id == 1){
-				//printf("servo control \n\r");
 				x_val = 255-(float) message_input.data[0];
 				a = (int) pw;
-				//printf("ow b: %d\n\r",  a);
-				//pw = pwm_follow_joystick_val(pw, x_val);
-				//a = (int) pw;
-				//printf("pw not scaled: %d\n\r",  a);
 				pw = pwm_scale_joystick_val(x_val);
 				a = (int) pw;
-				//printf("pw scaled: %d\n\r",  a);
 				pwm_set_pulse_width(pw);
 				
 			}
 			else if(message_input.id == 2){
-				//printf("motor control \n\r");
 				motor_pid_controller(message_input.data[0]);
 			
 			}
@@ -106,45 +94,18 @@ int main(void){
 				{
 					succesfull_bounce = 0;
 				}
+				succesfull_bounce++;
 				message_score.data[0] = succesfull_bounce;
 				can_message_send(&message_score);
-				succesfull_bounce++;
-				enable_game_fail = 1;
-				
-			}	
-			else printf("Atmega2560 received a new message id %d \n \r \n\r", message_input.id);	
-
-			
+				enable_game_fail = 1;				
+			}
+			else if (message_input.id == 4){
+				int gain_choise = message_input.data[0];
+				printf("numb %d\n\r", gain_choise);
+			}				
 		}
+
 		
-		//encoder = motor_read_encoder();
-		//printf("encoder %d \n \r \n\r", encoder);
-		//_delay_ms(50);
-		/*
-		motor_set_dir(0);
-		_delay_ms(1000);
-		motor_set_dir(1);
-		_delay_ms(1000);
-		
-		//this code is for the servo motor control
-		/*if(can_get_message(&message2)){
-			
-			//printf("Atmega2560 received a new message %d \n \r \n\r", message2.data[0]);
-			
-				
-			x_val = 255-(float) message2.data[0];
-			a = (int) pw;
-			//printf("ow b: %d\n\r",  a);
-			//pw = pwm_follow_joystick_val(pw, x_val);
-			//a = (int) pw;
-			//printf("pw not scaled: %d\n\r",  a);
-			pw = pwm_scale_joystick_val(x_val);
-			a = (int) pw;
-			//printf("pw scaled: %d\n\r",  a);
-			pwm_set_pulse_width(pw);
-			
-			
-		}*/
 		
 		new_val = adc_read();
 
@@ -163,12 +124,7 @@ int main(void){
 			message_score.data[0] = succesfull_bounce;
 			can_message_send(&message_game_over);
 			can_message_send(&message_score);
-		}
-		
-		
-		//TODO:: Please write your application code 
-		
-		
+		}		
 	}
 	return 0;
 }

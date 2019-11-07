@@ -110,14 +110,11 @@ void motor_pid_controller(uint8_t reference){
 	int var = 1;
 	
 	uint16_t encoder = motor_read_encoder();
-	//printf("enc  %d \n \r \n\r", encoder);
-	//double scalor = 255 / (encoder_max - encoder_min); 
 	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
 	var = (int) encoder_diff;
 	double measured_val = encoder_diff * scalor;
 	int error = reference - (int) measured_val;
-	//printf("e  %d \n \r \n\r", error);
 	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	sum_error += error;
 	int u = ( kp * error ) + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
@@ -128,9 +125,8 @@ void motor_pid_controller(uint8_t reference){
 		u = -u;
 	}
 	if ( 100 < u ){ u = 100; };
-	//if ( u < 15 ){ u = 0; };
 	motor_dac_write(u);
-	printf("u  %d ", u);
+	printf("u  %d \n\r", u);
 }
 
 void motor_set_gain(){

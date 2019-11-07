@@ -14,7 +14,7 @@ enum menu{main_menu, gain_menu, high_score_menu};
 int current_menu = main_menu;
 int score = 0;
 int back = 0;
-start_game = 0;
+int start_game = 0;
 
 /*
 void com_actualise_system(){
@@ -86,9 +86,6 @@ void com_navigate_display(){
 	
 	pin = (PINB & 0b0100)>>2;	
 	
-	/*if(pin == 0){
-		printf("string number %d selected \n \r", oled_get_joy_pos());
-	}*/
 	
 	temp_value = adc_joy_pos_changed();
 	
@@ -103,7 +100,6 @@ void com_navigate_display(){
 				oled_navigate_gain_menu();
 				break;
 			case high_score_menu:
-				printf("hs case %d \n \r");
 				oled_print_high_score();
 				break;
 		}
@@ -121,33 +117,86 @@ void com_navigate_display(){
 	{
 		old_val = 0;
 		_delay_ms(50);
-		if ((current_menu == main_menu)&&(!oled_get_joy_pos())){ start_game = 1; printf("game %d \n \r");}
+		if ((current_menu == main_menu)&&(!oled_get_joy_pos())){ start_game = 1;}
 		else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 1)){
 			current_menu = gain_menu;
-			//printf("gain_menu %d \n \r");
 			oled_navigate_gain_menu();
 		}else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 2)){
 			current_menu = high_score_menu;
-			//printf("hs_menu %d \n \r");
 			oled_print_high_score();
-		}
-	}
-	if ((PINB & 0b0010)>>1){
-		if ((current_menu == main_menu)&&(!oled_get_joy_pos())){ start_game = 1; printf("game %d \n \r");}
-		else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 1)){
-			current_menu = gain_menu;
-			//printf("gain_menu %d \n \r");
-			oled_navigate_gain_menu();
-		}else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 2)){
-			current_menu = high_score_menu;
-			//printf("hs_menu %d \n \r");
-			oled_print_high_score();
-		}
-		else if(current_menu == high_score_menu){
+		}else if (current_menu == high_score_menu){
 			oled_reset_hs();
 			oled_print_high_score();
+		}else if (current_menu == gain_menu){
+			int joy_pos = oled_get_joy_pos();
+			
+			struct can_message message_gain;
+			message_gain.id = 4;
+			message_gain.length = 1;
+			message_gain.data[0] = 0;
+			
+			switch (joy_pos){
+				case 0:
+					printf("easy \n\r");
+					message_gain.data[0] = 0;
+					break;
+				case 1:
+					printf("medium \n\r");
+					message_gain.data[0] = 1;
+					break;
+				case 2:
+					printf("hard \n\r");
+					message_gain.data[0] = 2;
+					break;
+				default:
+					break;
+			}
+			
+			can_message_send(&message_gain);
 		}
 	}
+	
+	if ((PINB & 0b0010)>>1){
+		if ((current_menu == main_menu)&&(!oled_get_joy_pos())){ start_game = 1;}
+		else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 1)){
+			current_menu = gain_menu;
+			oled_navigate_gain_menu();
+		}else if ((current_menu == main_menu)&&(oled_get_joy_pos() == 2)){
+			current_menu = high_score_menu;
+			oled_print_high_score();
+		}else if(current_menu == high_score_menu){
+			oled_reset_hs();
+			oled_print_high_score();
+		}else if (current_menu == gain_menu){
+			int joy_pos = oled_get_joy_pos();
+			
+			struct can_message message_gain;
+			message_gain.id = 4;
+			message_gain.length = 1;
+			message_gain.data[0] = 0;
+			
+			switch (joy_pos){
+				case 0:
+					printf("easy \n\r");
+					message_gain.data[0] = 0;
+					break;
+				case 1:
+					printf("medium \n\r");
+					message_gain.data[0] = 1;
+					break;
+				case 2:
+					printf("hard \n\r");
+					message_gain.data[0] = 2;
+					break;
+				default:
+					break;
+			}
+			
+			can_message_send(&message_gain);
+		}
+	}
+	
+	
 	if ((PINB & 0b0001)&&((current_menu == gain_menu ) || (current_menu == high_score_menu))){
 		current_menu = main_menu;
 		oled_display_activity();
@@ -172,11 +221,9 @@ void com_play_game(){
 	
 	
 	message_servo.data[0] = adc_read(1);
-	//printf("servo send %d \n\r", message_servo.data[0]);
 	can_message_send(&message_servo);
 	
 	message_motor.data[0] = adc_read(4);
-	//printf("motor send %d \n\r", message_motor.data[0]);
 	can_message_send(&message_motor);
 	
 	new_val = (PINB & 0b0100)>>2;
@@ -189,7 +236,6 @@ void com_play_game(){
 	else if( (old_val == 1) && (new_val == 0) )
 	{
 		message_solenoid.data[0] = 1;
-		printf("shot \n\r");
 		can_message_send(&message_solenoid);
 		old_val = 0;
 		_delay_ms(50);
@@ -214,7 +260,6 @@ void com_reset_score(){
 }
 
 int com_get_score(){
-	
 	return score;
 }
 
