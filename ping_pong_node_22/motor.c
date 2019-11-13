@@ -40,7 +40,7 @@ void motor_dac_write(uint8_t data) {
 	if (data > 255){data = 255;}
 	uint8_t address = 0b01010000;
 	uint8_t command = 0b0;
-	
+	printf("dac\n\r");
 	uint8_t message[3];
 	message[0] = address;
 	message[1] = command;
@@ -123,8 +123,8 @@ void motor_pid_controller(uint8_t reference){
 	else if (derivative_part > 40){derivative_part = 40;}
 	int u = ( kp * error ) + integral_part + derivative_part;
 	prev_error = error;
-	if (encoder < encoder_min){ u = 20; }
-	else if (encoder_max < encoder){ u = -20; }
+// 	if (encoder < encoder_min){ u = 20; printf("under\n\r");}
+// 	else if (encoder_max < encoder){ u = -20; }
 	if (u > 0){motor_set_dir(0);}
 	else {
 		motor_set_dir(1);
