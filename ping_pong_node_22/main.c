@@ -60,7 +60,9 @@ int main(void){
 	int succesfull_bounce = 0;
 	sei();
 	motor_init();
-	
+	printf("init\n\r");
+	_delay_ms(2000);
+	printf("init finish\n\r");
 	motor_reset_encoder();
 	motor_dac_write(0);
 	int16_t encoder = 0;

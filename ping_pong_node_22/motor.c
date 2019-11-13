@@ -29,8 +29,8 @@ void motor_init(void)
 	PORTH |= (1 << PH1); // Direction right on dc_motor
 	PORTH |= (1 << PH4); // Enable motor
 	DDRK = 0x00;
+	motor_set_dir(1);
 	motor_dac_write(80);
-	_delay_ms(2000);
 }
 
 void motor_dac_write(uint8_t data) {
@@ -98,15 +98,18 @@ void motor_reset_encoder() {
 
 void motor_pid_controller(uint8_t reference){
 	reference = -reference;
-	int var = 1;
-	
 	uint16_t encoder = motor_read_encoder();
 	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
 	double measured_val = encoder_diff * scalor;
+	int k = (int)measured_val;
+	//printf("m  %d \n\r", k);
 	int error = reference - (int) measured_val;
+	printf("e  %d \n\r", error);
 	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	sum_error += error;
+	if (sum_error < -500){sum_error = -500;}
+	else if (sum_error > 500){sum_error = 500;}
 	int integral_part = ( ki * sum_error / freq );
 	if (integral_part < -40){integral_part = -40;}
 	else if (integral_part > 40){integral_part = 40;}
@@ -115,6 +118,7 @@ void motor_pid_controller(uint8_t reference){
 	else if (derivative_part > 40){derivative_part = 40;}
 	int u = ( kp * error ) + integral_part + derivative_part;
 	prev_error = error;
+	//printf("u  %d \n\r", u);
 	if (u > 0){motor_set_dir(0);}
 	else {
 		motor_set_dir(1);
@@ -122,7 +126,7 @@ void motor_pid_controller(uint8_t reference){
 	}
 	if ( 100 < u ){ u = 100; };
 	motor_dac_write(u);
- 	printf("u  %d \n\r", u);
+ 	
 }
 
 void motor_set_gain(int gain_choise){
