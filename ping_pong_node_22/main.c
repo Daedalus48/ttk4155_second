@@ -51,8 +51,6 @@ int main(void){
 	pwm_init();	
 	adc_init();
 	
-	int a;
-	
 	float pw = 1500;
 	float x_val = 130;
 	
@@ -68,20 +66,19 @@ int main(void){
 	int16_t encoder = 0;
 	
 	int enable_game_fail = 0;
+	
+	uint8_t gain_choise = 0;
 
     while(1){
 		if(can_get_message(&message_input)){
 			if(message_input.id == 1){
 				x_val = 255-(float) message_input.data[0];
-				a = (int) pw;
 				pw = pwm_scale_joystick_val(x_val);
-				a = (int) pw;
 				pwm_set_pulse_width(pw);
 				
 			}
 			else if(message_input.id == 2){
 				motor_pid_controller(message_input.data[0]);
-			
 			}
 			else if(message_input.id == 3){	
 				printf("shot \n\r");			
@@ -98,9 +95,13 @@ int main(void){
 				enable_game_fail = 1;				
 			}
 			else if (message_input.id == 4){
-				int gain_choise = message_input.data[0];
+				gain_choise = message_input.data[0];
 				motor_set_gain(gain_choise);
-			}				
+			}else if (message_input.id == 5){
+				int gain_val = message_input.data[0];
+				printf("kp  %d \n\r", gain_val);
+				motor_tune_gain(gain_choise, gain_val);
+			}			
 		}
 
 		

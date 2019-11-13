@@ -64,12 +64,10 @@ void motor_speed_control(uint8_t slider_pos){
 	if (slider_pos < 128){
 		motor_set_dir(0);
 		motor_dac_write((127 - slider_pos) * 0.5);
-		//printf(" %d \n \r \n\r", (127 - slider_pos) * 2);
 	}
 	else {
 		motor_set_dir(1);
 		motor_dac_write((slider_pos - 127) * 0.5);
-		//printf(" %d \n \r \n\r", (slider_pos - 127) * 2);
 	}
 }
 
@@ -112,13 +110,21 @@ void motor_pid_controller(uint8_t reference){
 	uint16_t encoder = motor_read_encoder();
 	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
-	var = (int) encoder_diff;
+	//var = (int) encoder_diff;
 	double measured_val = encoder_diff * scalor;
 	int error = reference - (int) measured_val;
 	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	sum_error += error;
-	int u = ( kp * error ) + ( ki * sum_error / freq ) + ( kd * (error - prev_error) * freq);
+	int integral_part = ( ki * sum_error / freq );
+	if (integral_part < -40){integral_part = -40;}
+	else if (integral_part > 40){integral_part = 40;}
+	int derivative_part = ( kd * (error - prev_error) * freq);
+	if (derivative_part < -40){derivative_part = -40;}
+	else if (derivative_part > 40){derivative_part = 40;}
+	int u = ( kp * error ) + integral_part + derivative_part;
 	prev_error = error;
+	if (encoder < encoder_min){ u = 20; }
+	else if (encoder_max < encoder){ u = -20; }
 	if (u > 0){motor_set_dir(0);}
 	else {
 		motor_set_dir(1);
@@ -126,7 +132,7 @@ void motor_pid_controller(uint8_t reference){
 	}
 	if ( 100 < u ){ u = 100; };
 	motor_dac_write(u);
-	printf("u  %d \n\r", u);
+ 	printf("u  %d \n\r", u);
 }
 
 void motor_set_gain(int gain_choise){
@@ -145,6 +151,22 @@ void motor_set_gain(int gain_choise){
 			kp = 2.0;
 			kd = 0.0;
 			ki = 0.0;
+			break;
+		default:
+			break;
+	}
+}
+
+void motor_tune_gain(int gain_choise, int gain_val){
+	switch(gain_choise){
+		case 3:
+			kp = (float)(gain_val / 100.0);
+			break;
+		case 4:
+			ki = (float)(gain_val / 100.0);
+			break;
+		case 5:
+			kd = (float)(gain_val / 100.0);
 			break;
 		default:
 			break;

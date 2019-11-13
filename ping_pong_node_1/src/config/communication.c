@@ -23,69 +23,6 @@ int ki = 80;
 int kd = 20;
 int selected_gain = 2;
 
-/*
-void com_actualise_system(){
-	
-	int pin = 1;
-	int temp_value = NEUTRAL;
-	int new_val;
-	
-	pin = (PINB & 0b0100)>>2;
-	
-	struct can_message message_servo;
-	message_servo.id = 1;
-	message_servo.length = 1;
-	
-	struct can_message message_motor;
-	message_motor.id = 2;
-	message_motor.length = 1;
-	
-	struct can_message message_solenoid;
-	message_solenoid.id = 3;
-	message_solenoid.length = 1;
-	
-	
-	if(pin == 0){
-		printf("string number %d selected \n \r", oled_get_joy_pos());
-	}
-	
-	temp_value = adc_joy_pos_changed();
-	
-	if(temp_value == UP || temp_value == DOWN)
-	{
-		oled_actualise_joy_pos(temp_value, main_menu);
-		oled_display_activity();
-		//oled_navigate_gain_menu();
-		_delay_ms(400);
-	}
-	
-	message_servo.data[0] = adc_read(2);
-	//printf("servo send %d \n\r", message_servo.data[0]);
-	can_message_send(&message_servo);
-	
-	message_motor.data[0] = adc_read(1);
-	//printf("motor send %d \n\r", message_motor.data[0]);
-	can_message_send(&message_motor);
-	
-	new_val = (PINB & 0b0100)>>2;
-	
-	if( (old_val == 0) && (new_val == 1) )
-	{
-		old_val = 1;
-		_delay_ms(50);
-	}
-	else if( (old_val == 1) && (new_val == 0) )
-	{
-		printf("string number %d selected \n \r", oled_get_joy_pos());
-		message_solenoid.data[0] = 1;
-		can_message_send(&message_solenoid);
-		old_val = 0;
-		_delay_ms(50);
-	}
-	
-
-}*/
-
 void com_navigate_display(){
 	int pin = 1;
 	int temp_value = NEUTRAL;
@@ -303,61 +240,52 @@ void com_set_start_game(){
 }
 
 void com_play_game_with_gain_control(){
-	/*int new_val;*/
-	
-	struct can_message message_servo;
-	message_servo.id = 1;
-	message_servo.length = 1;
-	
 	struct can_message message_motor;
 	message_motor.id = 2;
 	message_motor.length = 1;
 	
-	/*struct can_message message_solenoid;
-	message_solenoid.id = 3;
-	message_solenoid.length = 1;*/
+	struct can_message message_gain;
+	message_gain.id = 4;
+	message_gain.length = 1;
+	message_gain.data[0] = 0;
 	
 	struct can_message message_prop_gain;
 	message_prop_gain.id = 5;
 	message_prop_gain.length = 1;
 	
-	message_servo.data[0] = adc_read(1);
-	can_message_send(&message_servo);
-	
 	message_motor.data[0] = adc_read(4);
 	can_message_send(&message_motor);
+	
+	if ((PINB & 0b0010)>>1){
+		if (selected_gain == 4){
+			selected_gain = 2;
+		}else{
+			selected_gain = selected_gain + 1;
+		}_delay_ms(50);
+	}
 	
 	switch (selected_gain){
 		case 2:
 			kp = adc_read(2);
+			message_gain.data[0] = 3;
+			message_prop_gain.data[0] = kp;
 			break;
 		case 3:
-			ki = adc_read(3);
+			ki = adc_read(2);
+			message_gain.data[0] = 4;
+			message_prop_gain.data[0] = ki;
 			break;
 		case 4:
-			kd = adc_read(3);
+			kd = adc_read(2);
+			message_gain.data[0] = 5;
+			message_prop_gain.data[0] = kd;
 			break;
 		default:
 			break;
 	}
+// 	can_message_send(&message_gain);
+// 	can_message_send(&message_prop_gain);
 	
-	message_prop_gain.data[0] = kp;
-	can_message_send(&message_prop_gain);
-	
-	/*new_val = (PINB & 0b0100)>>2;
-	
-	if( (old_val == 0) && (new_val == 1) )
-	{
-		old_val = 1;
-		_delay_ms(50);
-	}
-	else if( (old_val == 1) && (new_val == 0) )
-	{
-		message_solenoid.data[0] = 1;
-		can_message_send(&message_solenoid);
-		old_val = 0;
-		_delay_ms(50);
-	}*/
 	oled_in_game_with_gain_control(selected_gain, kp, ki, kd);
 	if (PINB & 0b0001){
 		back = 1;
