@@ -381,7 +381,7 @@ void oled_print_difficulty(int difficulty){
 			oled_page_select(1);
 			oled_printf("MEDIUM selected \n");
 			oled_page_select(2);
-			oled_printf("Kp = 0.05\n");
+			oled_printf("Kp = 0.6\n");
 			oled_page_select(3);
 			oled_printf("Ki = 0.8\n");
 			oled_page_select(4);

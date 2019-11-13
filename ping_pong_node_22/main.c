@@ -68,6 +68,7 @@ int main(void){
 	int enable_game_fail = 0;
 	
 	uint8_t gain_choise = 0;
+	uint8_t gain_val = 0;
 
     while(1){
 		if(can_get_message(&message_input)){
@@ -98,8 +99,9 @@ int main(void){
 				gain_choise = message_input.data[0];
 				motor_set_gain(gain_choise);
 			}else if (message_input.id == 5){
-				int gain_val = message_input.data[0];
-				printf("kp  %d \n\r", gain_val);
+				gain_val = message_input.data[0];
+				printf("gc %d\n\r", gain_choise);
+				printf("gv %d\n\r", gain_val);
 				motor_tune_gain(gain_choise, gain_val);
 			}			
 		}

@@ -17,6 +17,6 @@ int16_t motor_read_encoder();
 void motor_reset_encoder();
 void motor_pid_controller(uint8_t reference);
 void motor_set_gain(int gain_choise);
-void motor_tune_gain(int gain_choise, int gain_val);
+void motor_tune_gain(uint8_t gain_choise, uint8_t gain_val);
 
 #endif /* MOTOR_H_*/

@@ -247,7 +247,6 @@ void com_play_game_with_gain_control(){
 	struct can_message message_gain;
 	message_gain.id = 4;
 	message_gain.length = 1;
-	message_gain.data[0] = 0;
 	
 	struct can_message message_prop_gain;
 	message_prop_gain.id = 5;
@@ -256,35 +255,33 @@ void com_play_game_with_gain_control(){
 	message_motor.data[0] = adc_read(4);
 	can_message_send(&message_motor);
 	
+	int val = adc_read(2);
+	message_prop_gain.data[0] = val;
+	
 	if ((PINB & 0b0010)>>1){
 		if (selected_gain == 4){
 			selected_gain = 2;
 		}else{
 			selected_gain = selected_gain + 1;
-		}_delay_ms(50);
+		}message_gain.data[0] = selected_gain + 1;
+		can_message_send(&message_gain);
+		_delay_ms(50);
 	}
 	
 	switch (selected_gain){
 		case 2:
-			kp = adc_read(2);
-			message_gain.data[0] = 3;
-			message_prop_gain.data[0] = kp;
+			kp = val;
 			break;
 		case 3:
-			ki = adc_read(2);
-			message_gain.data[0] = 4;
-			message_prop_gain.data[0] = ki;
+			ki = val;
 			break;
 		case 4:
-			kd = adc_read(2);
-			message_gain.data[0] = 5;
-			message_prop_gain.data[0] = kd;
+			kd = val;
 			break;
 		default:
 			break;
 	}
-// 	can_message_send(&message_gain);
-// 	can_message_send(&message_prop_gain);
+	can_message_send(&message_prop_gain);
 	
 	oled_in_game_with_gain_control(selected_gain, kp, ki, kd);
 	if (PINB & 0b0001){

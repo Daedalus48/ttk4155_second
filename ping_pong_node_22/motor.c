@@ -40,7 +40,7 @@ void motor_dac_write(uint8_t data) {
 	if (data > 255){data = 255;}
 	uint8_t address = 0b01010000;
 	uint8_t command = 0b0;
-	printf("dac\n\r");
+
 	uint8_t message[3];
 	message[0] = address;
 	message[1] = command;
@@ -60,7 +60,6 @@ void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 }
 
 void motor_speed_control(uint8_t slider_pos){
-	printf("r  %d \n \r \n\r", slider_pos);
 	if (slider_pos < 128){
 		motor_set_dir(0);
 		motor_dac_write((127 - slider_pos) * 0.5);
@@ -82,14 +81,12 @@ int16_t motor_read_encoder(){
 	_delay_ms(20);
 	
 	msb = PINK; // read msb
-	//printf("msb  %d \n \r \n\r", msb);
 	
 	PORTH |= (1 << PH3); // set SEL high to get low byte
 	
 	_delay_ms(20);
 	
 	lsb = PINK; // read lsb
-	//printf("lsb  %d \n \r \n\r", lsb);
 	
 	PORTH |= (1 << PH5); // Disable encoder read
 	
@@ -110,7 +107,6 @@ void motor_pid_controller(uint8_t reference){
 	uint16_t encoder = motor_read_encoder();
 	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
-	//var = (int) encoder_diff;
 	double measured_val = encoder_diff * scalor;
 	int error = reference - (int) measured_val;
 	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
@@ -123,8 +119,6 @@ void motor_pid_controller(uint8_t reference){
 	else if (derivative_part > 40){derivative_part = 40;}
 	int u = ( kp * error ) + integral_part + derivative_part;
 	prev_error = error;
-// 	if (encoder < encoder_min){ u = 20; printf("under\n\r");}
-// 	else if (encoder_max < encoder){ u = -20; }
 	if (u > 0){motor_set_dir(0);}
 	else {
 		motor_set_dir(1);
@@ -132,41 +126,46 @@ void motor_pid_controller(uint8_t reference){
 	}
 	if ( 100 < u ){ u = 100; };
 	motor_dac_write(u);
- 	printf("u  %d \n\r", u);
+// 	int a = (int) (kp * 100);
+//  	printf("kp  %d \n\r", a);
 }
 
 void motor_set_gain(int gain_choise){
 	switch (gain_choise){
 		case 0:
 			kp = 1.2;
-			kd = 0.2;
 			ki = 0.8;
+			kd = 0.2;
 			break;
 		case 1:
-			kp = 0.05;
-			kd = 0.2;
+			kp = 0.6;
 			ki = 0.8;
+			kd = 0.2;
 			break;
 		case 2:
 			kp = 2.0;
-			kd = 0.0;
 			ki = 0.0;
+			kd = 0.0;
 			break;
 		default:
 			break;
 	}
 }
-
-void motor_tune_gain(int gain_choise, int gain_val){
+double b = 0;
+void motor_tune_gain(uint8_t gain_choise, uint8_t gain_val){
 	switch(gain_choise){
 		case 3:
-			kp = (float)(gain_val / 100.0);
+// 			b = (double)(gain_val / 100.0);
+// 			int a = (int) (b * 100);
+// 			printf("kp  %d \n\r", a);
+// 			printf("printed\n\r");
+			kp = (double)(gain_val / 100.0);
 			break;
 		case 4:
-			ki = (float)(gain_val / 100.0);
+			ki = (double)(gain_val / 100.0);
 			break;
 		case 5:
-			kd = (float)(gain_val / 100.0);
+			kd = (double)(gain_val / 100.0);
 			break;
 		default:
 			break;
