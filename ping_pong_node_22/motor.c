@@ -24,8 +24,6 @@ void motor_init(void)
 {
 	
 	TWI_Master_Initialise();
-
-	//printf("motor initialized \n\r");
 	
 	DDRH |= (1 << PH1) | (1 << PH3) | (1 << PH4) | (1 << PH5) | (1 << PH6);  // Set MJ1 as output
 	PORTH |= (1 << PH1); // Direction right on dc_motor
@@ -51,10 +49,8 @@ void motor_dac_write(uint8_t data) {
 void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 	if (dir){
 		PORTH |= (1 << PH1); // Direction right on dc_motor
-		//printf("right \n\r");
 	}else{
 		PORTH &= ~(1 << PH1); // Direction left on dc_motor
-		//printf("left \n\r");
 	}
 	
 }
@@ -126,8 +122,7 @@ void motor_pid_controller(uint8_t reference){
 	}
 	if ( 100 < u ){ u = 100; };
 	motor_dac_write(u);
-// 	int a = (int) (kp * 100);
-//  	printf("kp  %d \n\r", a);
+ 	printf("u  %d \n\r", u);
 }
 
 void motor_set_gain(int gain_choise){
@@ -155,10 +150,6 @@ double b = 0;
 void motor_tune_gain(uint8_t gain_choise, uint8_t gain_val){
 	switch(gain_choise){
 		case 3:
-// 			b = (double)(gain_val / 100.0);
-// 			int a = (int) (b * 100);
-// 			printf("kp  %d \n\r", a);
-// 			printf("printed\n\r");
 			kp = (double)(gain_val / 100.0);
 			break;
 		case 4:

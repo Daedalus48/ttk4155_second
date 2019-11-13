@@ -100,8 +100,6 @@ int main(void){
 				motor_set_gain(gain_choise);
 			}else if (message_input.id == 5){
 				gain_val = message_input.data[0];
-				printf("gc %d\n\r", gain_choise);
-				printf("gv %d\n\r", gain_val);
 				motor_tune_gain(gain_choise, gain_val);
 			}			
 		}
