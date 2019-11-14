@@ -75,7 +75,6 @@ int main(void){
 					else if(message.id == 2){
 						oled_reduce_lives();
 						oled_actualise_high_score();
-						com_reset_score();
 					}
 					
 				}

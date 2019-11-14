@@ -71,6 +71,8 @@ int main(void){
 	
 	uint8_t gain_choise = 0;
 	uint8_t gain_val = 0;
+	
+	int live_counter = 3;
 
     while(1){
 		if(can_get_message(&message_input)){
@@ -83,15 +85,10 @@ int main(void){
 			else if(message_input.id == 2){
 				motor_pid_controller(message_input.data[0]);
 			}
-			else if(message_input.id == 3){	
-				printf("shot \n\r");			
+			else if(message_input.id == 3){				
 				PORTD |= (1 << PD3);
 				_delay_ms(100);
 				PORTD &= ~(1 << PD3);
-				if (succesfull_bounce < 0)
-				{
-					succesfull_bounce = 0;
-				}
 				succesfull_bounce++;
 				message_score.data[0] = succesfull_bounce;
 				can_message_send(&message_score);
@@ -120,11 +117,12 @@ int main(void){
 		{
 			old_val = 0;
 			_delay_ms(50);
-			succesfull_bounce = 0;
 			enable_game_fail = 0;
 			message_score.data[0] = succesfull_bounce;
 			can_message_send(&message_game_over);
 			can_message_send(&message_score);
+			live_counter--;
+			if(!live_counter){succesfull_bounce = 0;};
 		}		
 	}
 	return 0;
