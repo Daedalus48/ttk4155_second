@@ -40,13 +40,7 @@ int main(void){
 	struct can_message message_score;
 	message_score.id = 1;
 	message_score.length = 1;
-	message_score.data[0] = (uint8_t) 0;
-	
-	struct can_message message_game_over;
-	message_game_over.id = 2;
-	message_game_over.length = 1;
-	message_game_over.data[0] = (uint8_t) 1;
-	
+	message_score.data[0] = (uint8_t) 1;	
 
 	pwm_init();	
 	adc_init();
@@ -84,13 +78,13 @@ int main(void){
 			}
 			else if(message_input.id == 2){
 				motor_pid_controller(message_input.data[0]);
+				//motor_speed_control(message_input.data[0]);
 			}
 			else if(message_input.id == 3){				
 				PORTD |= (1 << PD3);
 				_delay_ms(100);
 				PORTD &= ~(1 << PD3);
-				succesfull_bounce++;
-				message_score.data[0] = succesfull_bounce;
+				message_score.data[0] = 1;
 				can_message_send(&message_score);
 				enable_game_fail = 1;				
 			}
@@ -118,11 +112,8 @@ int main(void){
 			old_val = 0;
 			_delay_ms(50);
 			enable_game_fail = 0;
-			message_score.data[0] = succesfull_bounce;
-			can_message_send(&message_game_over);
+			message_score.data[0] = 0;
 			can_message_send(&message_score);
-			live_counter--;
-			if(!live_counter){succesfull_bounce = 0;};
 		}		
 	}
 	return 0;

@@ -1,10 +1,3 @@
-/*
- * spi.h
- *
- * Created: 02.10.2019 10:18:14
- *  Author: evendr
- */ 
-
 
 #ifndef SPI_H_
 #define SPI_H_

@@ -207,10 +207,6 @@ void com_play_game(){
 	}
 }
 
-void com_gain_menu(){
-	
-}
-
 void com_reset_score(){
 	score = 0;
 }
@@ -219,8 +215,9 @@ int com_get_score(){
 	return score;
 }
 
-void com_set_score(int score_node2){
-	score = score_node2;
+
+void com_actualise_score(){
+	score = score + 1;
 }
 
 int com_get_back(){

@@ -1,28 +1,13 @@
-/*
- * can_controller.c
- *
- * Created: 02.10.2019 13:01:04
- *  Author: evendr
- */ 
-
 #include "can_controller.h"
 #include "usart.h"
 #include "spi.h"
 
 
-// "Main" for using can:
 
 void can_init()
 {
 	mcp2515_init(); //Init
 	
-	/*
-	mcp2515_bit_modify(MCP_RXF0SIDH, 0xff , 0x00);
-	mcp2515_bit_modify(MCP_RXF0SIDL, 0xE0 , 0x00);
-	mcp2515_bit_modify(MCP_CANCTRL, 0xE0 , MODE_LOOPBACK);
-	*/	
-	
-	//mcp2515_bit_modify(MCP_RXF0SIDH, 0xff, 0x00);
 	mcp2515_write(MCP_RXB0CTRL, MCP_RXBnCTRL_NOFILTER_bm, 1); // Set to no filter
 	_delay_ms(30);
 	
@@ -51,10 +36,7 @@ void can_init()
 }
 
 void can_message_send(struct can_message* msg)
-{
-	
-	//prinf("Sending message of length %d with id %d with data[0] %d", msg->length, msg->id)
-	
+{	
 	mcp2515_write(MCP_TXB0DLC, msg->length, 1);
 	mcp2515_write(MCP_TXB0SIDH, msg->id, 1);
 	mcp2515_write(MCP_TXB0SIDL, msg->id, 1);
@@ -66,19 +48,9 @@ void can_message_send(struct can_message* msg)
 	}
 	printf("\n\r");
 	mcp2515_request(MCP_RTS_TX0);
-	//Do something...
 }
 
-/*
-void can_error()
-{
-	
-}
-void can_transmit_complete()
-{
-	
-}
-*/
+
 void can_data_receive(struct can_message* msg, int buffer)
 {
 	uint8_t result[MAX_CAN_LENGTH];
@@ -103,9 +75,7 @@ void can_data_receive(struct can_message* msg, int buffer)
 	for (i = 0; i < msg->length; i++)
 	{
 		msg->data[i] = result[i];
-		//printf("can messsage received %c", msg->data[i]);
 	}
-	//printf("\n\r");
 	
 	mcp2515_bit_modify(MCP_CANINTF, 0x01, 0x00);
 }
@@ -134,9 +104,3 @@ int can_get_message(struct can_message* message)
 	}
 	
 }
-
-/*
-void can_int_vect()
-{
-	
-}*/

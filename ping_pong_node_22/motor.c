@@ -34,6 +34,7 @@ void motor_init(void)
 }
 
 void motor_dac_write(uint8_t data) {
+	//printf("u %d\n\r", data);
 	if (data < 0){data = 0;}
 	if (data > 255){data = 255;}
 	uint8_t address = 0b01010000;
@@ -49,8 +50,10 @@ void motor_dac_write(uint8_t data) {
 void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 	if (dir){
 		PORTH |= (1 << PH1); // Direction right on dc_motor
+		//printf("right \n\r");
 	}else{
 		PORTH &= ~(1 << PH1); // Direction left on dc_motor
+		//printf("left \n\r");
 	}
 	
 }
@@ -58,11 +61,11 @@ void motor_set_dir(uint8_t dir){	// 0 = left; 1 = right;
 void motor_speed_control(uint8_t slider_pos){
 	if (slider_pos < 128){
 		motor_set_dir(0);
-		motor_dac_write((127 - slider_pos) * 0.5);
+		motor_dac_write((127 - slider_pos) * 0.5*2);
 	}
 	else {
 		motor_set_dir(1);
-		motor_dac_write((slider_pos - 127) * 0.5);
+		motor_dac_write((slider_pos - 127) * 0.5*2);
 	}
 }
 
@@ -102,10 +105,7 @@ void motor_pid_controller(uint8_t reference){
 	double scalor = 0.033031;	// 255 / (encoder_max - encoder_min)
 	double encoder_diff =(double) encoder - (double) encoder_min;
 	double measured_val = encoder_diff * scalor;
-	int k = (int)measured_val;
-	//printf("m  %d \n\r", k);
 	int error = reference - (int) measured_val;
-	printf("e  %d \n\r", error);
 	//int error = reference - (encoder - encoder_min) * 255 / (encoder_max - encoder_min); 
 	sum_error += error;
 	if (sum_error < -500){sum_error = -500;}
@@ -118,13 +118,15 @@ void motor_pid_controller(uint8_t reference){
 	else if (derivative_part > 40){derivative_part = 40;}
 	int u = ( kp * error ) + integral_part + derivative_part;
 	prev_error = error;
-	//printf("u  %d \n\r", u);
-	if (u > 0){motor_set_dir(0);}
-	else {
-		motor_set_dir(1);
-		u = -u;
+	printf("u_pid  %d \n\r", u);
+	if (u > 0){
+		motor_set_dir(0);
 	}
-	if ( 100 < u ){ u = 100; };
+	else {
+		u = -u;
+		motor_set_dir(1);
+	}
+	if ( 100 < u ){ u = 100; }
 	motor_dac_write(u);
  	
 }

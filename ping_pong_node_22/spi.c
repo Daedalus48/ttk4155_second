@@ -1,10 +1,3 @@
-/*
- * spi.c
- *
- * Created: 02.10.2019 10:17:56
- *  Author: evendr
- */ 
-
 #include "spi.h"
 
 #define SS_PIN PB7
@@ -17,10 +10,6 @@ void spi_init() {
   /* Set MOSI and SCK and CS output, all others input */
   DDRB |= (1 << MOSI_PIN) | (1 << SCK_PIN) | (1 << SS_PIN) | (1 << PB0);
   PORTB |= (1 << SS_PIN) | (1 << PB0); // Set Master mode
-  
-  //DDR_SPI = (1<<MISO_PIN);
-  /* Enable interrupt */
-  // SPSR = (1<<SPIF);
 
   /* Enable SPI interrupt, SPI, Master, set clock rate fck/16 , SPI mode 0 by
    * default*/
@@ -35,8 +24,7 @@ void spi_read(uint8_t *receive_data, uint8_t data_length)
 	{
 		SPDR = dummy_data[i];
 		int j = 0;
-		while (!(SPSR & (1 << SPIF))){
-			//printf("I am stuck here %d\n\r ",j++);			
+		while (!(SPSR & (1 << SPIF))){		
 		}
 		receive_data[i] = SPDR;
 	}

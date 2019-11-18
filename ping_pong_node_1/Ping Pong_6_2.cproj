@@ -256,9 +256,6 @@
     <None Include="src\ASF\mega\utils\preprocessor\preprocessor.h">
       <SubType>compile</SubType>
     </None>
-    <None Include="src\config\conf_board.h">
-      <SubType>compile</SubType>
-    </None>
     <None Include="src\ASF\mega\utils\progmem.h">
       <SubType>compile</SubType>
     </None>
@@ -272,9 +269,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\bit_macros.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\can.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\can_controller.c">

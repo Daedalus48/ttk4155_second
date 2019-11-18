@@ -32,6 +32,4 @@ void can_bit_modify(uint8_t address, uint8_t mask, uint8_t data);
 // Resets MCP2515
 void can_reset();
 
-//void can_test();
-
 #endif /* MCP2515_DRIVER_H_ */

@@ -1,10 +1,3 @@
-/*
- * spi.c
- *
- * Created: 02.10.2019 10:17:56
- *  Author: evendr
- */ 
-
 #include "spi.h"
 
 void spi_init() 

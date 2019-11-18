@@ -1,11 +1,3 @@
-/*
- * can_controller.h
- *
- * Created: 02.10.2019 13:01:35
- *  Author: evendr
- */ 
-
-
 #ifndef CAN_CONTROLLER_H_
 #define CAN_CONTROLLER_H_
 
@@ -24,12 +16,5 @@ void can_init();
 void can_message_send(struct can_message* msg);
 void can_data_receive(struct can_message* msg, int buffer);
 int can_get_message(struct can_message* message);
-/*void can_message_send()
-void can_error()
-void can_transmit_complete()
-void can_data_receive()
-void can_int_vect()*/
-
-
 
 #endif /* CAN_CONTROLLER_H_ */

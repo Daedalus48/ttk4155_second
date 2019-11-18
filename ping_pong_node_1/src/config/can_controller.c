@@ -1,15 +1,6 @@
-/*
- * can_controller.c
- *
- * Created: 02.10.2019 13:01:04
- *  Author: evendr
- */ 
-
 #include "can_controller.h"
 #include "usart.h"
 
-
-// "Main" for using can:
 
 void can_init()
 {
@@ -54,19 +45,8 @@ void can_message_send(struct can_message* msg)
 		mcp2515_write(MCP_TXB0D(0), msg->data[i], 1);
 	}
 	mcp2515_request(MCP_RTS_TX0);
-	//Do something...
 }
 
-/*
-void can_error()
-{
-	
-}
-void can_transmit_complete()
-{
-	
-}
-*/
 void can_data_receive(struct can_message* msg, int buffer)
 {
 	uint8_t result[MAX_CAN_LENGTH];
@@ -122,9 +102,3 @@ int can_get_message(struct can_message* message)
 	}
 	
 }
-
-/*
-void can_int_vect()
-{
-	
-}*/

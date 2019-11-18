@@ -28,15 +28,11 @@ int adc_get_slider_pos(int *left_s, int *right_s);
 
 int adc_get_joystick_pos(int *y, int *x);
 
-int adc_joystick_angle();
-
 int adc_joystick_direction();
 
 int adc_test_function();
 
 int adc_joy_pos_changed();
-
-int adc_joy_pos_changed_up_down();
 
 int get_joy_adc_direction();
 

@@ -20,13 +20,6 @@
 enum oled_font_size{FONT_SIZE_LARGE, FONT_SIZE_MEDIUM, FONT_SIZE_SMALL};
 enum adc_joystick_dir{LEFT, RIGHT, UP, DOWN, NEUTRAL};
 enum menu{main_menu, gain_menu, high_score_menu};
-	
-//struct oled_activity may_spring = {"Birds \n", "Sun rays \n", NULL, NULL};
-//struct oled_activity july_summer = {"Beach \n", "Sun burnt \n", NULL, NULL}; 
-
-//struct oled_activity oled_main = {"Spring \n", "Summer \n", NULL, NULL};
-	
-//struct oled_activity *current_activity = NULL;
 
 int joy_pos;
 int high_score = 0;
@@ -67,7 +60,6 @@ int oled_init(){
 	oled_write_c(0xa6);	//set normal display
 	oled_write_c(0xaf);	//display on
 	oled_clear_screen();
-	//current_activity = &oled_main;
 	joy_pos = 0;
 	high_score = xmem_read(HS_POS_ADDRESS);
 	oled_display_activity();

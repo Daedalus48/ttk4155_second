@@ -1,11 +1,3 @@
-/*
- * mcp2515_driver.h
- *
- * Created: 02.10.2019 10:42:24
- *  Author: evendr
- */ 
-
-
 #ifndef MCP2515_DRIVER_H_
 #define MCP2515_DRIVER_H_
 

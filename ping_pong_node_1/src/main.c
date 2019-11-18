@@ -70,13 +70,14 @@ int main(void){
 				if (can_get_message(&message))
 				{
 					if(message.id == 1){
-						com_set_score(message.data[0]);
-					}
-					else if(message.id == 2){
-						oled_reduce_lives();
-						oled_actualise_high_score();
-					}
-					
+						if(message.data[0]){
+							com_actualise_score();
+						}
+						else if(message.data[0] == 0){
+							oled_reduce_lives();
+							oled_actualise_high_score();
+						}
+					}					
 				}
 				break;
 			case CONTROL:
